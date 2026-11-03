@@ -17,9 +17,9 @@ reviewed with holds the earlier rounds. Cases of one PR are related: split them 
 
 Writes <out>/reviews.txt (the selected `<pr> <login> <submittedAt>` lines) and the dataset format README.md
 describes. Needs an authenticated gh, run outside any agent session:
-    python3 -m tools.select_reviews --pytorch ../pytorch \\
+    python3 -m review_data.tools.select_reviews --pytorch ../pytorch \\
         --reviewers ezyang,albanD,janeyx99 --since 2026-06-01 --until 2026-09-30 \\
-        --out datasets/recall_core
+        --out review_data/datasets/recall_core
 """
 
 from __future__ import annotations
@@ -33,8 +33,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from tools import build_dataset, fetch_references
-from tools.build_dataset import AUTOMATED_LOGINS, REPO, SEARCH_QUERY, graphql
+from review_data.tools import build_dataset, fetch_references
+from review_data.tools.build_dataset import AUTOMATED_LOGINS, REPO, SEARCH_QUERY, graphql
 
 BOTS = AUTOMATED_LOGINS | {"pytorch-bot", "pytorchmergebot", "facebook-github-bot", "pytorchbot"}
 SUBSTANTIVE_BODY = 40
@@ -168,7 +168,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--until", required=True, help="latest PR creation date (YYYY-MM-DD)")
     ap.add_argument("--max-per-reviewer", type=int, default=1000,
                     help="PRs searched per reviewer; GitHub search returns at most 1000, and fewer miss reviews")
-    ap.add_argument("--out", type=Path, required=True, help="dataset directory, e.g. datasets/recall_core")
+    ap.add_argument("--out", type=Path, required=True, help="dataset directory, e.g. review_data/datasets/recall_core")
     ap.add_argument("--workers", type=int, default=4, help="PRs fetched at once (keep <= 8)")
     ap.add_argument("--rounds", choices=("first", "all"), default="first",
                     help="first: each reviewer's first review; all: also their later rounds, each a case with "
@@ -211,7 +211,7 @@ def main(argv: list[str] | None = None) -> int:
                        "description as of that review; references/ holds that review's body and inline comments, "
                        "each with GitHub's outdated flag (the author acted on it). Tags: "
                        f"{counts['ai_authored_pr']} ai_authored_pr, {counts['ai_assisted_review']} ai_assisted_review.",
-        "source": "tools/select_reviews.py",
+        "source": "review_data/tools/select_reviews.py",
         "created": date.today().isoformat(),
     }, indent=2) + "\n")
     print(f"wrote {n} cases to {args.out} (tags: {counts})")

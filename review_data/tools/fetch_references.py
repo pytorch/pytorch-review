@@ -8,8 +8,8 @@ it. References are never given to the review; it sees only the
 conversation.
 
 Needs an authenticated gh, run outside any agent session:
-    python3 -m tools.fetch_references \\
-        --dataset datasets/recall_core
+    python3 -m review_data.tools.fetch_references \\
+        --dataset review_data/datasets/recall_core
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from tools.build_dataset import AUTOMATED_LOGINS, graphql
+from review_data.tools.build_dataset import AUTOMATED_LOGINS, graphql
 
 QUERY = """
 query($number: Int!) {

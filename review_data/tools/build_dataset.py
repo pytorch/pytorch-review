@@ -15,8 +15,8 @@ README.md describes. Cases are appended as they are found, so a rerun resumes.
 
 Needs an authenticated gh with read access to pytorch collaborator permissions, run outside any
 agent session:
-    python3 -m tools.build_dataset \\
-        --pytorch ../pytorch --out datasets/recent --per-label 25 \\
+    python3 -m review_data.tools.build_dataset \\
+        --pytorch ../pytorch --out review_data/datasets/recent --per-label 25 \\
         --since 2026-06-01 --until 2026-10-28
 """
 
@@ -247,7 +247,7 @@ def build_review_case(number: int, login: str, submitted_at: str, fetcher: Any,
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pytorch", type=Path, required=True, help="pytorch checkout (for scripts/pr_review)")
-    ap.add_argument("--out", type=Path, required=True, help="dataset directory, e.g. datasets/recent")
+    ap.add_argument("--out", type=Path, required=True, help="dataset directory, e.g. review_data/datasets/recent")
     ap.add_argument("--per-label", type=int, default=25)
     ap.add_argument("--since", default=(date.today() - timedelta(days=60)).isoformat(),
                     help="earliest PR creation date (YYYY-MM-DD)")
@@ -349,7 +349,7 @@ def main(argv: list[str] | None = None) -> int:
         "description": f"PRs labeled by maintainer decisions at the reviewed head "
                        f"({counts['block']} block, {counts['clean']} clean; "
                        + (f"reviews listed in {args.reviews.name})." if args.reviews else f"PRs listed in {args.prs.name})." if args.prs else f"created {args.since} to {args.until})."),
-        "source": "tools/build_dataset.py",
+        "source": "review_data/tools/build_dataset.py",
         "created": date.today().isoformat(),
     }, indent=2) + "\n")
     print(f"wrote {counts['block']} block + {counts['clean']} clean cases to {args.out}")

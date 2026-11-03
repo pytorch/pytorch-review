@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools import select_reviews
+from review_data.tools import select_reviews
 
 WHO = {"rev1", "rev2"}
 

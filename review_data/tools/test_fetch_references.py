@@ -1,6 +1,6 @@
 import unittest
 
-from tools import fetch_references
+from review_data.tools import fetch_references
 
 
 class TestFetchReferences(unittest.TestCase):

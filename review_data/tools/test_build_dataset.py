@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from tools import build_dataset
+from review_data.tools import build_dataset
 
 FETCHER = SimpleNamespace(NON_HUMAN_LOGINS={"pytorchmergebot"})
 MAINTAINERS = {"maint1", "maint2"}
