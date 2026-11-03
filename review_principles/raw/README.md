@@ -23,6 +23,9 @@ There is no base or previous-review commit column. Multiple comments on the same
 reviewed commit are separate rows; a nonempty review body is one row. Use a CSV
 parser: summaries and feedback can contain quotes, commas, and newlines.
 
+Rows are sorted by severity: P0, P1, P2, then blanks. The existing order within
+each severity is preserved, and provenance row numbers follow the sorted CSV.
+
 ## First batch
 
 The selected PR/reviewer pairs come from ciforge's `recall_core` and `pre_agent`

@@ -13,7 +13,10 @@
     "source_url"
   ],
   "repository": "pytorch/pytorch",
-  "seed_datasets": ["recall_core", "pre_agent"],
+  "seed_datasets": [
+    "recall_core",
+    "pre_agent"
+  ],
   "seed_ciforge_commit": "0797f5eefa6ed2e78605bc02a3e0d212091e2126",
   "collected_on": "2026-11-03",
   "source_prs": 128,
@@ -26,7 +29,7 @@
   "principles_distilled": false,
   "severity_labeled": false,
   "feedback_relocated": false,
-  "csv_sha256": "a15cb00b22bb318ea29356c573a4a1c44df978e90e81d709e4b1e3f7b70052bb",
+  "csv_sha256": "e37be5aa8cc476de82fd983c5eea5ca293261e70491f83cb766e21753bac3875",
   "export_source": {
     "repository": "pytorch/ciforge",
     "commit": "d9e0653e38c9257988eaa8ef0cc703fbeb95f9a5",
@@ -58,6 +61,18 @@
       "selected source hunks and review-thread replies"
     ],
     "source_execution": "No PyTorch build; isolated standard-library checks where useful.",
-    "independent_audit_ranges": ["0-199", "200-399", "400-469", "470-538"]
-  }
+    "independent_audit_ranges": [
+      "0-199",
+      "200-399",
+      "400-469",
+      "470-538"
+    ],
+    "audit_row_order_commit": "6abef264b77fde6cffc9b45f3b9e558133120a73"
+  },
+  "sort_order": [
+    "P0",
+    "P1",
+    "P2",
+    ""
+  ]
 }
