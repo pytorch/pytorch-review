@@ -1,0 +1,21 @@
+{
+  "pr": 197380,
+  "head_sha": "822c815356aa56175a3a03739ca7bdda34ee9a1a",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-21T20:49:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_weights_only_unpickler.py",
+      "line": 110,
+      "original_line": 107,
+      "body": "it's unclear if this should clear the ContextVar",
+      "diff_hunk": "@@ -94,12 +98,13 @@ def _add_safe_globals(safe_globals: list[Callable | tuple[Callable, str]]):\n \n def _get_safe_globals() -> list[Callable | tuple[Callable, str]]:\n     global _marked_safe_globals_set\n-    return list(_marked_safe_globals_set)\n+    return list(_marked_safe_globals_set.union(*_safe_globals_context.get()))\n \n \n def _clear_safe_globals():\n     global _marked_safe_globals_set\n     _marked_safe_globals_set = set()\n+    _safe_globals_context.set(tuple(frozenset() for _ in _safe_globals_context.get()))",
+      "outdated": false
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "pr": 192264,
+  "head_sha": "9a20a7bfc00ba5f6035c9dad619dd866916d6128",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "CHANGES_REQUESTED",
+    "body": "have you ocnsidered using STD_TORCH_CHECK\n\nalso it is not okay to expose internal details like folly into our external codebase",
+    "submitted_at": "2026-08-05T23:05:59Z"
+  },
+  "inline_comments": []
+}

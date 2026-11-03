@@ -1,0 +1,21 @@
+{
+  "pr": 189619,
+  "head_sha": "72e13848f60a929c0f45964bbee155f5978133dc",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-13T16:10:40Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_datapipe.py",
+      "line": 2895,
+      "original_line": 2895,
+      "body": "This link does work\n",
+      "diff_hunk": "@@ -2892,7 +2892,7 @@ def test_traverse_circular_datapipe(self):\n         source_iter_dp = dp.iter.IterableWrapper(list(range(10)))\n         circular_dp = TestGraph.CustomIterDataPipe(source_iter_dp)\n         graph = traverse_dps(circular_dp)\n-        # See issue: https://github.com/pytorch/data/issues/535",
+      "outdated": true
+    }
+  ]
+}

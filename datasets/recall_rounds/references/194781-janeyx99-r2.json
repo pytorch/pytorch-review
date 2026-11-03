@@ -1,0 +1,21 @@
+{
+  "pr": 194781,
+  "head_sha": "77e9a5cb8c0b02b2ece4c5753c47431dc2e40999",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-28T16:21:27Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/util/TypeCast.cpp",
+      "line": 11,
+      "original_line": 11,
+      "body": "can you add a note in the PR description saying that as of only a few days ago this was a throw std::runtime_error so this can safely be STD_TORCH_CHECK.",
+      "diff_hunk": "@@ -1,14 +1,11 @@\n #include <c10/util/TypeCast.h>\n \n-#include <c10/util/Exception.h>\n-\n namespace c10 {\n \n+// Export c10::report_overflow as C10_API for libtorch ABI. The throw logic\n+// lives in torch::headeronly::report_overflow; this wrapper delegates to it.\n [[noreturn]] void report_overflow(const char* name) {\n-  std::ostringstream oss;\n-  oss << \"value cannot be converted to type \" << name << \" without overflow\";\n-  // c10::Error rather than domain_error (issue 33562)\n-  TORCH_CHECK(false, std::move(oss).str());",
+      "outdated": true
+    }
+  ]
+}

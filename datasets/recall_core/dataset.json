@@ -1,0 +1,7 @@
+{
+  "name": "recall_core",
+  "scorer": "maintainer",
+  "description": "78 first reviews by ezyang, albanD and janeyx99 on PRs created June-September 2026 where the reviewer requested changes or the author later changed the code under the reviewer's comments. Each case is the commit the reviewer saw, with the conversation and description as of that review; references/ holds that review's body and inline comments, each with GitHub's outdated flag (the author acted on it). Score with score_findings.py: recall, and recall on the issues the author acted on.",
+  "source": "build_dataset.py --reviews, fetch_references.py",
+  "created": "2026-11-02"
+}

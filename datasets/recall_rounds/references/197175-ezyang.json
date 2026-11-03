@@ -1,0 +1,21 @@
+{
+  "pr": 197175,
+  "head_sha": "a10e7ee5ea6d022da98490b119fb4389feccd2ab",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-16T17:54:14Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/dynamo/guards.h",
+      "line": null,
+      "original_line": 39,
+      "body": "Why do we mask Fake here?",
+      "diff_hunk": "@@ -36,13 +36,15 @@ struct LocalState {\n       auto result =\n           (ks | dispatch_modifier.included_) - dispatch_modifier.excluded_;\n \n+      auto masked_keys = c10::DispatchKeySet(c10::DispatchKey::Fake);",
+      "outdated": true
+    }
+  ]
+}

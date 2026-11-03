@@ -1,0 +1,21 @@
+{
+  "pr": 189654,
+  "head_sha": "2db4f2980610e24c55e4658a08c12315973cfb78",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "nit: you can update the PR description to remove the FC discussion\n\nSmall addition to the test case to make sure we cover everything. And good to go!",
+    "submitted_at": "2026-07-14T19:16:14Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/common_methods_invocations.py",
+      "line": 393,
+      "original_line": 394,
+      "body": "Can we also add negative dums and broadcasting cases to be safe here?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

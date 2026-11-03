@@ -1,0 +1,21 @@
+{
+  "pr": 189672,
+  "head_sha": "bb1018ab10d54cace70174700912193c75ef8cd4",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Thanks for sending a PR\nThe code change sounds good. Small improvement on the test!",
+    "submitted_at": "2026-07-13T15:49:47Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/nn/test_convolution.py",
+      "line": null,
+      "original_line": 386,
+      "body": "Can you use device-generic testing mechanism for this to ensure it is properly working on all devices?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

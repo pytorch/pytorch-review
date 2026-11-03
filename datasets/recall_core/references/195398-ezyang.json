@@ -1,0 +1,21 @@
+{
+  "pr": 195398,
+  "head_sha": "217f48403c1b972d924cc8851099d74202df4e7c",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-31T18:12:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_cuda_graph_utils.py",
+      "line": 261,
+      "original_line": 260,
+      "body": "Probably OK to just get rid of it entirely?",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "pr": 189722,
+  "head_sha": "6abbcf62402ca9cc0d4f2f5ca87ec1c130e9c994",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-13T16:07:21Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".ci/manywheel/build_common.sh",
+      "line": null,
+      "original_line": 123,
+      "body": "This is not rocm-only logic?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": ".ci/manywheel/build_install_deps.py",
+      "line": null,
+      "original_line": 59,
+      "body": "This feels like a very specific bandaid and not really generic logic to be added here?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

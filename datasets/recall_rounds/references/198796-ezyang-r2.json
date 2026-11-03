@@ -1,0 +1,29 @@
+{
+  "pr": 198796,
+  "head_sha": "9484d2f922087f35164377a6360548f43988a314",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "Posted by Astra, an AI assistant, on behalf of @ezyang. @ezyang reviewed this request and asked that it be posted.\n\nThese findings were verified from source; the C++ changes were not executed.",
+    "submitted_at": "2026-10-23T15:11:10Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": null,
+      "original_line": 1675,
+      "body": "Posted by Astra, an AI assistant, on behalf of @ezyang. @ezyang reviewed this request and asked that it be posted.\n\n**[P2] Computation-dtype conversion changes the C++ Meta output layout**\n\n`binary_ref_meta` converts half inputs to float metadata before choosing strides. For an expanded input, `_convert_element_type_meta` replaces its zero strides with dense strides, changing which operand determines the output layout. For example:\n\n```cpp\nauto a = at::empty({1, 3}, at::kHalf).expand({2, 3});\nauto b = at::empty({3, 2}, at::kHalf).t();\nauto real = at::add(a, b);        // strides (1, 2)\nauto meta = at::meta::add(a, b);  // new kernel: strides (3, 1)\n```\n\nThis regresses the direct C++ Meta API from its previous TensorIterator implementation: metadata-based analysis now accepts `meta.view({6})`, although the corresponding real operation fails. Preserve TensorIterator\u2019s layout semantics without introducing opmath-cast temporaries into stride inference, and add this case to `test/cpp/api/meta_tensor.cpp`.",
+      "diff_hunk": "@@ -1656,4 +1657,22 @@ Tensor special_xlogy(const Tensor& x, const Scalar& y) {\n   return at::xlogy(x, y);\n }\n \n+// add.Tensor meta kernel\n+Tensor add_Tensor_meta(const Tensor& self, const Tensor& other, const Scalar& alpha) {\n+  const bool symbolic = is_symbolic_operand(self) || is_symbolic_operand(other) || alpha.isSymInt();\n+  if (symbolic) {\n+    if (auto out = fast_binary_impl(self, other, ELEMENTWISE_TYPE_PROMOTION_KIND::DEFAULT); out.defined()) {\n+      return out;\n+    }\n+  }\n+  // refs.add scales other by alpha with a separate prims.mul, which makes other's\n+  // broadcast strides dense and can change the output layout. Like TensorIterator,\n+  // only check alpha's type and leave the layout to the operands.\n+  const auto compute_dtype = elementwise_dtypes(self, other, ELEMENTWISE_TYPE_PROMOTION_KIND::DEFAULT).first;\n+  if (compute_dtype != kBool) {\n+    check_alpha_type(alpha, compute_dtype);\n+  }\n+  return binary_ref_meta(self, other, ELEMENTWISE_TYPE_PROMOTION_KIND::DEFAULT, symbolic);",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": null,
+      "original_line": 1672,
+      "body": "Posted by Astra, an AI assistant, on behalf of @ezyang. @ezyang reviewed this request and asked that it be posted.\n\n**[P2] Boolean results bypass required `alpha` validation**\n\nWith two boolean inputs, the new kernel skips validation completely. Consequently, `at::meta::add(a, b, 0.5)` returns boolean metadata, whereas eager `at::add` and the previous structured C++ Meta kernel reject the floating-point `alpha`. Complex `alpha` is also incorrectly accepted. The symbolic fast return additionally bypasses validation.\n\nRetain the existing `native::alpha_check(result_dtype, alpha)` contract, including before a successful fast-path return, and add C++ Meta error-parity tests.",
+      "diff_hunk": "@@ -1656,4 +1657,22 @@ Tensor special_xlogy(const Tensor& x, const Scalar& y) {\n   return at::xlogy(x, y);\n }\n \n+// add.Tensor meta kernel\n+Tensor add_Tensor_meta(const Tensor& self, const Tensor& other, const Scalar& alpha) {\n+  const bool symbolic = is_symbolic_operand(self) || is_symbolic_operand(other) || alpha.isSymInt();\n+  if (symbolic) {\n+    if (auto out = fast_binary_impl(self, other, ELEMENTWISE_TYPE_PROMOTION_KIND::DEFAULT); out.defined()) {\n+      return out;\n+    }\n+  }\n+  // refs.add scales other by alpha with a separate prims.mul, which makes other's\n+  // broadcast strides dense and can change the output layout. Like TensorIterator,\n+  // only check alpha's type and leave the layout to the operands.\n+  const auto compute_dtype = elementwise_dtypes(self, other, ELEMENTWISE_TYPE_PROMOTION_KIND::DEFAULT).first;\n+  if (compute_dtype != kBool) {",
+      "outdated": true
+    }
+  ]
+}

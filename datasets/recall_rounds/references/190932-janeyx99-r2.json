@@ -1,0 +1,21 @@
+{
+  "pr": 190932,
+  "head_sha": "c5303291ea2e3846d9b1126bcc6971d5cdfdc17b",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-24T17:36:25Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/inductor/aoti_torch/shim_mps.cpp",
+      "line": null,
+      "original_line": 42,
+      "body": "so this should move too",
+      "diff_hunk": "@@ -28,6 +29,18 @@ AOTITorchError aoti_torch_mps_set_arg_int(\n   });\n }\n \n+AOTITorchError torch_mps_set_arg_bytes(\n+    AOTIMetalKernelFunctionHandle handle,\n+    unsigned idx,\n+    const void* ptr,\n+    uint64_t size) {\n+  AOTI_TORCH_CONVERT_EXCEPTION_TO_ERROR_CODE({\n+    TORCH_CHECK(ptr != nullptr, \"Pointer is null.\");\n+    auto func = reinterpret_cast<at::native::mps::MetalKernelFunction*>(handle);\n+    func->setArg(idx, ptr, size);\n+  });\n+}",
+      "outdated": true
+    }
+  ]
+}

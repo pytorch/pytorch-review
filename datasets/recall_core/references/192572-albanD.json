@@ -1,0 +1,37 @@
+{
+  "pr": 192572,
+  "head_sha": "fdd2f3f633de0f8c3e5eeb12ff578c00b2fd1af3",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Mostly ok!",
+    "submitted_at": "2026-08-12T16:47:13Z"
+  },
+  "inline_comments": [
+    {
+      "path": "scripts/codeowners/test_check_taxonomy.py",
+      "line": null,
+      "original_line": 4,
+      "body": "When do we run this test ?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "CODEOWNERS",
+      "line": 29,
+      "original_line": 29,
+      "body": "This one is deleted? Please keep me there :)",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "scripts/codeowners/check_taxonomy.py",
+      "line": null,
+      "original_line": 272,
+      "body": "claude claims that the use of `not pattern.active` here and below is actually not good and hidding real bugs. On quant, caffe2 and other paths in the current file that are actually invalid",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

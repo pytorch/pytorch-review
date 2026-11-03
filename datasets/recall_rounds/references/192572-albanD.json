@@ -1,0 +1,37 @@
+{
+  "pr": 192572,
+  "head_sha": "fdd2f3f633de0f8c3e5eeb12ff578c00b2fd1af3",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Mostly ok!",
+    "submitted_at": "2026-08-12T16:47:13Z"
+  },
+  "inline_comments": [
+    {
+      "path": "scripts/codeowners/test_check_taxonomy.py",
+      "line": null,
+      "original_line": 4,
+      "body": "When do we run this test ?",
+      "diff_hunk": "@@ -1,10 +1,20 @@\n #!/usr/bin/env python3\n \n import subprocess\n+from contextlib import redirect_stdout",
+      "outdated": true
+    },
+    {
+      "path": "CODEOWNERS",
+      "line": 29,
+      "original_line": 29,
+      "body": "This one is deleted? Please keep me there :)",
+      "diff_hunk": "@@ -5,280 +5,17 @@\n \n # CODEOWNERS semantics:\n # - GitHub uses the last matching pattern for each path.\n-# - A pattern without owners is valid and explicitly leaves matching paths unowned.\n-# - Therefore, uncommenting the draft taxonomy before assigning owners would\n-#   override existing entries and suppress their code-owner review requests.\n+# - Active rules name one or more owners; commented rules mark paths whose\n+#   ownership is still to be determined.\n+# - Sections are ordered from broad defaults to narrower overrides.\n #\n-# Each active assignment is a file pattern followed by one or more owners.\n # For module labels => owners mapping, please see https://github.com/pytorch/pytorch/issues/24422.\n \n-/torch/utils/cpp_extension.py @fmassa @ezyang @malfet\n-\n-# Not there to strictly require the approval, but to be tagged as a reviewer\n-# on the PRs to push them into a high priority inbox.\n-/torch/csrc/autograd/ @albanD @soulitzer\n-/torch/autograd/ @albanD @soulitzer\n-/tools/autograd/ @albanD @soulitzer\n-/torch/nn/ @albanD @jbschlosser @mikaylagawarecki\n-/torch/optim/ @albanD @janeyx99\n-/test/test_public_bindings.py @albanD\n-/test/allowlist_for_publicAPI.json @albanD\n-/test/forward_backward_compatibility/check_forward_backward_compatibility.py @larryliu0820\n-/docs/source/conf.py @albanD\n-/aten/src/ATen/native/tags.yaml @ezyang\n-/.github/merge_rules.yaml @albanD @malfet",
+      "outdated": false
+    },
+    {
+      "path": "scripts/codeowners/check_taxonomy.py",
+      "line": null,
+      "original_line": 272,
+      "body": "claude claims that the use of `not pattern.active` here and below is actually not good and hidding real bugs. On quant, caffe2 and other paths in the current file that are actually invalid",
+      "diff_hunk": "@@ -182,56 +266,91 @@ def analyze(paths: list[str], patterns: list[TaxonomyPattern]) -> Report:\n         uncovered=uncovered,\n         overridden=overridden,\n         duplicates=duplicates,\n-        stale=[pattern for pattern in patterns if pattern not in matched_patterns],\n+        stale=[\n+            pattern\n+            for pattern in patterns\n+            if pattern not in matched_patterns and not pattern.active",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 188529,
+  "head_sha": "3bcc0fee87fcada7c651994102d6a7561ca68cb4",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-02T18:21:28Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_torch.py",
+      "line": null,
+      "original_line": 2130,
+      "body": "Why not update the for-loop for dtype in the test above rather than adding a new one here?",
+      "diff_hunk": "@@ -2126,6 +2126,16 @@ def test_repeat_interleave(self, device):\n             self.assertEqual(a_with_output.dtype, y.dtype)\n             self.assertEqual(a_with_output.size(), torch.Size([3, 2]))\n \n+    @onlyCPU\n+    def test_repeat_interleave_cpu_small_integer_repeats(self, device):",
+      "outdated": true
+    }
+  ]
+}

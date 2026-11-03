@@ -1,0 +1,85 @@
+{
+  "pr": 194240,
+  "head_sha": "9a8083fff00daa66df73acd6eb48e13611c73ac0",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-31T20:15:39Z"
+  },
+  "inline_comments": [
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 61,
+      "body": "This is starting mid-sentence?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 367,
+      "body": "I think this is missing some cases. Claude claims the following test will catch it:\n```\n  def test_a_disowned_tree_beside_a_claimed_one_is_fatal(self):\n      # gen_op computes `shipped` from the POST-tie-break survivors, so a stale\n      # plain sm_100 tree beside the sm_100a one the declaration claims is\n      # dropped by _by_arch before the check sees it. Same capability is the\n      # case the check exists for; the sm_90a case above never exercises it.\n      class _Narrow(_FakeDecl):\n          ARCHS = (\"sm_100a\",)\n\n      s100 = dict(SIDECAR, prefix=\"fakeop_p__sm100\", arch=\"sm_100\", _dir=\"out/sm_100\")\n      s100a = dict(SIDECAR, prefix=\"fakeop_p__sm100a\", arch=\"sm_100a\", _dir=\"out/sm_100a\")\n      with self.assertRaisesRegex(RuntimeError, \"declaration supports only\"):\n          gen_aot_lib.gen_op(\n              \"fakeop\", \"CUDA\", _Narrow, [s100, s100a],\n              \"const at::Tensor & self, int64_t k\",\n          )\n```",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 66,
+      "original_line": 68,
+      "body": "Is the comment above acurate since you do include core/Tensor.h? haha\nbtw if this is tricky, inlcuding everything might be fine.",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 119,
+      "body": "I'm sure this was a thing claude tripped on. But I don't think we need a comment here.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 115,
+      "body": "I'm confused. It's not generated, it's there in the template right now?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 201,
+      "body": "Just use this directly?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 292,
+      "body": "Comment being longer than the function itself is a code smell",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 358,
+      "body": "I fail to see how this comment is relevant here?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 405,
+      "body": "nit: make the default above a lambda returning \"\" to avoid extra conditions",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

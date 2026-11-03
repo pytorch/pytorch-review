@@ -1,0 +1,12 @@
+{
+  "pr": 191129,
+  "head_sha": "ee0ce6435969def91b1b376b06b4e6bf65f73a7d",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "This probably makes things worse when AOTAutograd is used as we lose the ability to graph break here now.",
+    "submitted_at": "2026-07-27T19:27:26Z"
+  },
+  "inline_comments": []
+}

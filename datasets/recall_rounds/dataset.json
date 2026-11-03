@@ -1,0 +1,7 @@
+{
+  "name": "recall_rounds",
+  "scorer": "maintainer",
+  "description": "132 review rounds by ezyang, albanD, janeyx99 on PRs created 2026-06-01 to 2026-09-30 where the reviewer requested changes or the author later changed the code under the reviewer's comments. Each case is the commit the reviewer saw, with the conversation and description as of that review; references/ holds that review's body and inline comments, each with GitHub's outdated flag (the author acted on it). Tags: 50 ai_authored_pr, 17 ai_assisted_review.",
+  "source": "tools/select_reviews.py",
+  "created": "2026-11-03"
+}

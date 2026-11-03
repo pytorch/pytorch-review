@@ -1,0 +1,21 @@
+{
+  "pr": 192774,
+  "head_sha": "3f196ea98efbf8c0764631d93c4ca941996004e5",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-12T20:12:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/stable/c/shim_function_versions.txt",
+      "line": null,
+      "original_line": 135,
+      "body": "The branch cut was yesterday :c so this would be 2_15 now",
+      "diff_hunk": "@@ -132,7 +132,12 @@ torch_library_set_python_module: TORCH_VERSION_2_13_0\n torch_new_generator_handle: TORCH_VERSION_2_13_0\n torch_new_stable_ivalue: TORCH_VERSION_2_13_0\n torch_stream_native_handle: TORCH_VERSION_2_13_0\n+torch_device_from_pyobject: TORCH_VERSION_2_14_0",
+      "outdated": true
+    }
+  ]
+}

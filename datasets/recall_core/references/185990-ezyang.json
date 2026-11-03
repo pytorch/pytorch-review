@@ -1,0 +1,21 @@
+{
+  "pr": 185990,
+  "head_sha": "41a4d03bf5070b1e8387fdc68819cf5090383e3c",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-02T20:49:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/cuda/_graph_annotations.py",
+      "line": null,
+      "original_line": 97,
+      "body": "This is overly defensive.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

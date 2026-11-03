@@ -1,0 +1,37 @@
+{
+  "pr": 189654,
+  "head_sha": "e83717ac84ae35f50a8888a15b5fb1f4cf6c8331",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Looks pretty good, thanks for working on this!",
+    "submitted_at": "2026-07-13T16:18:04Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/onnx/_internal/torchscript_exporter/symbolic_opset9.py",
+      "line": 3068,
+      "original_line": 3068,
+      "body": "We would need a new test covering this right?\n",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "test/test_nn.py",
+      "line": 4928,
+      "original_line": 5784,
+      "body": "This  is actually part of the python frontend already, there is no FC constraint for kwargs with default value.\nThe doc needs updating appropriately",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/api/include/torch/nn/functional/distance.h",
+      "line": 14,
+      "original_line": 14,
+      "body": "Can we also update the python Module to support this?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

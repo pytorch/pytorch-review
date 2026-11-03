@@ -1,0 +1,21 @@
+{
+  "pr": 192097,
+  "head_sha": "cb760bb831420502c80f49fa7881c6050a029807",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-05T22:40:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp_extensions/test_libtorch_agnostic.py",
+      "line": null,
+      "original_line": 350,
+      "body": "this should be extraneous",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

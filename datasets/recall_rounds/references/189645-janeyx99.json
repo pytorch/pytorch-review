@@ -1,0 +1,29 @@
+{
+  "pr": 189645,
+  "head_sha": "981ce3aeac129ce57488ca8dd683b999c119f382",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "CHANGES_REQUESTED",
+    "body": "Thanks for this change! I have some comments to get the code looking cleaner, but the approach makes sense to me. We should definitely add a test for the ivalue conversion logic (you can have Claude take a look in test_libtorch_agnostic.py)--I haven't reviewed the aoti stuff, cc @desertfire ",
+    "submitted_at": "2026-07-16T15:00:37Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/shim_common.cpp",
+      "line": 326,
+      "original_line": 326,
+      "body": "A more indicative name here would be \"consume_stableivalue_reference\"\n```suggestion\nstatic void consume_stableivalue_reference(\n```",
+      "diff_hunk": "@@ -310,6 +317,22 @@ static c10::IValue to_ivalue(\n   }\n }\n \n+// Frees an owning StableIValue that from_ivalue produced for `type`. Delegates\n+// to to_ivalue, which consumes the handle and, for aggregate types\n+// (optional/list), recursively frees every nested owning handle -- the raw\n+// deleters (torch_delete_list / torch_delete_stable_ivalue) would leak those.\n+// Only used on the error/rollback path: we are already unwinding, so a\n+// secondary failure is swallowed.\n+static void free_owning_stable_ivalue(",
+      "outdated": false
+    },
+    {
+      "path": "torch/csrc/shim_common.cpp",
+      "line": 354,
+      "original_line": 354,
+      "body": "I see the code here is essentially duplicated 3 times for different use cases, a cleaner way to dedup would be to make each corresponding chunk into a macro: \n\nBEGIN_STACK_GUARD\nINCREMENT_STACK_IDX\nEND_STACK_GUARD",
+      "diff_hunk": "@@ -328,25 +351,65 @@ class StableIValueBoxedKernel : public c10::OperatorKernel {\n     auto ministack =\n         std::make_unique<StableIValue[]>(std::max(num_arguments, num_returns));\n \n+    // Produce owning argument handles (in reverse) into `ministack`. If a",
+      "outdated": false
+    }
+  ]
+}

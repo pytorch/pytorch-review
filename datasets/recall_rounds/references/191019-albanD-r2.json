@@ -1,0 +1,93 @@
+{
+  "pr": 191019,
+  "head_sha": "59807364cce62cbc6e2d70b56d9c5f9712327491",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "",
+    "submitted_at": "2026-07-27T13:05:48Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": null,
+      "original_line": 532,
+      "body": "I'm confused. doesn't `auto seed_t = capture_state->rng_state_seed_extragraph_.alias();` work?",
+      "diff_hunk": "@@ -494,6 +499,56 @@ PhiloxCudaState CUDAGeneratorImpl::philox_cuda_state(uint64_t increment) {\n   }\n }\n \n+/**\n+ * Tensor-based variant of philox_cuda_state for consumers that cannot\n+ * take a PhiloxCudaState (e.g. Python). Returns 1-element int64 tensors\n+ * (seed, offset, intragraph_offset); the kernel-visible values are\n+ * (seed, offset + intragraph_offset), with the uint64 seed and offset\n+ * reinterpreted as int64. During capture, seed and offset are aliases of\n+ * the per-capture extragraph device state that replay_prologue refills on\n+ * every replay; their contents are undefined until the first replay and\n+ * they are only valid for that capture's lifetime. Otherwise they are\n+ * device tensors holding the current values.\n+ *\n+ * See Note [Acquire lock when using random generators]\n+ */\n+std::tuple<\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>>\n+CUDAGeneratorImpl::philox_state(uint64_t increment) {\n+  const auto cpu_opts = at::TensorOptions().dtype(at::kLong).device(at::kCPU);\n+  const auto dev_opts = at::TensorOptions().dtype(at::kLong).device(device());\n+  auto capture_id = at::cuda::currentStreamCaptureId();\n+  if (capture_id.has_value()) {\n+    auto* capture_state = state_->get_capture_state(capture_id.value(), true);\n+    uint64_t offset = capture_state->offset_intragraph_;\n+    state_->increase(increment);\n+    // Aliases (not the tensors themselves) so callers cannot mutate the\n+    // capture state's metadata; the storage itself is non-resizable (see\n+    // CUDAGeneratorCaptureState::initialize). wrap_tensor_impl converts the\n+    // at::TensorBase members to the at::Tensor that at::alias expects.\n+    auto seed_t = at::alias(at::Tensor::wrap_tensor_impl(\n+        capture_state->rng_state_seed_extragraph_.getIntrusivePtr()));",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": null,
+      "original_line": 518,
+      "body": "These are just `at::Tensor`",
+      "diff_hunk": "@@ -494,6 +499,56 @@ PhiloxCudaState CUDAGeneratorImpl::philox_cuda_state(uint64_t increment) {\n   }\n }\n \n+/**\n+ * Tensor-based variant of philox_cuda_state for consumers that cannot\n+ * take a PhiloxCudaState (e.g. Python). Returns 1-element int64 tensors\n+ * (seed, offset, intragraph_offset); the kernel-visible values are\n+ * (seed, offset + intragraph_offset), with the uint64 seed and offset\n+ * reinterpreted as int64. During capture, seed and offset are aliases of\n+ * the per-capture extragraph device state that replay_prologue refills on\n+ * every replay; their contents are undefined until the first replay and\n+ * they are only valid for that capture's lifetime. Otherwise they are\n+ * device tensors holding the current values.\n+ *\n+ * See Note [Acquire lock when using random generators]\n+ */\n+std::tuple<\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>>",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": null,
+      "original_line": 549,
+      "body": "Just return the Tensors as-is for all functions. You should never have to touch an intrusivePtr or a TensorImpl ever :)",
+      "diff_hunk": "@@ -494,6 +499,56 @@ PhiloxCudaState CUDAGeneratorImpl::philox_cuda_state(uint64_t increment) {\n   }\n }\n \n+/**\n+ * Tensor-based variant of philox_cuda_state for consumers that cannot\n+ * take a PhiloxCudaState (e.g. Python). Returns 1-element int64 tensors\n+ * (seed, offset, intragraph_offset); the kernel-visible values are\n+ * (seed, offset + intragraph_offset), with the uint64 seed and offset\n+ * reinterpreted as int64. During capture, seed and offset are aliases of\n+ * the per-capture extragraph device state that replay_prologue refills on\n+ * every replay; their contents are undefined until the first replay and\n+ * they are only valid for that capture's lifetime. Otherwise they are\n+ * device tensors holding the current values.\n+ *\n+ * See Note [Acquire lock when using random generators]\n+ */\n+std::tuple<\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>>\n+CUDAGeneratorImpl::philox_state(uint64_t increment) {\n+  const auto cpu_opts = at::TensorOptions().dtype(at::kLong).device(at::kCPU);\n+  const auto dev_opts = at::TensorOptions().dtype(at::kLong).device(device());\n+  auto capture_id = at::cuda::currentStreamCaptureId();\n+  if (capture_id.has_value()) {\n+    auto* capture_state = state_->get_capture_state(capture_id.value(), true);\n+    uint64_t offset = capture_state->offset_intragraph_;\n+    state_->increase(increment);\n+    // Aliases (not the tensors themselves) so callers cannot mutate the\n+    // capture state's metadata; the storage itself is non-resizable (see\n+    // CUDAGeneratorCaptureState::initialize). wrap_tensor_impl converts the\n+    // at::TensorBase members to the at::Tensor that at::alias expects.\n+    auto seed_t = at::alias(at::Tensor::wrap_tensor_impl(\n+        capture_state->rng_state_seed_extragraph_.getIntrusivePtr()));\n+    auto off_t = at::alias(at::Tensor::wrap_tensor_impl(\n+        capture_state->rng_state_offset_extragraph_.getIntrusivePtr()));\n+    auto intra_t = at::full({1}, static_cast<int64_t>(offset), cpu_opts);\n+    return {\n+        seed_t.getIntrusivePtr(),\n+        off_t.getIntrusivePtr(),\n+        intra_t.getIntrusivePtr()};\n+  }\n+  uint64_t offset = state_->philox_offset_per_thread_;\n+  state_->increase(increment);\n+  auto seed_t = at::full({1}, static_cast<int64_t>(state_->seed_), dev_opts);\n+  auto off_t = at::full({1}, static_cast<int64_t>(offset), dev_opts);\n+  auto intra_t = at::zeros({1}, cpu_opts);\n+  return {\n+      seed_t.getIntrusivePtr(),\n+      off_t.getIntrusivePtr(),\n+      intra_t.getIntrusivePtr()};",
+      "outdated": true
+    },
+    {
+      "path": "test/test_cuda.py",
+      "line": null,
+      "original_line": 2996,
+      "body": "I'm not sure what this means?\nIs this a reinterpret cast weirdness? What happens in the uint64_t space of the C++ offset?",
+      "diff_hunk": "@@ -2957,6 +2957,123 @@ def get_final_offsets_of_states(generator_state):\n             # Compare the states generated outside and inside the graph\n             self.assertEqual(random_values, graphed_random_values)\n \n+    def test_philox_cuda_state_eager(self):\n+        g = torch.Generator(device=\"cuda\")\n+        g.manual_seed(123)\n+        seed_t, off_t, intra_t = g.philox_cuda_state(8)\n+        self.assertEqual(seed_t.item(), g.initial_seed())\n+        self.assertEqual(off_t.item(), 0)\n+        self.assertEqual(intra_t.item(), 0)\n+        for t in (seed_t, off_t, intra_t):\n+            self.assertEqual(t.dtype, torch.int64)\n+            self.assertEqual(t.shape, (1,))\n+        self.assertEqual(seed_t.device.type, \"cuda\")\n+        self.assertEqual(off_t.device.type, \"cuda\")\n+        self.assertEqual(intra_t.device.type, \"cpu\")\n+        self.assertEqual(g.get_offset(), 8)\n+        _, off_t, _ = g.philox_cuda_state(8)\n+        self.assertEqual(off_t.item(), 8)\n+        self.assertEqual(g.get_offset(), 16)\n+\n+    def test_philox_cuda_state_rounds_increment_to_multiple_of_4(self):\n+        g = torch.Generator(device=\"cuda\")\n+        g.manual_seed(0)\n+        g.philox_cuda_state(1)\n+        self.assertEqual(g.get_offset(), 4)\n+        g.philox_cuda_state(5)\n+        self.assertEqual(g.get_offset(), 12)\n+\n+    def test_philox_cuda_state_large_seed_reinterpreted_as_int64(self):\n+        # Seeds >= 2**63 come back reinterpreted as negative int64.\n+        g = torch.Generator(device=\"cuda\")\n+        seed = (1 << 64) - 3\n+        g.manual_seed(seed)\n+        seed_t, _, _ = g.philox_cuda_state(4)\n+        self.assertEqual(seed_t.item() & ((1 << 64) - 1), seed)\n+\n+    def test_philox_cuda_state_offset_overflows_int64(self):\n+        # Offsets >= 2**63 come back reinterpreted as negative int64, and\n+        # the internal uint64 offset wraps on advancement past 2**64.",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14406,
+      "body": "Let's not make this \"cuda\" specific in the name here.\nWe can just say \"philox_state()\" and document that it only works for philox-based RNG.",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14412,
+      "body": "How is the user supposed to used these int64 Tensors? Especially when they're negative? And how do they match to the \"standard\" cuda params (as I expect a lot of people will want to stash these into a cudaphiloxstate)?",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,\n+    r\"\"\"\n+Generator.philox_cuda_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this CUDA generator's Philox stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. A kernel launched now should consume the Philox",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14417,
+      "body": "I think we need to be more specific here.\nWe have to tell the user exactly which set of values in the philox stream that allows them to use.\nIn this case, fixed seed, which offset values and which subsequence values. Also explain the wrapping for offset overflow.",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,\n+    r\"\"\"\n+Generator.philox_cuda_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this CUDA generator's Philox stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. A kernel launched now should consume the Philox\n+inputs ``(seed, offset + intragraph_offset)``; this is the same reservation\n+protocol aten's CUDA kernels use, so kernels built on it draw from the same\n+stream as (and compose with) the built-in random operations.\n+\n+``increment`` must be at least the number of Philox outputs (32-bit random",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14422,
+      "body": "You can reference accelerator Graph throughout here as we now have a device-generic entry for it: https://docs.pytorch.org/docs/2.13/generated/torch.accelerator.Graph.html",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,\n+    r\"\"\"\n+Generator.philox_cuda_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this CUDA generator's Philox stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. A kernel launched now should consume the Philox\n+inputs ``(seed, offset + intragraph_offset)``; this is the same reservation\n+protocol aten's CUDA kernels use, so kernels built on it draw from the same\n+stream as (and compose with) the built-in random operations.\n+\n+``increment`` must be at least the number of Philox outputs (32-bit random\n+values) any single thread of the consuming kernel generates. It is rounded up\n+to a multiple of 4, and the generator's offset advances by the rounded amount.\n+\n+The values are returned as tensors rather than integers so the same code is\n+safe under CUDA graph capture. Outside capture, ``seed`` and ``offset`` are",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14423,
+      "body": "outside capture aren't seed/offset on CPU actually? ",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,\n+    r\"\"\"\n+Generator.philox_cuda_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this CUDA generator's Philox stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. A kernel launched now should consume the Philox\n+inputs ``(seed, offset + intragraph_offset)``; this is the same reservation\n+protocol aten's CUDA kernels use, so kernels built on it draw from the same\n+stream as (and compose with) the built-in random operations.\n+\n+``increment`` must be at least the number of Philox outputs (32-bit random\n+values) any single thread of the consuming kernel generates. It is rounded up\n+to a multiple of 4, and the generator's offset advances by the rounded amount.\n+\n+The values are returned as tensors rather than integers so the same code is\n+safe under CUDA graph capture. Outside capture, ``seed`` and ``offset`` are\n+device tensors holding the current values and ``intragraph_offset`` is a CPU",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14442,
+      "body": "Any maximum value?",
+      "diff_hunk": "@@ -14402,6 +14402,51 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_cuda_state,\n+    r\"\"\"\n+Generator.philox_cuda_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this CUDA generator's Philox stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. A kernel launched now should consume the Philox\n+inputs ``(seed, offset + intragraph_offset)``; this is the same reservation\n+protocol aten's CUDA kernels use, so kernels built on it draw from the same\n+stream as (and compose with) the built-in random operations.\n+\n+``increment`` must be at least the number of Philox outputs (32-bit random\n+values) any single thread of the consuming kernel generates. It is rounded up\n+to a multiple of 4, and the generator's offset advances by the rounded amount.\n+\n+The values are returned as tensors rather than integers so the same code is\n+safe under CUDA graph capture. Outside capture, ``seed`` and ``offset`` are\n+device tensors holding the current values and ``intragraph_offset`` is a CPU\n+tensor holding 0. During capture, ``seed`` and ``offset`` alias generator\n+state that each :meth:`torch.cuda.CUDAGraph.replay` refills with the values\n+current at replay time, and ``intragraph_offset`` holds this reservation's\n+position within the graph; a kernel that loads ``seed`` and ``offset`` from\n+the tensors at run time therefore replays correctly with no capture-specific\n+code.\n+\n+.. note::\n+    The seed and offset are unsigned 64-bit values reinterpreted as ``int64``;\n+    values at or above ``2**63`` appear negative.\n+\n+.. warning::\n+    Tensors returned during capture alias the capture's state: their contents\n+    are undefined until the first replay and they must not be used after the\n+    graph is destroyed.\n+\n+Arguments:\n+    increment (int): Number of Philox outputs to reserve; must be\n+        non-negative.",
+      "outdated": true
+    }
+  ]
+}

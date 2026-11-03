@@ -1,0 +1,21 @@
+{
+  "pr": 194781,
+  "head_sha": "7eca4c6b0b09010a85019c07aef8366ee2113b39",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-26T17:31:48Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/headeronly/util/TypeCast.h",
+      "line": null,
+      "original_line": 280,
+      "body": "```suggestion\n// Define with C10_NOINLINE to prevent code-size bloat.\n```",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "pr": 190799,
+  "head_sha": "8dd415dd1a86894b615abb8fd4f03e3fbcc70ec2",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "At minimum, we should have TVM be preinstalled on the Docker image (not installed at test time), but we also need to decide (1) if the main CI should be running TVM, or if it's low risk enough that it's not super necessary to do the E2E test and (2) how many tests / how long are we willing to run. On a technical level on this PR we need to show the TVM tests actually pass. Also need to understand how many moving parts this install potentially has.",
+    "submitted_at": "2026-07-23T13:51:46Z"
+  },
+  "inline_comments": []
+}

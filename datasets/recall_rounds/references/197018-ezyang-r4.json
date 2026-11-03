@@ -1,0 +1,12 @@
+{
+  "pr": 197018,
+  "head_sha": "1002963a3b7264926e54c9e9d05ba2021169b72a",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "Review automatically exported from Phabricator review in Meta.",
+    "submitted_at": "2026-09-22T15:27:13Z"
+  },
+  "inline_comments": []
+}

@@ -1,0 +1,12 @@
+{
+  "pr": 197475,
+  "head_sha": "38188fb82828f64b57cdd894511a93c146de3f60",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "this is complicated enough and in old enough code that I am worried about impact/severity",
+    "submitted_at": "2026-09-21T20:38:41Z"
+  },
+  "inline_comments": []
+}

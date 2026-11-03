@@ -1,0 +1,21 @@
+{
+  "pr": 187075,
+  "head_sha": "b40b78312f6dcd49a10c49b529a8573e758660b4",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "nit on C++ version, SGTM otherwise.",
+    "submitted_at": "2026-06-11T20:03:20Z"
+  },
+  "inline_comments": [
+    {
+      "path": "RELEASE.md",
+      "line": null,
+      "original_line": 54,
+      "body": "We're not on C++20? I guess only partially?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

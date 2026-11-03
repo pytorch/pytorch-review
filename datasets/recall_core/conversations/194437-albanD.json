@@ -1,0 +1,1 @@
+{"pr_author":"cyyever","head_sha":"d59c7e34946b04125812ffe9856bba95fc6fb39b","title":"Simplify torch.multiprocessing._atfork","body":"Simplify _atfork.py docstring and consolidate platform-specific logic into function body.","truncated":false,"reactions_truncated":false,"omitted_items":0,"items":[]}

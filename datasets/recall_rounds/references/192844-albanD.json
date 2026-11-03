@@ -1,0 +1,21 @@
+{
+  "pr": 192844,
+  "head_sha": "d4d2081b9764732825c306c6cae4fa6102240b66",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Header definition needs changing, but sounds good after",
+    "submitted_at": "2026-08-10T20:53:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/headeronly/cuda/KernelUtils.h",
+      "line": null,
+      "original_line": 23,
+      "body": "not good?",
+      "diff_hunk": "@@ -0,0 +1,161 @@\n+#pragma once\n+\n+#include <torch/headeronly/cuda/Atomic.h>\n+\n+#if !(defined(USE_ROCM) || ((defined(__CUDA_ARCH__) && (__CUDA_ARCH__ < 800))))\n+#include <cuda_bf16.h>\n+#endif\n+\n+#if defined(USE_ROCM)\n+#include <device_functions.h>\n+#include <hip/hip_bf16.h>\n+#include <hip/hip_fp16.h>\n+\n+#include <torch/headeronly/cuda/detail/ROCmMacros.h>\n+\n+#define ATOMICADD unsafeAtomicAdd\n+#define NATIVE_ZERO_BF16 __float2bfloat16(0.0f)\n+#else\n+#define ATOMICADD atomicAdd\n+#define NATIVE_ZERO_BF16 __int2bfloat16_rz(0)\n+#endif\n+\n+namespace torch::headeronly {",
+      "outdated": true
+    }
+  ]
+}

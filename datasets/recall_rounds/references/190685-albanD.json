@@ -1,0 +1,21 @@
+{
+  "pr": 190685,
+  "head_sha": "fc16a995b9723d28ad2252915bf83fae32a49c83",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Thx",
+    "submitted_at": "2026-07-21T17:40:42Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/nn/test_module_hooks.py",
+      "line": null,
+      "original_line": 1493,
+      "body": "You have self.assertWarnsRegex or something along those line to simplify this.",
+      "diff_hunk": "@@ -1482,6 +1482,21 @@ def hook(mod, grad_input, grad_output):\n         with self.assertRaisesRegex(RuntimeError, \"where no input requires gradient\"):\n             mod(inp).sum().backward()\n \n+    def test_pre_hook_no_requires_grad_no_warning(self):\n+        # A full backward pre-hook only receives grad_output, so firing from the\n+        # output side when no input requires grad is expected and must not emit\n+        # the full-backward-hook warning. See\n+        # https://github.com/pytorch/pytorch/issues/189093\n+        mod = nn.Linear(2, 3)\n+        inp = torch.rand(1, 2)\n+        mod.register_full_backward_pre_hook(lambda mod, gO: None)\n+        with warnings.catch_warnings(record=True) as w:",
+      "outdated": true
+    }
+  ]
+}

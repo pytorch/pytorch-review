@@ -1,0 +1,21 @@
+{
+  "pr": 190597,
+  "head_sha": "3acc58b036dbcc6c53b36f65b39be2c1fb014fc7",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-24T21:09:42Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/optim/_muon.py",
+      "line": 65,
+      "original_line": 71,
+      "body": "move the bug to a diff PR stacked in front of this one with a use case. no need to explain in a forever comment that a bug has been fixed",
+      "diff_hunk": "@@ -47,32 +59,49 @@ def _zeropower_via_newtonschulz(\n         raise ValueError(\n             \"Number of steps must be less than 100 for computational efficiency\"\n         )\n-    if len(grad.shape) != 2:\n-        raise ValueError(\"Input tensor gradient must be a 2D matrix\")\n+    if grad.ndim < 2:\n+        raise ValueError(\"Input tensor gradient must be a matrix or matrix batch\")\n     if len(ns_coefficients) != 3:\n         raise ValueError(\"Coefficients must be a tuple of exactly 3 values\")\n     a, b, c = ns_coefficients\n-    ortho_grad = grad.bfloat16()\n-    if grad.size(0) > grad.size(1):\n-        ortho_grad = ortho_grad.T\n-    # Ensure spectral norm is at most 1\n-    ortho_grad.div_(ortho_grad.norm().clamp(min=eps))\n-    # Perform the NS iterations\n-    for _ in range(ns_steps):\n-        gram_matrix = ortho_grad @ ortho_grad.T\n-        gram_update = torch.addmm(\n-            gram_matrix, gram_matrix, gram_matrix, beta=b, alpha=c\n-        )\n-        ortho_grad = torch.addmm(ortho_grad, gram_update, ortho_grad, beta=a)\n+    # Fixes a latent bug: grad.bfloat16() returns grad itself when grad is\n+    # already bf16, and the div_ below is in place. With nesterov=False the\n+    # caller passes the momentum buffer directly, so the optimizer state was\n+    # normalized on every step. copy=True never aliases, whatever the dtype.\n+    ortho_grad = grad.to(dtype=torch.bfloat16, copy=True)",
+      "outdated": false
+    }
+  ]
+}

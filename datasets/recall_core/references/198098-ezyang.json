@@ -1,0 +1,21 @@
+{
+  "pr": 198098,
+  "head_sha": "e2964afb8225fbcb4a056723240d4b86a684a383",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-22T16:41:12Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/cuda.md",
+      "line": 218,
+      "original_line": 218,
+      "body": "what's \"Cuspy able to subscribe\"?",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

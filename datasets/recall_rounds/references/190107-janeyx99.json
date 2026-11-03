@@ -1,0 +1,21 @@
+{
+  "pr": 190107,
+  "head_sha": "e50d6cd969e8e2ce24c606d456a2d82612dfa3c9",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "CHANGES_REQUESTED",
+    "body": "",
+    "submitted_at": "2026-07-16T19:21:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/inductor/test_flex_attention.py",
+      "line": 5474,
+      "original_line": 5475,
+      "body": "@skip_on_rocm? if it exists?",
+      "diff_hunk": "@@ -5469,6 +5469,10 @@ def tail_only(b, h, m, n):\n     @supported_platform\n     @skip_on_cpu\n     @skip_on_mps  # asserts Triton-specific BLOCK_M/BLOCK_N divisibility error\n+    @unittest.skip(\n+        \"Disabled due to CI failures; see \"\n+        \"https://github.com/pytorch/pytorch/issues/190239\"\n+    )",
+      "outdated": false
+    }
+  ]
+}

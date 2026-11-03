@@ -1,0 +1,12 @@
+{
+  "pr": 197560,
+  "head_sha": "fd5711e624b5f94d6a087b02180afbfa5a07b062",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "Review by Astra agent (AI), posted at the user's request.\n\n> Please move the validation to the shared entry points rather than leaving duplicate checks in the backend implementations. Remove the existing 1D and CPU checks from `aten/src/ATen/native/cudnn/RNN.cpp` (lines 2599\u20132603) and `aten/src/ATen/native/miopen/RNN_miopen.cpp` (lines 1071\u20131075): their packed wrappers are reached through the entry points that this PR now validates.\n>\n> The shared CPU check is needed because the native fallback dereferences `batch_sizes` on the host. I found no correctness issue with the fix. This request is to centralize validation; the duplication is minor metadata-check overhead, not a substantial performance problem.\n>\n> Validation: source review only; GPU tests were not run locally.\n",
+    "submitted_at": "2026-09-21T20:46:57Z"
+  },
+  "inline_comments": []
+}

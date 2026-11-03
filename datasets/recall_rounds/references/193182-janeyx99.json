@@ -1,0 +1,21 @@
+{
+  "pr": 193182,
+  "head_sha": "b85ba6359421f5487d790e2b6098730d5ac1604c",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-21T17:30:12Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/optim/adagrad.py",
+      "line": null,
+      "original_line": 374,
+      "body": "not a fan of torch.compiler.is_compiling() in library code",
+      "diff_hunk": "@@ -375,12 +363,27 @@ def _single_tensor_adagrad(\n     eps: float,\n     has_sparse_grad: bool,\n     maximize: bool,\n+    capturable: bool,\n     differentiable: bool,\n     has_complex: bool,\n ) -> None:\n     if grad_scale is not None or found_inf is not None:\n         raise AssertionError(\"Expected grad_scale and found_inf to be None\")\n \n+    # If compiling, the compiler will handle cudagraph checks, see note [torch.compile x capturable]\n+    if not torch.compiler.is_compiling() and capturable:",
+      "outdated": true
+    }
+  ]
+}

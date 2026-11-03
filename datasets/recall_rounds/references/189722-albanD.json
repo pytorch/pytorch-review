@@ -1,0 +1,29 @@
+{
+  "pr": 189722,
+  "head_sha": "6abbcf62402ca9cc0d4f2f5ca87ec1c130e9c994",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-13T16:07:21Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".ci/manywheel/build_common.sh",
+      "line": null,
+      "original_line": 123,
+      "body": "This is not rocm-only logic?",
+      "diff_hunk": "@@ -115,10 +115,22 @@ if [[ -z \"$PYTORCH_ROOT\" ]]; then\n     exit 1\n fi\n pushd \"$PYTORCH_ROOT\"\n+# Make `pkg-config python3` resolve the interpreter we're building for: the\n+# manylinux ROCm image ships the distro's python3-devel (Python 3.6), whose\n+# python3.pc is on pkg-config's default path and hijacks meson's Cython sanity\n+# check when a dep (e.g. NumPy) is built from source for a Python with no\n+# released wheels yet (e.g. 3.15). Prepend this interpreter's pkgconfig dir.\n+_py_libpc=\"$(python -c 'import sysconfig; print(sysconfig.get_config_var(\"LIBPC\") or \"\")')\"",
+      "outdated": true
+    },
+    {
+      "path": ".ci/manywheel/build_install_deps.py",
+      "line": null,
+      "original_line": 59,
+      "body": "This feels like a very specific bandaid and not really generic logic to be added here?",
+      "diff_hunk": "@@ -42,19 +46,40 @@ def pip_install(*args: str) -> None:\n \n \n def numpy_pin() -> str:\n-    tag = f\"cp{sys.version_info.major}{sys.version_info.minor}\"\n-    for prefix, version in NUMPY_PINS:\n-        if tag.startswith(prefix):\n-            return version\n+    version = sys.version_info[:2]\n+    for floor, pin in NUMPY_PINS:\n+        if version >= floor:\n+            return pin\n     return DEFAULT_NUMPY\n \n \n+def prefer_target_python_pkgconfig() -> None:\n+    \"\"\"Make ``pkg-config python3`` resolve the interpreter we are building for.\n+\n+    The manylinux ROCm image ships the distro's ``python3-devel`` (Python 3.6),",
+      "outdated": true
+    }
+  ]
+}

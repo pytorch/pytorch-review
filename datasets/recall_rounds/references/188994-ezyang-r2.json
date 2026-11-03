@@ -1,0 +1,12 @@
+{
+  "pr": 188994,
+  "head_sha": "77d3be77ea14a335c8223b02ea25cf7a5f509c9d",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "ask your agent to split this into logical pieces, Sol thinks that would be productive\n\n```\n\u203a Could it have been split into multiple PRs productively?\n\n\n\u2022 Yes, productively:\n\n  1. Preserve expression structure: leaf mapping, xreplace, cache preflight, and\n     regression tests for u0 + u1. This is the actual bug fix.\n\n  2. Environment identity: prevent equal symbol names from distinct ShapeEnvs\n     aliasing. This needs a durable identity design, not id().\n\n  3. Range propagation: decide whether derived-size leaves become size_like.\n     This is a separate semantic change and currently appears unsound.\n\n  The hint-copying and opaque fallback handling belong with PR 1 because they\n  preserve existing behavior during the algorithm change. Splitting the other\n  two would make the core fix easier to validate and prevent unrelated policy\n  decisions from blocking it.\n```",
+    "submitted_at": "2026-07-21T14:01:11Z"
+  },
+  "inline_comments": []
+}

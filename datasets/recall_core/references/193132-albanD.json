@@ -1,0 +1,29 @@
+{
+  "pr": 193132,
+  "head_sha": "3e8358c3432693c3eeb98faa169a32c3a645488f",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Any python test we can have to validate this?",
+    "submitted_at": "2026-09-23T18:42:50Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/cuda/impl/CUDAGuardImpl.h",
+      "line": null,
+      "original_line": 307,
+      "body": "DeviceGuard ?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "c10/cuda/impl/CUDAGuardImpl.h",
+      "line": null,
+      "original_line": 332,
+      "body": "DeviceGuard",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

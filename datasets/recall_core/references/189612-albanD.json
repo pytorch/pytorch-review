@@ -1,0 +1,21 @@
+{
+  "pr": 189612,
+  "head_sha": "ad6577f620740204feed839f1584160ca05b95c0",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-13T16:18:50Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": null,
+      "original_line": 1576,
+      "body": "I'm confused. If it is CompositeExplicitAutograd it should never be launching a kernel.\nSo that is not a state we should ever be in :)",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

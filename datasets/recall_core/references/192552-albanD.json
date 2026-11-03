@@ -1,0 +1,21 @@
+{
+  "pr": 192552,
+  "head_sha": "542a77c7f0e281893db0a2857e2511b6730d1671",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-10T19:40:19Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/headeronly/util/complex_utils.h",
+      "line": null,
+      "original_line": 51,
+      "body": "Let's change this to be headeronly and re-expose on the c10 side so we have the right long term behavior.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

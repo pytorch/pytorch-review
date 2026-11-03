@@ -1,0 +1,21 @@
+{
+  "pr": 192083,
+  "head_sha": "c4e0c5c1ef85bb93cd0d6e3cc46cff6446222db7",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-05T23:00:05Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp_extensions/libtorch_agn_2_10_extension/csrc/my_permute.cpp",
+      "line": null,
+      "original_line": 9,
+      "body": "use IntHeaderOnlyArrayRef",
+      "diff_hunk": "@@ -0,0 +1,19 @@\n+#include <torch/csrc/stable/library.h>\n+#include <torch/csrc/stable/ops.h>\n+#include <torch/csrc/stable/tensor.h>\n+\n+using torch::stable::Tensor;\n+\n+Tensor my_permute(\n+    Tensor self,\n+    torch::headeronly::HeaderOnlyArrayRef<int64_t> dims) {",
+      "outdated": true
+    }
+  ]
+}

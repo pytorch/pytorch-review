@@ -1,0 +1,21 @@
+{
+  "pr": 198797,
+  "head_sha": "63e3d56b63e809d24108ac97b5881ce74bd96a34",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-10-07T14:54:27Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/ElementwiseRefMeta.cpp",
+      "line": null,
+      "original_line": 761,
+      "body": "lmao",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

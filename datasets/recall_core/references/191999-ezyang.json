@@ -1,0 +1,21 @@
+{
+  "pr": 191999,
+  "head_sha": "41cbc0ff156ee0801f7f94089bc1e367a5be26e7",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-07T00:08:28Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/profiler/_cupti/monitor.py",
+      "line": null,
+      "original_line": 1466,
+      "body": "this docblock is soooooo llm lmao",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

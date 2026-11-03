@@ -1,0 +1,21 @@
+{
+  "pr": 193398,
+  "head_sha": "befdbe77bd145f7771c1b9aa390e8608e1df3baf",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Agreed we should remove them.\nIf there is anything new/better we should add from the foundation, we can do that in a follow up",
+    "submitted_at": "2026-08-13T16:48:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": "README.md",
+      "line": null,
+      "original_line": 587,
+      "body": "```suggestion\n```\nYeah I think this is dead as well",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

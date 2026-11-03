@@ -1,0 +1,12 @@
+{
+  "pr": 191129,
+  "head_sha": "da5b51eaab2f212eb07429572d73216d8493eee7",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "test insufficient. you would simply lose the graph break in the middle and just not compile the entire region entirely",
+    "submitted_at": "2026-07-29T03:48:43Z"
+  },
+  "inline_comments": []
+}

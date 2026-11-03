@@ -1,0 +1,21 @@
+{
+  "pr": 191973,
+  "head_sha": "1c238a2efab94edf5615bd2b58ed37c0db0f18d4",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-03T21:16:38Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp_extensions/test_libtorch_agnostic.py",
+      "line": null,
+      "original_line": 272,
+      "body": "use @parametrize or split these into separate tests per op? i'm thinking of what we'd do when we can template out a ton of these aten ops ",
+      "diff_hunk": "@@ -268,6 +268,51 @@ def test_has_storage(self, device):\n         # Sparse tensors do not own a contiguous storage.\n         self.assertFalse(libtorch_agnostic.ops.my_has_storage(t.to_sparse()))\n \n+    @skipIfTorchVersionLessThan(2, 14)\n+    def test_my_bitwise_ops(self, device):",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "pr": 189284,
+  "head_sha": "2473a8a13626e217618a8bd77f815c7def99686e",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "DISMISSED",
+    "body": "We should either say that the Node is not ready for inspection or actually trigger when ready!",
+    "submitted_at": "2026-07-08T17:49:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/autograd/graph.py",
+      "line": null,
+      "original_line": 476,
+      "body": "It should propagate to any worker thread from any systems.",
+      "diff_hunk": "@@ -456,6 +457,72 @@ def disable_saved_tensors_hooks(error_message: str) -> Generator[None, None, Non\n             torch._C._autograd._saved_tensors_hooks_disable(maybe_prev_message)\n \n \n+class node_creation_hook:\n+    \"\"\"Context-manager that registers a hook called on each autograd Node created within it.\n+\n+    In that context, ``hook`` is called once for every autograd graph node\n+    created by operations on tensors that require grad, with the freshly\n+    created :class:`torch.autograd.graph.Node` as its only argument. At that\n+    point the node's ``next_edges`` are already set up, so the hook may\n+    inspect the node, record it, stash entries in ``node.metadata``, or\n+    register backward hooks on it via\n+    :meth:`~torch.autograd.graph.Node.register_hook` and\n+    :meth:`~torch.autograd.graph.Node.register_prehook`.\n+\n+    The hook should have the following signature::\n+\n+        hook(node: torch.autograd.graph.Node) -> None\n+\n+    The registration is thread-local and propagates to autograd engine worker",
+      "outdated": true
+    },
+    {
+      "path": "torch/autograd/graph.py",
+      "line": null,
+      "original_line": 485,
+      "body": "These are all private APIs. We should have an example with public APIs",
+      "diff_hunk": "@@ -456,6 +457,72 @@ def disable_saved_tensors_hooks(error_message: str) -> Generator[None, None, Non\n             torch._C._autograd._saved_tensors_hooks_disable(maybe_prev_message)\n \n \n+class node_creation_hook:\n+    \"\"\"Context-manager that registers a hook called on each autograd Node created within it.\n+\n+    In that context, ``hook`` is called once for every autograd graph node\n+    created by operations on tensors that require grad, with the freshly\n+    created :class:`torch.autograd.graph.Node` as its only argument. At that\n+    point the node's ``next_edges`` are already set up, so the hook may\n+    inspect the node, record it, stash entries in ``node.metadata``, or\n+    register backward hooks on it via\n+    :meth:`~torch.autograd.graph.Node.register_hook` and\n+    :meth:`~torch.autograd.graph.Node.register_prehook`.\n+\n+    The hook should have the following signature::\n+\n+        hook(node: torch.autograd.graph.Node) -> None\n+\n+    The registration is thread-local and propagates to autograd engine worker\n+    threads: if backward is run under this context (or graph nodes are\n+    created during backward, e.g. with ``create_graph=True`` or inside\n+    checkpoint recomputation), the hook also fires for those nodes.\n+\n+    Nodes created by hooks themselves do not trigger hooks again. When\n+    nesting this context-manager, all active hooks are called for each node,\n+    outermost first.\n+\n+    One motivating use case is attributing memory allocated during backward",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/autograd/function.cpp",
+      "line": null,
+      "original_line": 54,
+      "body": "Why does this indirect through the engine vs calling the hook directly here?\nLet's use the same pattern as saved_variable_hooks ",
+      "diff_hunk": "@@ -37,6 +39,27 @@ c10::intrusive_ptr<Node> get_current_node() {\n   return current_evaluating_node;\n }\n \n+void fire_node_creation_hooks(const c10::intrusive_ptr<Node>& node) {\n+  const auto& state = at::impl::NodeCreationHooks::get_tls_state();\n+  if (C10_LIKELY(state.stack.empty())) {\n+    return;\n+  }\n+  if (state.is_firing || node->node_creation_hooks_fired()) {\n+    return;\n+  }\n+  node->set_node_creation_hooks_fired();\n+  at::impl::NodeCreationHooks::set_is_firing(true);\n+  auto guard = c10::make_scope_exit(\n+      [] { at::impl::NodeCreationHooks::set_is_firing(false); });\n+  auto& engine = Engine::get_default_engine();",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": 735,
+      "original_line": 723,
+      "body": "didn't the \"set_next_edges\" above already trigger it?",
+      "diff_hunk": "@@ -717,6 +720,7 @@ const c10::intrusive_ptr<torch::autograd::Node>& VariableHooks::grad_fn(\n             self.unsafeGetTensorImpl()->is_python_dispatch(),\n             self.is_nested(),\n             self.grad_dtype());\n+        torch::autograd::fire_node_creation_hooks(fn);",
+      "outdated": false
+    },
+    {
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": null,
+      "original_line": 332,
+      "body": "This will make the doc above fake news.\nIt will trigger once ONE of the next_functions is setup, not all of them!",
+      "diff_hunk": "@@ -328,6 +328,9 @@ Edge gradient_edge(const Variable& self) {\n \n void set_gradient_edge(const Variable& self, Edge edge) {\n   auto* meta = materialize_autograd_meta(self);\n+  if (edge.function) {\n+    fire_node_creation_hooks(edge.function);",
+      "outdated": true
+    },
+    {
+      "path": "test/test_autograd.py",
+      "line": null,
+      "original_line": 11379,
+      "body": "Can you check nodes[1] is correct? :D\nYou can use split() as a function with multiple differentiable outputs.",
+      "diff_hunk": "@@ -11356,6 +11356,176 @@ def backward(ctx, grad_out):\n             out = Func.apply(a)\n         out.backward()\n \n+    def test_node_creation_hook(self):\n+        a = torch.randn(2, requires_grad=True)\n+        nodes = []\n+\n+        b = a * 2\n+        with torch.autograd.graph.node_creation_hook(nodes.append):\n+            c = b.exp()\n+            d = c + c\n+        e = d.sum()\n+\n+        self.assertEqual([n.name() for n in nodes], [\"ExpBackward0\", \"AddBackward0\"])\n+        self.assertIs(nodes[0], c.grad_fn)\n+        self.assertIs(nodes[1], d.grad_fn)\n+\n+    def test_node_creation_hook_multi_output_fires_once(self):\n+        nodes = []\n+        a = torch.randn(5, requires_grad=True)\n+        with torch.autograd.graph.node_creation_hook(nodes.append):\n+            values, indices = a.sort()\n+        self.assertEqual(len(nodes), 1)\n+        self.assertIs(nodes[0], values.grad_fn)",
+      "outdated": true
+    }
+  ]
+}
