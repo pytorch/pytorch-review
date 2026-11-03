@@ -1,13 +1,15 @@
 {
   "name": "maintainer_raw",
-  "schema_version": 1,
-  "stage": "raw_feedback",
+  "schema_version": 2,
+  "stage": "draft_principles",
   "columns": [
     "pr_number",
     "pr_summary",
     "current_commit",
-    "review_principle",
+    "reviewer_comment",
+    "reviewer_principle",
     "severity",
+    "severity_reason",
     "source_url"
   ],
   "repository": "pytorch/pytorch",
@@ -24,10 +26,38 @@
   "principles_distilled": false,
   "severity_labeled": false,
   "feedback_relocated": false,
-  "csv_sha256": "6c14e38f1eb92a96cac5a4ec2aad469e1f307060d6bd7a9d8e2fdb9e8aa0957e",
+  "csv_sha256": "a15cb00b22bb318ea29356c573a4a1c44df978e90e81d709e4b1e3f7b70052bb",
   "export_source": {
     "repository": "pytorch/ciforge",
     "commit": "d9e0653e38c9257988eaa8ef0cc703fbeb95f9a5",
     "path": "scripts/pr_review_eval/datasets/maintainer_raw"
+  },
+  "principles_drafted": true,
+  "draft_principles": 336,
+  "severity_suggestions": 335,
+  "severity_suggestion_counts": {
+    "P2": 126,
+    "P1": 204,
+    "P0": 5
+  },
+  "principle_status_counts": {
+    "resolved": 4,
+    "needs_context": 29,
+    "draft": 307,
+    "excluded": 170,
+    "needs_human_adjudication": 29
+  },
+  "human_reviewed_rows": 0,
+  "draft_version": 1,
+  "drafting": {
+    "authorship": "agent",
+    "agent": "Codex",
+    "basis": [
+      "original comments",
+      "PR summaries",
+      "selected source hunks and review-thread replies"
+    ],
+    "source_execution": "No PyTorch build; isolated standard-library checks where useful.",
+    "independent_audit_ranges": ["0-199", "200-399", "400-469", "470-538"]
   }
 }

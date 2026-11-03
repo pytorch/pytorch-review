@@ -16,7 +16,7 @@ The same tree can show up in more than one item.
 
 ## Raw collection
 
-[`raw/`](raw/) contains the initial collection of 539 human feedback entries,
-with source URLs and provenance. These entries await principle distillation and
-human labeling; severity is blank. See [the raw collection README](raw/README.md)
-for the current CSV schema and collection scope.
+[`raw/`](raw/) contains 539 original feedback entries, with source URLs and
+provenance, alongside AI-drafted principles and severity suggestions. The drafts
+await human labeling. See [the raw collection README](raw/README.md) for the
+current CSV schema, authorship distinctions, and collection scope.
