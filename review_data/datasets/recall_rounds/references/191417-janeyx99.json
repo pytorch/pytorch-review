@@ -1,0 +1,21 @@
+{
+  "pr": 191417,
+  "head_sha": "672641664701e2c407c859869f1ac83e920cdf4b",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-29T03:40:47Z"
+  },
+  "inline_comments": [
+    {
+      "path": "CLAUDE.md",
+      "line": null,
+      "original_line": 157,
+      "body": "arguably should go under Git and not ghstack workflow",
+      "diff_hunk": "@@ -151,6 +151,10 @@ Rules for working with ghstack:\n - **Finding the PR.** If the user asks to pull CI results or code review for a\n   ghstack commit, get the PR URL from the `Pull-Request` trailer in the commit\n   message. Use `gh` CLI to fetch status/comments from there.\n+- **Pulling CI status.** A PR has hundreds of check-runs, so a single\n+  `check-runs?per_page=100` call silently truncates and makes red look green.\n+  Use `gh pr checks <PR> --json name,state,workflow,link,bucket,completedAt`\n+  (already head-only, no paging).",
+      "outdated": true
+    }
+  ]
+}

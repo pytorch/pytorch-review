@@ -1,0 +1,21 @@
+{
+  "pr": 186444,
+  "head_sha": "9beeee99402ea38bc56ff27e71e9fcd7cacecf9c",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-09T19:00:47Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_optim.py",
+      "line": null,
+      "original_line": 2352,
+      "body": "we should not need to parametrize on amsgrad since that should be handled by using the OptimInfo correctly. We shouldn't need to test lr=1e-3, cuz the bug will never be hit. ",
+      "diff_hunk": "@@ -2348,6 +2348,37 @@ def test_non_empty_state(self, device, dtype, optim_info):\n             for state in optim.state.values():\n                 self.assertGreater(len(state), 0)\n \n+    @onlyCUDA\n+    @parametrize(\"amsgrad\", [False, True])",
+      "outdated": true
+    }
+  ]
+}

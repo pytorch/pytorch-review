@@ -1,0 +1,21 @@
+{
+  "pr": 191417,
+  "head_sha": "672641664701e2c407c859869f1ac83e920cdf4b",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-29T03:40:47Z"
+  },
+  "inline_comments": [
+    {
+      "path": "CLAUDE.md",
+      "line": null,
+      "original_line": 157,
+      "body": "arguably should go under Git and not ghstack workflow",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

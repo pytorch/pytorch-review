@@ -1,0 +1,21 @@
+{
+  "pr": 190932,
+  "head_sha": "ba481809c532ba92291a3c321388953d2ba9648c",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-23T21:18:15Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/inductor/aoti_torch/c/shim_mps.h",
+      "line": null,
+      "original_line": null,
+      "body": "hm this file doesn't seem to be picked up by the shim linters...hmmmm i'll look into including those.\n\nbut separately, could we have this live in torch/csrc/stable/c/shim.h actually? with a comment to look here for the other set_args?\n",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

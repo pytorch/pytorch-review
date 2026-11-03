@@ -1,0 +1,21 @@
+{
+  "pr": 191973,
+  "head_sha": "af779b585337e83294378c7201062bd2722d6550",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-04T18:55:13Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/stable/ops.h",
+      "line": null,
+      "original_line": 1138,
+      "body": "this is still wrong?",
+      "diff_hunk": "@@ -1135,6 +1135,94 @@ inline torch::stable::Tensor full(\n   return torch::stable::Tensor(ret0);\n }\n \n+#if TORCH_FEATURE_VERSION >= TORCH_VERSION_2_14_0",
+      "outdated": true
+    }
+  ]
+}

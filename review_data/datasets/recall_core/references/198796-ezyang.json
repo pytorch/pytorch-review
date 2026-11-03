@@ -1,0 +1,21 @@
+{
+  "pr": 198796,
+  "head_sha": "9eefaa5527e6456365d0238eb0ec4337c20f5a85",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-10-07T14:57:38Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": null,
+      "original_line": 1669,
+      "body": "I am very unsure about this idiom",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

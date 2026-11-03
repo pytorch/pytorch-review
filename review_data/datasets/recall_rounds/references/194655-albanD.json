@@ -1,0 +1,21 @@
+{
+  "pr": 194655,
+  "head_sha": "5cb39d2ac0977958c47349ce9fab8bc836a43e83",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Not sure what this one is about.",
+    "submitted_at": "2026-08-26T17:20:23Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": 6446,
+      "original_line": 6446,
+      "body": "We actually do want to catch bad cycles as well!",
+      "diff_hunk": "@@ -6439,7 +6439,12 @@ def check_leaked_tensors(limit=1, matched_type=torch.Tensor):\n     limit specifies how many tensors to dump debug graphs for (default=1)\n     \"\"\"\n     def match_obj(obj):\n-        return isinstance(obj, matched_type)\n+        if not isinstance(obj, matched_type):\n+            return False\n+        # Meta tensors are excluded: they own no storage, so cannot leak memory.\n+        # Counting them makes this report count reference-cycle hygiene rather\n+        # than leaked memory, and produces failures that depend on when the collector happens to run.",
+      "outdated": false
+    }
+  ]
+}

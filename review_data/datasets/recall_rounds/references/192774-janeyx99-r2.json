@@ -1,0 +1,21 @@
+{
+  "pr": 192774,
+  "head_sha": "6b309ca7c3d4a5ff1042347789f5d677e40cc560",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-30T16:40:45Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/notes/libtorch_stable_abi.md",
+      "line": null,
+      "original_line": 61,
+      "body": "just curious, what's the use case for is_tensor_pyobject for you?",
+      "diff_hunk": "@@ -53,9 +53,20 @@ which will handle all the rough edges of the C API for the user.\n ### Python interop shims\n \n `torch/csrc/stable/pyobject.h` converts between Python objects and their\n-`torch::stable` equivalents (for example `tensor_from_pyobject` / `tensor_to_pyobject` for\n-converting between `torch::stable::Tensor` in C++ and `torch.Tensor` in Python). Like the\n-rest of the stable ABI, an extension using them can just link `libtorch`.\n+`torch::stable` equivalents:\n+\n+- `tensor_from_pyobject` / `tensor_to_pyobject`: `torch.Tensor` <-> `torch::stable::Tensor`\n+- `dtype_from_pyobject` / `dtype_to_pyobject`: `torch.dtype` <-> `torch::headeronly::ScalarType`\n+- `device_from_pyobject` / `device_to_pyobject`: `torch.device` <-> `torch::stable::Device`\n+- `is_tensor_pyobject`: a stable version of `THPVariable_Check` \u2014 whether a",
+      "outdated": true
+    }
+  ]
+}

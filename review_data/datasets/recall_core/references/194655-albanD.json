@@ -1,0 +1,21 @@
+{
+  "pr": 194655,
+  "head_sha": "5cb39d2ac0977958c47349ce9fab8bc836a43e83",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Not sure what this one is about.",
+    "submitted_at": "2026-08-26T17:20:23Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": 6446,
+      "original_line": 6446,
+      "body": "We actually do want to catch bad cycles as well!",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

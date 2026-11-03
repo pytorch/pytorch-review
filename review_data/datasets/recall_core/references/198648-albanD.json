@@ -1,0 +1,21 @@
+{
+  "pr": 198648,
+  "head_sha": "ae5e4ff095eb8b66d4f3b1896b655b50f7420368",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-28T14:49:34Z"
+  },
+  "inline_comments": [
+    {
+      "path": "third_party/kineto/CODE_OF_CONDUCT.md",
+      "line": null,
+      "original_line": 1,
+      "body": "I expect the core version of these would take over.\nCan you remove the code of conduct, contributing, link and clang files if they don't run anymore as well as the .github folder that won't trigger here.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

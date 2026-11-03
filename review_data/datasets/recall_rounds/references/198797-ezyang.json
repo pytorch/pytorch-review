@@ -1,0 +1,21 @@
+{
+  "pr": 198797,
+  "head_sha": "63e3d56b63e809d24108ac97b5881ce74bd96a34",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-10-07T14:54:27Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/ElementwiseRefMeta.cpp",
+      "line": null,
+      "original_line": 761,
+      "body": "lmao",
+      "diff_hunk": "@@ -749,14 +749,16 @@ std::optional<Scalar> symbolic_number(const Tensor& t) {\n // alpha must not be a wider number type than the computation dtype unless that\n // is bool. The output strides follow the operands' memory layout, and the\n // output dtype is the result dtype for kind.\n+// is_sub rejects two bool tensors and drops the bool exemption for alpha.\n // other_number is other's value when other wraps a Scalar argument.\n Tensor binary_ref_meta_impl(\n     const Tensor& self,\n     const Tensor& other,\n     const std::optional<Scalar>& other_number,\n     ELEMENTWISE_TYPE_PROMOTION_KIND kind,\n     bool fake_devices,\n-    const std::optional<Scalar>& alpha) {\n+    const std::optional<Scalar>& alpha,\n+    bool is_sub) {",
+      "outdated": true
+    }
+  ]
+}

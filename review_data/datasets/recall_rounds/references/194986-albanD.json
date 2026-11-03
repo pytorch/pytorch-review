@@ -1,0 +1,45 @@
+{
+  "pr": 194986,
+  "head_sha": "2fa9a5dc034da2e40936cfb14b1c594b53cd7562",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-27T14:23:09Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/optim.md",
+      "line": null,
+      "original_line": 225,
+      "body": "nit: you can use the decorator to save an indentation",
+      "diff_hunk": "@@ -125,6 +125,136 @@ for input, target in dataset:\n     optimizer.step(closure)\n ```\n \n+(functional-optimizer-api)=\n+\n+## Functional optimizer API\n+\n+Optimizer classes are the recommended interface for most use cases: they own\n+optimizer state, read gradients from parameter ``.grad`` attributes, organize\n+parameter groups, and provide state-dict integration. The module-level\n+functional optimizer APIs are lower-level building blocks for cases where one\n+may want to control those details explicitly. For example, a distributed\n+training system may apply an update as soon as a gradient becomes available, or\n+a caller may choose a different storage dtype for optimizer state to save memory.\n+\n+Functional optimizer calls update parameters and state tensors according to the\n+respective algorithm in place; they are not pure functions. Each tensor list is\n+positional, so entries at the same index must be respective to the same parameter.\n+When using these functional optimizer APIs, the caller has full control and\n+responsibility for creating and retaining state, filtering parameters without\n+gradients from every list consistently, and saving and restoring that state.\n+\n+Most public functional optimizer APIs are located in their respective\n+optimizer's module, such as {func}`torch.optim.adamw.adamw`. Since Adafactor and\n+Muon are implemented in private modules, their functional APIs are exposed\n+directly from {mod}`torch.optim`.\n+\n+| Optimizer | Functional API |\n+| --- | --- |\n+| {class}`Adadelta` | {func}`torch.optim.adadelta.adadelta` |\n+| {class}`Adafactor` | {func}`torch.optim.adafactor` |\n+| {class}`Adagrad` | {func}`torch.optim.adagrad.adagrad` |\n+| {class}`Adam` | {func}`torch.optim.adam.adam` |\n+| {class}`Adamax` | {func}`torch.optim.adamax.adamax` |\n+| {class}`AdamW` | {func}`torch.optim.adamw.adamw` |\n+| {class}`ASGD` | {func}`torch.optim.asgd.asgd` |\n+| {class}`Muon` | {func}`torch.optim.muon` |\n+| {class}`NAdam` | {func}`torch.optim.nadam.nadam` |\n+| {class}`RAdam` | {func}`torch.optim.radam.radam` |\n+| {class}`RMSprop` | {func}`torch.optim.rmsprop.rmsprop` |\n+| {class}`Rprop` | {func}`torch.optim.rprop.rprop` |\n+| {class}`SGD` | {func}`torch.optim.sgd.sgd` |\n+| {class}`SparseAdam` | {func}`torch.optim.sparse_adam.sparse_adam` |\n+\n+```{eval-rst}\n+.. currentmodule:: torch.optim\n+.. autosummary::\n+   :toctree: generated\n+   :nosignatures:\n+\n+    adafactor\n+    muon\n+```\n+\n+{class}`LBFGS` does not currently expose a functional API. Its update is\n+coupled to repeated closure evaluations and optional line-search orchestration,\n+rather than implemented as a standalone functional kernel.\n+\n+(functional-adamw-bf16-state)=\n+\n+### AdamW with BF16 optimizer state\n+\n+One use of the functional API is storing optimizer state in a lower precision\n+dtype to save memory, for example storing AdamW's first- and second-moment\n+buffers in BF16 while keeping parameters and gradients in FP32. As seen in\n+DeepSeek-V3, this optimization halves the memory occupied by the two moment\n+buffers. In particular, PyTorch's fused CUDA implementations for Adam and AdamW\n+supports loading the BF16 moments, performing the update in FP32, and storing\n+the updated moments back in BF16. This can be combined with BF16 autocast for\n+forward and backward while the stored model parameters remain FP32.\n+\n+The following example keeps the optimizer state outside an\n+{class}`~torch.optim.Optimizer` and applies the functional update after\n+backward:\n+\n+```python\n+import torch\n+from torch.optim.adamw import adamw\n+\n+model = torch.nn.Linear(16, 4, device=\"cuda\", dtype=torch.float32)\n+params = list(model.parameters())\n+state = [\n+    {\n+        \"step\": torch.zeros((), device=p.device, dtype=torch.float32),\n+        \"exp_avg\": torch.zeros_like(p, dtype=torch.bfloat16),\n+        \"exp_avg_sq\": torch.zeros_like(p, dtype=torch.bfloat16),\n+    }\n+    for p in params\n+]\n+\n+\n+def functional_adamw_step():\n+    active = [\n+        (p, p_state)\n+        for p, p_state in zip(params, state, strict=True)\n+        if p.grad is not None\n+    ]\n+    if not active:\n+        return\n+\n+    with torch.no_grad():",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/optim.md",
+      "line": null,
+      "original_line": 303,
+      "body": "Anything else more meaningful we can use here? Maybe just using profiler API to add a custom range around the optimizer?",
+      "diff_hunk": "@@ -149,7 +279,51 @@ for input, target in dataset:\n     Optimizer.zero_grad\n ```\n \n-## Module-level hooks\n+## Optimizer step hooks\n+\n+Optimizer {meth}`~torch.optim.Optimizer.register_step_pre_hook` and\n+{meth}`~torch.optim.Optimizer.register_step_post_hook` hooks are useful for\n+observing or coordinating work around an optimizer update without taking\n+ownership of its state. Typical uses include profiling, memory tracking, and\n+recording events before or after the update. A pre-hook may also replace the\n+positional and keyword arguments passed to ``step()``. Use a functional\n+optimizer API instead when customization requires directly controlling\n+optimizer-state tensors or supplying gradients separately from parameter\n+``.grad`` attributes.\n+\n+The following example records information outside the optimizer before and\n+after each update. The returned handles can remove the hooks when they are no\n+longer needed.\n+\n+```python\n+import torch\n+\n+parameter = torch.nn.Parameter(torch.tensor(2.0))\n+optimizer = torch.optim.SGD([parameter], lr=0.01)\n+events = []",
+      "outdated": true
+    },
+    {
+      "path": "torch/optim/__init__.py",
+      "line": null,
+      "original_line": 11,
+      "body": "I'm not a fan of this and it makes things inconsistent with the rest...\nI would slightly prefer adding a new torch.optim.muon module that re-exposes the content of the _muon part.\nBut no very strong opinion, so if you prefer this, that sounds ok as well",
+      "diff_hunk": "@@ -7,8 +7,8 @@\n \"\"\"\n \n from torch.optim import lr_scheduler as lr_scheduler, swa_utils as swa_utils\n-from torch.optim._adafactor import Adafactor as Adafactor\n-from torch.optim._muon import Muon as Muon\n+from torch.optim._adafactor import Adafactor as Adafactor, adafactor as adafactor\n+from torch.optim._muon import Muon as Muon, muon as muon",
+      "outdated": true
+    },
+    {
+      "path": "torch/optim/sparse_adam.py",
+      "line": null,
+      "original_line": 10,
+      "body": "I would expect this to fix public API binding error that would require removing from the allowlist \ud83e\udd14 ",
+      "diff_hunk": "@@ -7,7 +7,10 @@\n from .optimizer import _maximize_doc, _params_doc, _to_scalar, Optimizer, ParamsT\n \n \n-__all__ = [\"SparseAdam\"]\n+__all__ = [\"SparseAdam\", \"sparse_adam\"]",
+      "outdated": true
+    }
+  ]
+}

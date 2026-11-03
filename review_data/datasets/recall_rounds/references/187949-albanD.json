@@ -1,0 +1,45 @@
+{
+  "pr": 187949,
+  "head_sha": "30aa47bf961110c2469385c5bfb4fcb045f1661e",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-24T19:44:09Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/core/dispatch/Dispatcher.h",
+      "line": null,
+      "original_line": 218,
+      "body": "Is this new function actually used?",
+      "diff_hunk": "@@ -215,11 +215,18 @@ class TORCH_API Dispatcher final {\n       DispatchKeySet dispatchKeySet,\n       Stack* stack) const;\n \n-  bool hasBackendFallbackForDispatchKey(DispatchKey dk) {\n+  const KernelFunction* backendFallbackKernelForDispatchKey(",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/core/dispatch/DispatchKeyExtractor.h",
+      "line": null,
+      "original_line": 146,
+      "body": "Any perf impact? should this be forcedinline?",
+      "diff_hunk": "@@ -143,6 +143,23 @@ struct TORCH_API DispatchKeyExtractor final {\n     dispatch_arg_indices_reverse_ = c10::utils::bitset();\n   }\n \n+  DispatchKeySet getDispatchKeySetFromRawDispatchKeySet(",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/utils/python_dispatch.cpp",
+      "line": 1387,
+      "original_line": 1360,
+      "body": "Why are these needed here?",
+      "diff_hunk": "@@ -904,7 +1356,8 @@ void initDispatchBindings(PyObject* module) {\n       [](const char* dispatch_key) -> std::optional<c10::DispatchKey> {\n         try {\n           return c10::parseDispatchKey(dispatch_key);\n-        } catch (const c10::Error&) {\n+        } catch (const c10::Error& e) {\n+          (void)e;",
+      "outdated": false
+    },
+    {
+      "path": "torch/_ops.py",
+      "line": null,
+      "original_line": 970,
+      "body": "why is_enabled and not enable ?",
+      "diff_hunk": "@@ -933,6 +964,22 @@ def decompose(self, *args: _P.args, **kwargs: _P.kwargs) -> _T:\n     def _uncache_dispatch(self, key: DispatchKey) -> None:\n         self._dispatch_cache.pop(key, None)\n \n+    def _is_pyobj_dispatcher_enabled(self) -> bool:\n+        return self._pyobj_dispatcher is not None\n+\n+    def _enable_pyobj_dispatch(self, is_enabled: bool = True) -> None:",
+      "outdated": true
+    }
+  ]
+}

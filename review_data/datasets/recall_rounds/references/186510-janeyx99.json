@@ -1,0 +1,21 @@
+{
+  "pr": 186510,
+  "head_sha": "0c282fd54bae3c039128c02a11c349dc4f7e3e7d",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "CHANGES_REQUESTED",
+    "body": "",
+    "submitted_at": "2026-06-08T19:49:13Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/optim/adagrad.py",
+      "line": null,
+      "original_line": 526,
+      "body": "no  torch.compiler.is_compiling(): in library code ",
+      "diff_hunk": "@@ -521,9 +521,18 @@ def _multi_tensor_adagrad(\n                     device_grads, device_params, alpha=weight_decay\n                 )\n \n-        minus_clr = [\n-            -lr / (1 + (_get_value(step) - 1) * lr_decay) for step in device_state_steps\n-        ]\n+        if lr_decay == 0:\n+            minus_clr = [-lr] * len(device_state_steps)\n+        elif torch.compiler.is_compiling():",
+      "outdated": true
+    }
+  ]
+}

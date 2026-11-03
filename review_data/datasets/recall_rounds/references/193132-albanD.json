@@ -1,0 +1,29 @@
+{
+  "pr": 193132,
+  "head_sha": "3e8358c3432693c3eeb98faa169a32c3a645488f",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Any python test we can have to validate this?",
+    "submitted_at": "2026-09-23T18:42:50Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/cuda/impl/CUDAGuardImpl.h",
+      "line": null,
+      "original_line": 307,
+      "body": "DeviceGuard ?",
+      "diff_hunk": "@@ -291,6 +297,44 @@ struct CUDAGuardImpl final : public c10::impl::DeviceGuardImplInterface {\n     C10_CUDA_CHECK(cudaEventElapsedTime(&time_ms, cuda_event1, cuda_event2));\n     return static_cast<double>(time_ms);\n   }\n+\n+  std::string getEventIPCHandle(\n+      void** event,\n+      const DeviceIndex device_index,\n+      const EventFlag flag) const override {\n+    DeviceIndex orig_device{-1};\n+    C10_CUDA_CHECK(c10::cuda::GetDevice(&orig_device));\n+    C10_CUDA_CHECK(c10::cuda::SetDevice(device_index));",
+      "outdated": true
+    },
+    {
+      "path": "c10/cuda/impl/CUDAGuardImpl.h",
+      "line": null,
+      "original_line": 332,
+      "body": "DeviceGuard",
+      "diff_hunk": "@@ -291,6 +297,44 @@ struct CUDAGuardImpl final : public c10::impl::DeviceGuardImplInterface {\n     C10_CUDA_CHECK(cudaEventElapsedTime(&time_ms, cuda_event1, cuda_event2));\n     return static_cast<double>(time_ms);\n   }\n+\n+  std::string getEventIPCHandle(\n+      void** event,\n+      const DeviceIndex device_index,\n+      const EventFlag flag) const override {\n+    DeviceIndex orig_device{-1};\n+    C10_CUDA_CHECK(c10::cuda::GetDevice(&orig_device));\n+    C10_CUDA_CHECK(c10::cuda::SetDevice(device_index));\n+    const auto restore_device = c10::make_scope_exit(\n+        [&]() { C10_CUDA_CHECK_WARN(c10::cuda::MaybeSetDevice(orig_device)); });\n+    if (!*event) {\n+      createEvent(reinterpret_cast<cudaEvent_t*>(event), flag);\n+    }\n+    cudaEvent_t cuda_event = reinterpret_cast<cudaEvent_t>(*event);\n+    cudaIpcEventHandle_t ipc_handle{};\n+    C10_CUDA_CHECK(cudaIpcGetEventHandle(&ipc_handle, cuda_event));\n+    return std::string(\n+        reinterpret_cast<const char*>(&ipc_handle), CUDA_IPC_HANDLE_SIZE);\n+  }\n+\n+  void reconstructEventFromIPCHandle(\n+      void** event,\n+      const DeviceIndex device_index,\n+      const std::string& handle_string) const override {\n+    TORCH_CHECK(\n+        handle_string.size() == CUDA_IPC_HANDLE_SIZE,\n+        \"IPC handle string doesn't match size CUDA_IPC_HANDLE_SIZE\");\n+    cudaIpcEventHandle_t ipc_handle{};\n+    std::memcpy(&ipc_handle, handle_string.data(), handle_string.size());\n+\n+    DeviceIndex orig_device{-1};\n+    C10_CUDA_CHECK(c10::cuda::GetDevice(&orig_device));\n+    C10_CUDA_CHECK(c10::cuda::SetDevice(device_index));",
+      "outdated": true
+    }
+  ]
+}

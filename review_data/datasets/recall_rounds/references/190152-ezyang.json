@@ -1,0 +1,12 @@
+{
+  "pr": 190152,
+  "head_sha": "56481ecda056c330bbea1b91106a9607377b038e",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "I'm blocking this, not because I don't think it's a reasonable change, but because I don't care about multithread PG and I would rather we just stop touching it, get tests to stop running on it, and generally rely on fake PG / local tensor mode instead for the use cases it was previously used for. Ultimately I'd like to delete it entirely.\n\ncc @wconstab",
+    "submitted_at": "2026-07-17T17:03:05Z"
+  },
+  "inline_comments": []
+}

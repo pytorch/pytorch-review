@@ -1,0 +1,21 @@
+{
+  "pr": 185853,
+  "head_sha": "4c8865094b2ac306dfd02292d2dca989aebba11b",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-02T02:42:31Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/codegen/cutedsl/cutedsl_op_overrides.py",
+      "line": 330,
+      "original_line": 328,
+      "body": "This is technically wrong right? (It's probably harmless but it is wrong)",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 196407,
+  "head_sha": "52732d2b51b46aef74e45b3b1f0f91f64ae3cd65",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-10-31T20:12:36Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/amp/autocast_mode.py",
+      "line": 46,
+      "original_line": 45,
+      "body": "There's no compelling reason to make this PR Python only. Fix the C++ bindings to provide the necessary thing.",
+      "diff_hunk": "@@ -37,6 +39,34 @@ def is_autocast_available(device_type: str) -> bool:\n     return torch._C._is_autocast_available(device_type)\n \n \n+def _get_autocast_nesting() -> int:\n+    # There is no direct getter for the autocast nesting counter, only\n+    # autocast_increment_nesting()/autocast_decrement_nesting(), so read it\n+    # via a no-net-effect increment+decrement pair.",
+      "outdated": false
+    }
+  ]
+}

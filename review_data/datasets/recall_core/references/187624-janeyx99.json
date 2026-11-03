@@ -1,0 +1,21 @@
+{
+  "pr": 187624,
+  "head_sha": "c7181398167a813adc9d05772e54f0f7074ee21c",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-18T18:40:48Z"
+  },
+  "inline_comments": [
+    {
+      "path": "CODEOWNERS",
+      "line": null,
+      "original_line": 383,
+      "body": "We can categorize the Fused* things as one category (owned by the optim maintainer)",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 197380,
+  "head_sha": "822c815356aa56175a3a03739ca7bdda34ee9a1a",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-21T20:49:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_weights_only_unpickler.py",
+      "line": 110,
+      "original_line": 107,
+      "body": "it's unclear if this should clear the ContextVar",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

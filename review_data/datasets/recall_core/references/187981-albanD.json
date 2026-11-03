@@ -1,0 +1,69 @@
+{
+  "pr": 187981,
+  "head_sha": "1f2b04bf2a92e92fc3b11bc9a9a97184b49f2148",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-24T14:53:09Z"
+  },
+  "inline_comments": [
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 155,
+      "body": "Not sure what this one means? :D",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 223,
+      "body": "Pretty insane trick haha",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 383,
+      "body": "Am I right that the tradeoff here is:\n- The delayed Tensor is super simple as it is never worked on, as this pass ensures that it is only created when needed.\n- There could be another design where we don't have this pass but the main would always create delayed Tensors that would get materialized whenever someone tries to use them.\n\nWe are leaning on the explicit rather an implicit here and simple vs easy. Is that right?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 697,
+      "original_line": 423,
+      "body": "nit: we could lift this and use the returned Tensor shape. With a nice error asking to use this if they don't match.\nBut explicit is ok for now",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 474,
+      "body": "Just build a list if you're not going to use the fact that it's a generator haha",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 479,
+      "body": "This could be computed during the full traversal above?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": null,
+      "original_line": 590,
+      "body": "You either need:\n- assert defer_input_idx == 0\n- Have this rule take a grad_input_idx\n\n",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

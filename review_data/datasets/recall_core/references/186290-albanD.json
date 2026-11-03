@@ -1,0 +1,53 @@
+{
+  "pr": 186290,
+  "head_sha": "0f6073e8f11f0d56c97733265ec0f0a4f186fcfe",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Only a couple of nits.",
+    "submitted_at": "2026-07-06T14:05:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/distributed/fake_pg.py",
+      "line": null,
+      "original_line": 9,
+      "body": "I'm confused by the BC argument here?\nHaving FakeProcessGoup in `__all__` is definitely new?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeStore.hpp",
+      "line": null,
+      "original_line": 12,
+      "body": "nit: I would say here that we need a pure C++ object to be held by our pure C++ ProcessGroup. So this cannot live in Python without extra indirection.\n\nEither way, not sure we need to argue so hard on having this a C++ class haha",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 408,
+      "body": "Don't you already make sure to have a real option in the new call above? Why this change?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 79,
+      "body": "Based on claude and quick check, this seems to logically merge conflict with main. These are dead code now.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 73,
+      "body": "Nit: NCCL considers this an error. Not sure why we want to be more flexible here?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

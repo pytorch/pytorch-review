@@ -1,0 +1,37 @@
+{
+  "pr": 195152,
+  "head_sha": "e37e5412563a063948dd865058be21f05b5bb495",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-28T17:43:18Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".claude/skills/triaging-issues/labels.json",
+      "line": 1099,
+      "original_line": 1099,
+      "body": "Why label vs milestone?",
+      "diff_hunk": "@@ -1095,6 +1095,10 @@\n       \"name\": \"release-feature-request\",\n       \"description\": \"This tag is to mark Feature Tracked for PyTorch OSS Releases\"\n     },\n+    {\n+      \"name\": \"release triage\",",
+      "outdated": false
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 37,
+      "body": "Why 5.5 and not a separate step? This is not just for high pri issues?\n",
+      "diff_hunk": "@@ -34,6 +34,7 @@ This skill helps triage GitHub issues by routing issues, applying labels, and le\n   - Step 3: Redirect to Secondary Oncall\n   - Step 4: Label the Issue\n   - Step 5: High Priority \u2014 REQUIRES HUMAN REVIEW\n+  - Step 5.5: release triage \u2014 Affects an Upcoming Release",
+      "outdated": true
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 251,
+      "body": "I'm not sure what's the intent of the paragraph above and this one?",
+      "diff_hunk": "@@ -234,6 +235,48 @@ High priority criteria:\n - Many users affected\n - Core component or popular model impact\n \n+### 5.5) release triage \u2014 Affects an Upcoming Release\n+\n+Add `release triage` when an issue would affect a release if it went unfixed. This is a\n+continuous process, not something that only applies while a release branch is open. The\n+label means \"whoever owns the release needs to see this\"; what happens next depends on\n+where the cycle currently is:\n+\n+- **Between a completed release and the next branch cut** \u2014 the fix lands in main and\n+  ships in the next release. Flagging early is what keeps the problem from reaching the\n+  branch at all.\n+- **Between branch cut and release** \u2014 the fix lands in main and is then cherry-picked to\n+  the release branch, under the criteria in [RELEASE.md](../../../RELEASE.md).\n+\n+Either way the bot's job is the same: surface it so it can be found with",
+      "outdated": true
+    }
+  ]
+}

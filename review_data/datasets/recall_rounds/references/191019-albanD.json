@@ -1,0 +1,45 @@
+{
+  "pr": 191019,
+  "head_sha": "ce78fa04eb3b919510980a210f3b3e9dbf84b3ca",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-24T17:50:14Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/Generator.cpp",
+      "line": null,
+      "original_line": 342,
+      "body": "Why not make it public and nicely documented?\nI think there is quite a bit of subtlety about what it returns and how you should use it, especially in a Graph world.",
+      "diff_hunk": "@@ -307,6 +339,7 @@ static PyMethodDef THPGenerator_methods[] = {\n     {\"seed\", THPGenerator_seed, METH_NOARGS, nullptr},\n     {\"initial_seed\", THPGenerator_initialSeed, METH_NOARGS, nullptr},\n     {\"get_offset\", THPGenerator_getOffset, METH_NOARGS, nullptr},\n+    {\"_philox_cuda_state\", THPGenerator_philoxCudaState, METH_O, nullptr},",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/Generator.cpp",
+      "line": null,
+      "original_line": 248,
+      "body": "Release the lock after this line?",
+      "diff_hunk": "@@ -225,6 +225,38 @@ static PyObject* THPGenerator_getOffset(PyObject* _self, PyObject* noargs) {\n   END_HANDLE_TH_ERRORS\n }\n \n+static PyObject* THPGenerator_philoxCudaState(\n+    PyObject* _self,\n+    PyObject* increment) {\n+  HANDLE_TH_ERRORS\n+  auto& gen = (reinterpret_cast<THPGenerator*>(_self))->cdata;\n+  TORCH_CHECK_NOT_IMPLEMENTED(\n+      gen.device().type() == at::kCUDA,\n+      \"_philox_cuda_state is only supported on CUDA generators, but got a \"\n+      \"generator on \",\n+      gen.device());\n+  TORCH_CHECK(\n+      THPUtils_checkLong(increment),\n+      \"_philox_cuda_state expected an int, but got \",\n+      THPUtils_typename(increment));\n+  // Deliberately not unpack_uint64: a negative increment is never\n+  // meaningful, so let the OverflowError propagate.\n+  const uint64_t inc = THPUtils_unpackUInt64(increment);\n+\n+  // See Note [Acquire lock when using random generators]\n+  std::scoped_lock<std::mutex> lock(gen.mutex());\n+  auto [seed_t, offset_t, intragraph_t] = gen.philox_state(inc);",
+      "outdated": true
+    },
+    {
+      "path": "test/test_cuda.py",
+      "line": null,
+      "original_line": 2960,
+      "body": "Can we have a test that shows the behavior when the offset overflows the int64 size?",
+      "diff_hunk": "@@ -2957,6 +2957,112 @@ def get_final_offsets_of_states(generator_state):\n             # Compare the states generated outside and inside the graph\n             self.assertEqual(random_values, graphed_random_values)\n \n+    def test_philox_cuda_state_eager(self):",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": null,
+      "original_line": 524,
+      "body": "What?!\nWhy take a data_ptr of a Tensor to make it into another Tensor? :p\nclone() or alias() should work here depending if you want a fresh Tensor or a view to the original.",
+      "diff_hunk": "@@ -494,6 +494,60 @@ PhiloxCudaState CUDAGeneratorImpl::philox_cuda_state(uint64_t increment) {\n   }\n }\n \n+/**\n+ * Tensor-based variant of philox_cuda_state for consumers that cannot\n+ * take a PhiloxCudaState (e.g. Python). Returns 1-element int64 tensors\n+ * (seed, offset, intragraph_offset); the kernel-visible values are\n+ * (seed, offset + intragraph_offset), with the uint64 seed and offset\n+ * reinterpreted as int64. During capture, seed and offset alias the\n+ * per-capture extragraph device state that replay_prologue refills on\n+ * every replay; their contents are undefined until the first replay, they\n+ * are only valid for that capture's lifetime, and they are returned as\n+ * non-resizable from_blob wrappers so a caller cannot reallocate the\n+ * underlying storage out from under the captured graph. Otherwise they\n+ * are device tensors holding the current values.\n+ *\n+ * See Note [Acquire lock when using random generators]\n+ */\n+std::tuple<\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>,\n+    c10::intrusive_ptr<c10::TensorImpl>>\n+CUDAGeneratorImpl::philox_state(uint64_t increment) {\n+  const auto cpu_opts = at::TensorOptions().dtype(at::kLong).device(at::kCPU);\n+  const auto dev_opts = at::TensorOptions().dtype(at::kLong).device(device());\n+  auto capture_id = at::cuda::currentStreamCaptureId();\n+  if (capture_id.has_value()) {\n+    auto* capture_state = state_->get_capture_state(capture_id.value(), true);\n+    uint64_t offset = capture_state->offset_intragraph_;\n+    state_->increase(increment);\n+    auto seed_t = at::from_blob(",
+      "outdated": true
+    }
+  ]
+}

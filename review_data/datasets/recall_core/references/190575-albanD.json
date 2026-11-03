@@ -1,0 +1,21 @@
+{
+  "pr": 190575,
+  "head_sha": "00b65a04a2d30e498eedcb1e3476abd547f428f1",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Sounds ok tbh\nFYI @scotts ",
+    "submitted_at": "2026-07-20T20:16:06Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/cuda/memory.py",
+      "line": null,
+      "original_line": 1239,
+      "body": "nit: do you need this version? Why is the Tensor version not enough?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

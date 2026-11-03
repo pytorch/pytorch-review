@@ -1,0 +1,21 @@
+{
+  "pr": 194579,
+  "head_sha": "e8802bd0914a0e69c290ed1c4384984e082ad582",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "",
+    "submitted_at": "2026-08-26T16:01:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/nn/modules/batchnorm.py",
+      "line": 810,
+      "original_line": 810,
+      "body": "These are significant changes. I don't expect they would be ok",
+      "diff_hunk": "@@ -807,7 +807,7 @@ def forward(self, input: Tensor) -> Tensor:\n                 raise AssertionError(\"num_batches_tracked must not be None\")\n             self.num_batches_tracked.add_(1)\n             if self.momentum is None:  # use cumulative moving average\n-                exponential_average_factor = 1.0 / self.num_batches_tracked.item()",
+      "outdated": false
+    }
+  ]
+}

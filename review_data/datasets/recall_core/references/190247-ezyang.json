@@ -1,0 +1,21 @@
+{
+  "pr": 190247,
+  "head_sha": "37d354c9c67b0db8d0f144390651152b2ec69304",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-20T17:26:53Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/core/TensorImpl.cpp",
+      "line": null,
+      "original_line": 218,
+      "body": "Kinda weird you need a special case for this",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 191364,
+  "head_sha": "440840ef9fc78b81e4facd5d1799ff5f1bba9429",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Sounds ok!",
+    "submitted_at": "2026-07-28T21:32:25Z"
+  },
+  "inline_comments": [
+    {
+      "path": "tools/linter/adapters/_stable_shim_utils.py",
+      "line": null,
+      "original_line": 505,
+      "body": "f string missing",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

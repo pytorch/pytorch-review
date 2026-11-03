@@ -1,0 +1,12 @@
+{
+  "pr": 193456,
+  "head_sha": "95ab1518902e3ded2d299161c26c31fba4ab46ed",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "We should fix the reference function, not drop test coverage for something that we support right?",
+    "submitted_at": "2026-08-15T22:47:17Z"
+  },
+  "inline_comments": []
+}

@@ -1,0 +1,45 @@
+{
+  "pr": 192132,
+  "head_sha": "b974a228b68ad353348b41f875c99413b65bac8e",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-07T20:17:06Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/community/viable_strict.md",
+      "line": null,
+      "original_line": 15,
+      "body": "What's the current pull runtime? Can we aim for less? :D\n\nAlso can we add another max time for all jobs that are viable strict blocking (like 120min).",
+      "diff_hunk": "@@ -0,0 +1,29 @@\n+---\n+orphan: true\n+---\n+\n+# viable/strict CI jobs\n+## Background\n+The [*viable/strict*](https://github.com/pytorch/pytorch/tree/viable/strict) branch ensures all essential PyTorch tests are passing on it. This provides a stable base for contributions and greatly increases confidence that test failures are newly introduced. *viable/strict* should closely track *main*, providing a topline read on trunk health.\n+\n+All merged commits on main are candidates for becoming the new *viable/strict* head. Tests that must pass for this promotion to succeed are part of the *viable/strict*-blocking set. These tests must be high signal and minimally flaky. No subset of these tests should dominate advancement failures.\n+\n+## Blocking Set Requirements\n+The *viable/strict*-blocking set is encompassed by `trunk`, `pull`, `lint`, and `docs-build`. Jobs that are part of these workflows should meet the following requirements:\n+\n+Let **Failures %** (given a job, over an N-day window) be defined as the percent of commits where this job was red, over the decided main commits in the provided window.\n+1. A job should only be added to the *viable/strict*-blocking set if it meets **Failures % less than 10% over the last 7 days**. Furthermore, jobs added to the frequently-run `pull` workflow should not cause `pull` runtime to exceed 90 minutes. The job owner is responsible for ensuring these requirements are met.",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/community/viable_strict.md",
+      "line": null,
+      "original_line": 18,
+      "body": "Can you inline this in the rule above with the failure rate?\nAlso any dashboard showing the `pull` runtime?",
+      "diff_hunk": "@@ -0,0 +1,29 @@\n+---\n+orphan: true\n+---\n+\n+# viable/strict CI jobs\n+## Background\n+The [*viable/strict*](https://github.com/pytorch/pytorch/tree/viable/strict) branch ensures all essential PyTorch tests are passing on it. This provides a stable base for contributions and greatly increases confidence that test failures are newly introduced. *viable/strict* should closely track *main*, providing a topline read on trunk health.\n+\n+All merged commits on main are candidates for becoming the new *viable/strict* head. Tests that must pass for this promotion to succeed are part of the *viable/strict*-blocking set. These tests must be high signal and minimally flaky. No subset of these tests should dominate advancement failures.\n+\n+## Blocking Set Requirements\n+The *viable/strict*-blocking set is encompassed by `trunk`, `pull`, `lint`, and `docs-build`. Jobs that are part of these workflows should meet the following requirements:\n+\n+Let **Failures %** (given a job, over an N-day window) be defined as the percent of commits where this job was red, over the decided main commits in the provided window.\n+1. A job should only be added to the *viable/strict*-blocking set if it meets **Failures % less than 10% over the last 7 days**. Furthermore, jobs added to the frequently-run `pull` workflow should not cause `pull` runtime to exceed 90 minutes. The job owner is responsible for ensuring these requirements are met.\n+2. *viable/strict*-blocking jobs that exceed **Failures % greater than 15% over the last 7 days should be removed from the viable/strict-blocking set**, outside of sustained breakages across the *viable/strict*-blocking set. This will be maintained by the PyTorch Dev Infra team.\n+\n+Job health can be viewed at HUD [/reliability](https://hud.pytorch.org/reliability) or computed manually on [the trunk dashboard](https://hud.pytorch.org/hud/pytorch/pytorch/main).",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/community/viable_strict.md",
+      "line": null,
+      "original_line": 15,
+      "body": "Should these match https://github.com/pytorch/rfcs/pull/102 (and the L4 version) directly?",
+      "diff_hunk": "@@ -0,0 +1,29 @@\n+---\n+orphan: true\n+---\n+\n+# viable/strict CI jobs\n+## Background\n+The [*viable/strict*](https://github.com/pytorch/pytorch/tree/viable/strict) branch ensures all essential PyTorch tests are passing on it. This provides a stable base for contributions and greatly increases confidence that test failures are newly introduced. *viable/strict* should closely track *main*, providing a topline read on trunk health.\n+\n+All merged commits on main are candidates for becoming the new *viable/strict* head. Tests that must pass for this promotion to succeed are part of the *viable/strict*-blocking set. These tests must be high signal and minimally flaky. No subset of these tests should dominate advancement failures.\n+\n+## Blocking Set Requirements\n+The *viable/strict*-blocking set is encompassed by `trunk`, `pull`, `lint`, and `docs-build`. Jobs that are part of these workflows should meet the following requirements:\n+\n+Let **Failures %** (given a job, over an N-day window) be defined as the percent of commits where this job was red, over the decided main commits in the provided window.\n+1. A job should only be added to the *viable/strict*-blocking set if it meets **Failures % less than 10% over the last 7 days**. Furthermore, jobs added to the frequently-run `pull` workflow should not cause `pull` runtime to exceed 90 minutes. The job owner is responsible for ensuring these requirements are met.",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/community/viable_strict.md",
+      "line": null,
+      "original_line": 21,
+      "body": "How do we detect this?\n\nAlso \"unstable\" is not defined here.",
+      "diff_hunk": "@@ -0,0 +1,29 @@\n+---\n+orphan: true\n+---\n+\n+# viable/strict CI jobs\n+## Background\n+The [*viable/strict*](https://github.com/pytorch/pytorch/tree/viable/strict) branch ensures all essential PyTorch tests are passing on it. This provides a stable base for contributions and greatly increases confidence that test failures are newly introduced. *viable/strict* should closely track *main*, providing a topline read on trunk health.\n+\n+All merged commits on main are candidates for becoming the new *viable/strict* head. Tests that must pass for this promotion to succeed are part of the *viable/strict*-blocking set. These tests must be high signal and minimally flaky. No subset of these tests should dominate advancement failures.\n+\n+## Blocking Set Requirements\n+The *viable/strict*-blocking set is encompassed by `trunk`, `pull`, `lint`, and `docs-build`. Jobs that are part of these workflows should meet the following requirements:\n+\n+Let **Failures %** (given a job, over an N-day window) be defined as the percent of commits where this job was red, over the decided main commits in the provided window.\n+1. A job should only be added to the *viable/strict*-blocking set if it meets **Failures % less than 10% over the last 7 days**. Furthermore, jobs added to the frequently-run `pull` workflow should not cause `pull` runtime to exceed 90 minutes. The job owner is responsible for ensuring these requirements are met.\n+2. *viable/strict*-blocking jobs that exceed **Failures % greater than 15% over the last 7 days should be removed from the viable/strict-blocking set**, outside of sustained breakages across the *viable/strict*-blocking set. This will be maintained by the PyTorch Dev Infra team.\n+\n+Job health can be viewed at HUD [/reliability](https://hud.pytorch.org/reliability) or computed manually on [the trunk dashboard](https://hud.pytorch.org/hud/pytorch/pytorch/main).\n+\n+### Core Jobs, Ineligible for Unstable Designation\n+The following jobs are not eligible for being marked as unstable given the above guidance. At least one CPU default and one CUDA default test job must always be present. Absence of signals from the following jobs should block *viable/strict* entirely.",
+      "outdated": true
+    }
+  ]
+}

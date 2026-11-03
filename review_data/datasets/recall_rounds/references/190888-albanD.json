@@ -1,0 +1,21 @@
+{
+  "pr": 190888,
+  "head_sha": "ea299124b4b6b4b4c3fa4351154217916d117c55",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-24T15:44:59Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_weights_only_unpickler.py",
+      "line": null,
+      "original_line": 330,
+      "body": "There can actually be geniune reconstruction errors here as well right? Can we update the language to keep that in mind?",
+      "diff_hunk": "@@ -316,7 +316,22 @@ def load(self):\n         \"\"\"Read a pickled object representation from the open file.\n \n         Return the reconstituted object hierarchy specified in the file.\n+\n+        Structural corruption in the byte stream (stack underflow, truncated\n+        fields, dangling memo references, or undecodable strings) is surfaced\n+        as ``UnpicklingError`` instead of a bare ``IndexError`` /\n+        ``struct.error`` / ``KeyError`` / ``UnicodeDecodeError``, so callers\n+        loading untrusted checkpoints see a single, catchable error type.\n         \"\"\"\n+        try:\n+            return self._load()\n+        except (IndexError, _struct_error, KeyError, UnicodeDecodeError) as e:\n+            raise UnpicklingError(\n+                f\"Encountered malformed pickle data ({type(e).__name__}: {e}); \"",
+      "outdated": true
+    }
+  ]
+}

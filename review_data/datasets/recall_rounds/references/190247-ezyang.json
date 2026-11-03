@@ -1,0 +1,21 @@
+{
+  "pr": 190247,
+  "head_sha": "37d354c9c67b0db8d0f144390651152b2ec69304",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-20T17:26:53Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/core/TensorImpl.cpp",
+      "line": null,
+      "original_line": 218,
+      "body": "Kinda weird you need a special case for this",
+      "diff_hunk": "@@ -211,13 +215,16 @@ void TensorImpl::set_fake_device(c10::Device fake_device) {\n   // where the fake device logic is instead of just calling device_default()\n   set_custom_device(true);\n \n-  // change backend key from Meta to the fake device\n-  _change_backend_component_keys(fake_device);\n+  if (fake_device.type() != c10::DeviceType::Meta) {",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "pr": 191019,
+  "head_sha": "12b0a7efb0de6d0d38ae0e5efdd5742a028b9df8",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "nit about return type, but SGTM otherwise!",
+    "submitted_at": "2026-07-28T17:34:13Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/core/Generator.cpp",
+      "line": null,
+      "original_line": 27,
+      "body": "Why not return the Tensor's from this one? this will avoid a couple refcount bumps.",
+      "diff_hunk": "@@ -21,4 +21,11 @@ Generator Generator::graphsafe_get_state() const {\n   return Generator(this->impl_->graphsafe_get_state());\n }\n \n+std::tuple<at::Tensor, at::Tensor, at::Tensor> Generator::philox_state(\n+    uint64_t increment) {\n+  at::Tensor seed, offset, intragraph;\n+  this->impl_->philox_state(increment, seed, offset, intragraph);",
+      "outdated": true
+    },
+    {
+      "path": "torch/_torch_docs.py",
+      "line": null,
+      "original_line": 14418,
+      "body": "nit: should the reinterpret be done before the add ?  Also, sohuld there be a modulo here? :p",
+      "diff_hunk": "@@ -14402,6 +14402,71 @@ def merge_dicts(*dicts):\n \"\"\",\n )\n \n+add_docstr(\n+    torch.Generator.philox_state,\n+    r\"\"\"\n+Generator.philox_state(increment) -> tuple[Tensor, Tensor, Tensor]\n+\n+Reserves ``increment`` values from this generator's Philox4x32-10 stream and\n+returns the reserved position as ``(seed, offset, intragraph_offset)``, three\n+1-element ``int64`` tensors. This is the same reservation protocol the\n+built-in CUDA random kernels use (``PhiloxCudaState`` in C++), so kernels\n+built on it draw from the same stream as, and compose with, the built-in\n+random operations. Only Philox-based generators (currently CUDA) support this\n+method.\n+\n+**What the reservation grants.** With ``effective_offset = offset +",
+      "outdated": true
+    }
+  ]
+}

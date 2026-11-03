@@ -1,0 +1,21 @@
+{
+  "pr": 189447,
+  "head_sha": "0193ab2626c7420b3add6c531848722425857fc2",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-09T18:43:57Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/TensorShape.cpp",
+      "line": null,
+      "original_line": 4038,
+      "body": "I feel these conversions shouldn't be needed",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 194437,
+  "head_sha": "d59c7e34946b04125812ffe9856bba95fc6fb39b",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-26T17:31:45Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/multiprocessing/_atfork.py",
+      "line": null,
+      "original_line": 21,
+      "body": "Won't this fail unconditionally?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

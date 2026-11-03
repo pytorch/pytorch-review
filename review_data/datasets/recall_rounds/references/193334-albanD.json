@@ -1,0 +1,21 @@
+{
+  "pr": 193334,
+  "head_sha": "6fcfe08dbd5cd712a43df641b6939eb8f40b752f",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-15T22:34:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": null,
+      "original_line": 5994,
+      "body": "We support cross-dtype views, so `torch.tensor(byte_list, dtype=torch.uint8, device=device).view(dtype=dtype)` or similar would work?",
+      "diff_hunk": "@@ -5977,27 +5977,22 @@ def check_bytes(byte_list):\n             if not (0 <= byte <= 255):\n                 raise AssertionError(f\"byte value out of range: expected 0 <= byte <= 255, got {byte}\")\n \n-    if dtype.is_complex:\n-        if len(byte_list) != (num_bytes * 2):\n-            raise AssertionError(\n-                f\"expected len(byte_list) == {num_bytes * 2} for complex dtype, got {len(byte_list)}\"\n-            )\n-        check_bytes(byte_list)\n-        real = ctype.from_buffer((ctypes.c_byte * num_bytes)(\n-            *byte_list[:num_bytes])).value\n-        imag = ctype.from_buffer((ctypes.c_byte * num_bytes)(\n-            *byte_list[num_bytes:])).value\n-        res = real + 1j * imag\n-    else:\n-        if len(byte_list) != num_bytes:\n-            raise AssertionError(\n-                f\"expected len(byte_list) == {num_bytes}, got {len(byte_list)}\"\n-            )\n-        check_bytes(byte_list)\n-        res = ctype.from_buffer((ctypes.c_byte * num_bytes)(\n-            *byte_list)).value\n-\n-    return torch.tensor(res, device=device, dtype=dtype)\n+    expected_len = num_bytes * 2 if dtype.is_complex else num_bytes\n+    if len(byte_list) != expected_len:\n+        raise AssertionError(\n+            f\"expected len(byte_list) == {expected_len}\"\n+            f\"{' for complex dtype' if dtype.is_complex else ''}, got {len(byte_list)}\"\n+        )\n+    check_bytes(byte_list)\n+\n+    # Write bytes directly into storage to preserve exact bit patterns\n+    # (e.g. NaN payloads, which are not preserved when round-tripping through\n+    # Python float/complex, especially on architectures like RISC-V that\n+    # canonicalize NaNs).\n+    res = torch.empty((), dtype=dtype, device=device)\n+    src = torch.tensor(byte_list, dtype=torch.uint8, device=device)\n+    res.untyped_storage().copy_(src.untyped_storage())",
+      "outdated": true
+    }
+  ]
+}
