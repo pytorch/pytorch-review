@@ -2,4 +2,6 @@ In this house, we carefully distinguish between human and AI written text (slop)
 
 Everything in scratch/ should be assumed to be slop.
 
-This applies to our dataset: there is a place for AI summaries, but if the human labeler wrote text by hand we should cherish it--even if humans make mistakes sometimes!  Mistakes in a human labeled dataset at scale are expected and LLMs should help but not replace humans in fixing problems and improving the system.
+This applies to our datasets: there is a place for AI summaries, but if the human labeler wrote text by hand we should cherish it--even if humans make mistakes sometimes!  Mistakes in a human labeled dataset at scale are expected and LLMs should help but not replace humans in fixing problems and improving the system.
+
+Each dataset is its own thing.  They have different objectives, even if they come from the same underlying source.  Don't get mixed up.
