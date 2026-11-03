@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": 1576,
+      "summary": "The change handles a case where a CompositeExplicitAutograd op launches a kernel, but such an op should never launch a kernel directly, so the code (or the dispatch registration) is wrong and needs rethinking.",
+      "type": "design"
+    }
+  ]
+}

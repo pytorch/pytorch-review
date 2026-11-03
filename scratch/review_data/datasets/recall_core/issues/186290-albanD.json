@@ -1,0 +1,39 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/testing/_internal/distributed/fake_pg.py",
+      "line": 9,
+      "summary": "The backward-compatibility justification is confusing because adding FakeProcessGroup to `__all__` is new; explain or fix the claim.",
+      "type": "question"
+    },
+    {
+      "id": "h2",
+      "path": "torch/csrc/distributed/c10d/FakeStore.hpp",
+      "line": 12,
+      "summary": "Rewrite the comment so it says the store has to be a pure C++ object held by the C++ ProcessGroup, which is why it can't live in Python without extra indirection; the current comment argues the point too hard.",
+      "type": "style"
+    },
+    {
+      "id": "h3",
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": 408,
+      "summary": "This change looks unnecessary because the new call above already guarantees a real options object; justify it or revert it.",
+      "type": "question"
+    },
+    {
+      "id": "h4",
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": 79,
+      "summary": "This code logically merge-conflicts with main and is now dead code; remove it.",
+      "type": "defect"
+    },
+    {
+      "id": "h5",
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": 73,
+      "summary": "The fake PG accepts a case that NCCL treats as an error; it should match NCCL and raise an error instead of being more lenient.",
+      "type": "design"
+    }
+  ]
+}

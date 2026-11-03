@@ -1,0 +1,46 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": 332,
+      "summary": "The hook fires once only ONE of the next_functions is set up, not all of them, so the Node isn't ready to inspect yet; either document that the Node is not ready for inspection or trigger the hook only once it is fully ready.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": "torch/autograd/graph.py",
+      "line": 476,
+      "summary": "The hook should propagate to any worker thread from any system, not only some threads.",
+      "type": "defect"
+    },
+    {
+      "id": "h3",
+      "path": "torch/autograd/graph.py",
+      "line": 485,
+      "summary": "The docstring example uses private APIs; it should be rewritten with public APIs.",
+      "type": "style"
+    },
+    {
+      "id": "h4",
+      "path": "torch/csrc/autograd/function.cpp",
+      "line": 54,
+      "summary": "The hook goes through the engine instead of being called directly; it should follow the same pattern as saved_variable_hooks.",
+      "type": "design"
+    },
+    {
+      "id": "h5",
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": 735,
+      "summary": "The trigger here looks redundant because set_next_edges above should already fire the hook, which could make it fire twice.",
+      "type": "defect"
+    },
+    {
+      "id": "h6",
+      "path": "test/test_autograd.py",
+      "line": 11379,
+      "summary": "The test should also check that nodes[1] is correct, using a multi-output differentiable function such as split().",
+      "type": "missing_test"
+    }
+  ]
+}

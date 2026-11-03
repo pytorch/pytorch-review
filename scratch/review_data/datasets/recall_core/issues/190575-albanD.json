@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/cuda/memory.py",
+      "line": 1239,
+      "summary": "The reviewer asks why this extra (non-Tensor) version of the function is needed when the Tensor version looks like it should be enough, implying it could be removed.",
+      "type": "design"
+    }
+  ]
+}

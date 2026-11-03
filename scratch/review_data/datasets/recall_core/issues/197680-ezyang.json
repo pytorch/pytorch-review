@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/distributed/tensor/_dispatch.py",
+      "line": 382,
+      "summary": "The device guard checks the input tensor's device rather than the effective output device, so factory-like random ops such as rand_like/randn_like with an explicit device override (e.g. CPU-local DTensor on a CUDA mesh with device=\"cuda\") are now wrongly rejected instead of using the CUDA RNG tracker.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": "torch/distributed/tensor/_dispatch.py",
+      "line": 382,
+      "summary": "Add regression tests for a CPU input with CUDA output via an explicit device override for rand_like and randn_like.",
+      "type": "missing_test"
+    }
+  ]
+}

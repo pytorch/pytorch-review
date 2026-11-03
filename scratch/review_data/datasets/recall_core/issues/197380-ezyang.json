@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_weights_only_unpickler.py",
+      "line": 110,
+      "summary": "It's unclear whether this code path should clear/reset the ContextVar; the PR needs to decide whether to reset it (or justify leaving it set) so state doesn't leak.",
+      "type": "question"
+    }
+  ]
+}

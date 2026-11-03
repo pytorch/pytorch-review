@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": ".claude/skills/triaging-issues/labels.json",
+      "line": 1099,
+      "summary": "Questions why this is modeled as a label rather than a milestone, suggesting a milestone may be more appropriate.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": 37,
+      "summary": "Questions why this is numbered as step 5.5 rather than a separate step, and points out it seems to apply beyond only high-priority issues.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": 251,
+      "summary": "The intent of this paragraph and the one before it is unclear, so they need to be clarified or rewritten.",
+      "type": "style"
+    }
+  ]
+}

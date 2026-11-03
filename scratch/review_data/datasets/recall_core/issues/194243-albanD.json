@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "tools/native_aot/build_stage2.py",
+      "line": 733,
+      "summary": "Part of the error message reads like an internal code comment rather than text for the user who sees the error, so it should be rewritten or moved into a code comment.",
+      "type": "style"
+    },
+    {
+      "id": "h2",
+      "path": "tools/native_aot/build_stage2.py",
+      "line": 827,
+      "summary": "The wrong variable name is used here.",
+      "type": "defect"
+    },
+    {
+      "id": "h3",
+      "path": "tools/native_aot/build_stage2.py",
+      "line": 795,
+      "summary": "The rebuild does not make sure it reuses the exact same cache as the previous build, and nothing stops a configuration change from being triggered.",
+      "type": "defect"
+    }
+  ]
+}

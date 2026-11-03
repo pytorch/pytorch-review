@@ -60,6 +60,20 @@ python3 -m review_data.tools.select_reviews --pytorch ../pytorch \
 
 `review_data/tools/build_dataset.py` alone builds `block` / `clean` cases from maintainer decisions in a date window.
 
+## Human labeling
+
+`datasets/recall_core/issues/<case>.json` holds the distinct issues each maintainer review raised, extracted once
+by an LLM and frozen (`id`, `type`, `path`, `line`, `summary`; AI-written), so agent results and labels refer to the
+same issues. `results/fanout-acc31ac6427/recall_core.json` records which of them one run of pytorch's PR review
+agent with fan-out caught (86 of 167; two cases were not run). `tools/export_labeling.py` writes them as a CSV for
+human labeling: the AI summary, what the maintainer wrote, whether the author acted on it, whether the agent caught
+it, and empty label columns; `--show missed` keeps only the issues the agent did not catch:
+
+```
+python3 -m review_data.tools.export_labeling --dataset review_data/datasets/recall_core \
+    --results review_data/results/fanout-acc31ac6427/recall_core.json --show missed --out labels.csv
+```
+
 ## Tests
 
 ```

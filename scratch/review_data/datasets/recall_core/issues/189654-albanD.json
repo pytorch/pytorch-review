@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/onnx/_internal/torchscript_exporter/symbolic_opset9.py",
+      "line": 3068,
+      "summary": "The ONNX symbolic change needs a new test that covers it.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h2",
+      "path": "test/test_nn.py",
+      "line": 4928,
+      "summary": "The Python frontend already has this, and kwargs with default values don't have a forward-compatibility (FC) constraint, so the FC workaround is unnecessary. The docs should be updated to match.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": "torch/csrc/api/include/torch/nn/functional/distance.h",
+      "line": 14,
+      "summary": "The Python Module should also be updated to support the new option, not just the C++ functional API.",
+      "type": "design"
+    }
+  ]
+}

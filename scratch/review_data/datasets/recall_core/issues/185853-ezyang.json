@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_inductor/codegen/cutedsl/cutedsl_op_overrides.py",
+      "line": 330,
+      "summary": "The implementation at this line is technically incorrect, even if it's probably harmless in practice, and should be fixed.",
+      "type": "defect"
+    }
+  ]
+}

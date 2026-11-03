@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/native/cudnn/RNN.cpp",
+      "line": 2599,
+      "summary": "The 1D and CPU checks on batch_sizes in the cuDNN packed RNN wrapper (lines 2599\u20132603) now duplicate the new validation at the shared entry points, so remove them and keep validation in one place.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "aten/src/ATen/native/miopen/RNN_miopen.cpp",
+      "line": 1071,
+      "summary": "The 1D and CPU checks on batch_sizes in the MIOpen packed RNN wrapper (lines 1071\u20131075) now duplicate the new validation at the shared entry points, so remove them and keep validation in one place.",
+      "type": "design"
+    }
+  ]
+}

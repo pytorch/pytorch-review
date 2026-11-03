@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/amp/autocast_mode.py",
+      "line": 46,
+      "summary": "The change is implemented only in Python; it should instead fix the C++ bindings to expose the needed functionality.",
+      "type": "design"
+    }
+  ]
+}

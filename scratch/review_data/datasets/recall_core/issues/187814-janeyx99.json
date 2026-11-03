@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/optim/test_lrscheduler.py",
+      "line": 478,
+      "summary": "Combine the new separate tests into one test rather than having numbered tests (test1/test2), which are poorly named.",
+      "type": "style"
+    }
+  ]
+}

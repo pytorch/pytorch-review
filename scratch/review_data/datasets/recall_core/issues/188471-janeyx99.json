@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/lazy/python/init.cpp",
+      "line": 324,
+      "summary": "The #endif should keep the existing convention of a trailing comment naming the #if condition it closes.",
+      "type": "style"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/foreach/__init__.py",
+      "line": 1583,
+      "summary": "Rename this parameter to \"inputs\" to match the naming used by the other foreach functions.",
+      "type": "style"
+    },
+    {
+      "id": "h2",
+      "path": "torch/foreach/__init__.py",
+      "line": 1197,
+      "summary": "Make the `value` argument keyword-only for all these foreach functions, including the ones at lines 1288 and 1601.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": "torch/foreach/__init__.py",
+      "line": 734,
+      "summary": "The overloads with and without alpha resolve the Scalar overload differently and may behave oddly; either document this or always pass alpha=1 so the preferred overload is used.",
+      "type": "design"
+    },
+    {
+      "id": "h4",
+      "path": "torch/foreach/__init__.py",
+      "line": 1256,
+      "summary": "The claim that maximum/minimum always dispatch to clamp may be wrong because there are specialized kernels; check it and remove it if it isn't true.",
+      "type": "defect"
+    },
+    {
+      "id": "h5",
+      "path": "torch/overrides.py",
+      "line": 1572,
+      "summary": "In-place variants are missing from the overrides list; asks why they aren't included.",
+      "type": "question"
+    },
+    {
+      "id": "h6",
+      "path": "torch/testing/_internal/common_methods_invocations.py",
+      "line": 11429,
+      "summary": "test/test_meta.py has the same logic at the top and should be changed to reuse this new helper.",
+      "type": "design"
+    },
+    {
+      "id": "h7",
+      "path": "torch/foreach/__init__.py",
+      "line": 195,
+      "summary": "If func() is in-place, it has already run before the argument error is raised, so the warning or error should say the function was actually executed.",
+      "type": "defect"
+    },
+    {
+      "id": "h8",
+      "path": "torch/foreach/__init__.py",
+      "line": 206,
+      "summary": "Asks why there is an empty return here.",
+      "type": "question"
+    },
+    {
+      "id": "h9",
+      "path": "torch/foreach/__init__.py",
+      "line": 184,
+      "summary": "The signature bind may be expensive; benchmark its overhead on an optimizer use case.",
+      "type": "design"
+    },
+    {
+      "id": "h10",
+      "path": "docs/source/torch.md",
+      "line": 929,
+      "summary": "Changing this docs anchor may break existing external links to it.",
+      "type": "question"
+    }
+  ]
+}

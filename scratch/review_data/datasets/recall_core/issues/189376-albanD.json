@@ -1,0 +1,60 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 38,
+      "summary": "These tests shouldn't be listed for out-of-tree backends to run, since core CI already runs them on all supported CPU architectures.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 68,
+      "summary": "The meaning of this entry is unclear and needs explaining.",
+      "type": "question"
+    },
+    {
+      "id": "h3",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 65,
+      "summary": "This entry is probably a no-op for out-of-tree backends; the doc should instead point to a PrivateUse1 test that checks the PU1 backend was registered correctly.",
+      "type": "design"
+    },
+    {
+      "id": "h4",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 94,
+      "summary": "Give the full path to the referenced file instead of a partial one.",
+      "type": "style"
+    },
+    {
+      "id": "h5",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 67,
+      "summary": "Say whether this function can be called more than once, or whether every config has to go into a single call.",
+      "type": "design"
+    },
+    {
+      "id": "h6",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 115,
+      "summary": "Tell users to send PRs to core to make this update.",
+      "type": "design"
+    },
+    {
+      "id": "h7",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 170,
+      "summary": "The section leaves out which test file to run and how it applies.",
+      "type": "design"
+    },
+    {
+      "id": "h8",
+      "path": "docs/source/accelerator/testing.md",
+      "line": 179,
+      "summary": "This link may not resolve in the rendered docs and should be checked or fixed.",
+      "type": "defect"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": ".ci/manywheel/build_common.sh",
+      "line": 123,
+      "summary": "The added logic is not ROCm-specific, but it's written as ROCm-only code, so it should be generalized or moved out of the ROCm-specific path.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": ".ci/manywheel/build_install_deps.py",
+      "line": 59,
+      "summary": "The change is a very specific bandaid fix and doesn't belong in this generic dependency-install logic; it needs a more general approach or a different location.",
+      "type": "design"
+    }
+  ]
+}

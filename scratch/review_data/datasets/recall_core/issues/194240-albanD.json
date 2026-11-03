@@ -1,0 +1,74 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 61,
+      "summary": "The comment starts mid-sentence and needs to be rewritten so it reads properly.",
+      "type": "style"
+    },
+    {
+      "id": "h2",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 367,
+      "summary": "The arch-support check runs on the survivors left after the tie-break, so a stale disowned tree with the same capability (e.g. a plain sm_100 next to the claimed sm_100a) is dropped before the check sees it and is never flagged as fatal.",
+      "type": "defect"
+    },
+    {
+      "id": "h3",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 367,
+      "summary": "Add a test covering a disowned tree with the same capability next to a claimed one (sm_100 vs sm_100a), since the existing sm_90a test never exercises that case.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h4",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 66,
+      "summary": "The comment about avoiding includes is inaccurate because core/Tensor.h is included anyway; fix the comment or just include everything.",
+      "type": "style"
+    },
+    {
+      "id": "h5",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 119,
+      "summary": "This comment isn't needed and should be removed.",
+      "type": "style"
+    },
+    {
+      "id": "h6",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 115,
+      "summary": "The comment calls this code generated, but it is written directly in the template, so the comment is misleading.",
+      "type": "style"
+    },
+    {
+      "id": "h7",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 201,
+      "summary": "Use the value directly instead of going through an unnecessary intermediate.",
+      "type": "design"
+    },
+    {
+      "id": "h8",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 292,
+      "summary": "The comment is longer than the function it describes; cut it down.",
+      "type": "style"
+    },
+    {
+      "id": "h9",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 358,
+      "summary": "This comment doesn't seem relevant at this spot and should be removed or moved.",
+      "type": "style"
+    },
+    {
+      "id": "h10",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 405,
+      "summary": "Make the default a lambda that returns \"\" so the extra conditional checks can go.",
+      "type": "style"
+    }
+  ]
+}

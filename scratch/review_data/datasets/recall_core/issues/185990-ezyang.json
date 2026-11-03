@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/cuda/_graph_annotations.py",
+      "line": 97,
+      "summary": "The code here is overly defensive; the unnecessary defensive checks or handling should be simplified or removed.",
+      "type": "design"
+    }
+  ]
+}

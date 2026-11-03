@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "third_party/kineto/CODE_OF_CONDUCT.md",
+      "line": 1,
+      "summary": "Remove the vendored kineto repo-level files (code of conduct, contributing, lint, and clang config files) because the core PyTorch versions take over and these won't apply or run any more.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "third_party/kineto/CODE_OF_CONDUCT.md",
+      "line": 1,
+      "summary": "Remove the vendored kineto .github folder because its workflows won't trigger inside the PyTorch repo.",
+      "type": "design"
+    }
+  ]
+}

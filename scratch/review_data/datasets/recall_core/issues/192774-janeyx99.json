@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/stable/c/shim_function_versions.txt",
+      "line": 135,
+      "summary": "The branch cut has already happened, so the new shim function should be versioned as 2_15 instead of the version currently listed.",
+      "type": "defect"
+    }
+  ]
+}

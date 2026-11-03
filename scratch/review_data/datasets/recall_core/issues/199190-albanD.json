@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": ".github/scripts/tryrebase.py",
+      "line": 295,
+      "summary": "The base SHA comes from a comment that anyone can post, so the script must check that it is safe/trusted before using it and must not assume it is good.",
+      "type": "defect"
+    }
+  ]
+}

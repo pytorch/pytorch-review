@@ -1,0 +1,39 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "TVM should be preinstalled in the Docker image, not installed at test time.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": null,
+      "line": null,
+      "summary": "Need to decide whether main CI should run TVM E2E tests at all, since the risk may be low enough that they aren't needed.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": null,
+      "line": null,
+      "summary": "Need to decide how many TVM tests to run and how much CI time is acceptable.",
+      "type": "design"
+    },
+    {
+      "id": "h4",
+      "path": null,
+      "line": null,
+      "summary": "The PR must show that the TVM tests actually pass.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h5",
+      "path": null,
+      "line": null,
+      "summary": "The maintainer needs to understand how many moving parts and dependencies the TVM install involves.",
+      "type": "question"
+    }
+  ]
+}

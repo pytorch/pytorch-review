@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/native/BinaryOps.cpp",
+      "line": 1669,
+      "summary": "The reviewer doubts the coding idiom used at this spot and wants it reconsidered or replaced with a more conventional approach.",
+      "type": "design"
+    }
+  ]
+}

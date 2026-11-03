@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/test_optim.py",
+      "line": 2705,
+      "summary": "The new Muon momentum-buffer aliasing test should be moved into TestOptimRenewed and use its device/dtype parametrization (@dtypes float32/bfloat16, nesterov parametrize).",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "test/test_optim.py",
+      "line": 2705,
+      "summary": "Delete the long, hard-to-read comment in the test and simplify it to compare the momentum buffer against a plainly computed expected lerp value.",
+      "type": "style"
+    }
+  ]
+}

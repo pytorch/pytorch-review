@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "scripts/codeowners/test_check_taxonomy.py",
+      "line": 4,
+      "summary": "Unclear when/where this test is run; it does not seem to be hooked into CI or any test runner.",
+      "type": "question"
+    },
+    {
+      "id": "h2",
+      "path": "CODEOWNERS",
+      "line": 29,
+      "summary": "An existing CODEOWNERS entry for the reviewer was removed and should be put back.",
+      "type": "defect"
+    },
+    {
+      "id": "h3",
+      "path": "scripts/codeowners/check_taxonomy.py",
+      "line": 272,
+      "summary": "Skipping patterns with `not pattern.active` hides real bugs: invalid paths in CODEOWNERS (e.g. quant, caffe2) get silently ignored when they should be reported.",
+      "type": "defect"
+    }
+  ]
+}

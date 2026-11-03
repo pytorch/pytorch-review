@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": ".github/auto-pr-triage/team_members.json",
+      "line": 12,
+      "summary": "The team members list needs updating; the maintainer asks whether Ivan has actually agreed to be included, which implies the roster should be checked and corrected.",
+      "type": "defect"
+    }
+  ]
+}

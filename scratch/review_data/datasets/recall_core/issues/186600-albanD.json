@@ -1,0 +1,32 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/accelerator/__init__.py",
+      "line": 32,
+      "summary": "These random APIs should not be exposed in the top-level torch.accelerator module namespace.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "torch/accelerator/random.py",
+      "line": 122,
+      "summary": "The purpose and meaning of the seed argument is unclear; it needs explaining or justifying.",
+      "type": "question"
+    },
+    {
+      "id": "h3",
+      "path": "torch/accelerator/random.py",
+      "line": 185,
+      "summary": "The documentation should state clearly that the same seed is applied to all devices.",
+      "type": "style"
+    },
+    {
+      "id": "h4",
+      "path": "torch/accelerator/random.py",
+      "line": 120,
+      "summary": "The seed should probably be converted with int(seed) the way the CUDA implementation does it, for consistency.",
+      "type": "style"
+    }
+  ]
+}

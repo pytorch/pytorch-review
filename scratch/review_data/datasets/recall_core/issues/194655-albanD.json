@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": 6446,
+      "summary": "The change stops catching bad reference cycles, but the check should keep detecting them too.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": null,
+      "line": null,
+      "summary": "The PR's purpose and motivation aren't clear and need to be explained.",
+      "type": "question"
+    }
+  ]
+}

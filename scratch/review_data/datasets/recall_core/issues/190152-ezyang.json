@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "The maintainer objects to making any changes to multithreaded ProcessGroup. They want it frozen, tests moved off it, and use cases switched to fake PG / local tensor mode, with the aim of deleting it eventually.",
+      "type": "design"
+    }
+  ]
+}

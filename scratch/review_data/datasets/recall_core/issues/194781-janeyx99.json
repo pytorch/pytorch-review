@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/headeronly/util/TypeCast.h",
+      "line": 280,
+      "summary": "Reword the comment to say it is defined with C10_NOINLINE to prevent code-size bloat.",
+      "type": "style"
+    }
+  ]
+}

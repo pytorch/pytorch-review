@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "cmake/public/utils.cmake",
+      "line": 559,
+      "summary": "Keep the quotes around the variable expansions here and in the code above, so empty values or values with spaces are handled correctly.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": "cmake/public/utils.cmake",
+      "line": 548,
+      "summary": "Have the function build a unique result-variable name internally, the way append_cxx_flag_if_supported does, instead of making the caller pass one in.",
+      "type": "design"
+    }
+  ]
+}

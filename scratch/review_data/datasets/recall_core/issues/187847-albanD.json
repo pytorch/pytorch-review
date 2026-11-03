@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/nn/utils/prune.py",
+      "line": null,
+      "summary": "Fix the logic in prune.py that sets `container._tensor_name = \"temp\"` to match `method`, so it stops using the placeholder \"temp\" name.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "torch/nn/utils/prune.py",
+      "line": null,
+      "summary": "The `_tensor_name: str` annotation on the base class should be changed to Optional.",
+      "type": "style"
+    },
+    {
+      "id": "h3",
+      "path": "test/nn/test_pruning.py",
+      "line": 395,
+      "summary": "The multi-arg test is missing a case for constructing PruningContainer(m1, m2) with multiple arguments.",
+      "type": "missing_test"
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "agent": "pytorch .agents/skills/pr-review with fan-out, at pytorch commit acc31ac6427 (claude-opus-5-5, effort high)",
+  "runs": 1,
+  "note": "caught: the issue ids (issues/<case>.json) at least one finding of the run was matched to by an LLM judge (same root cause or same fix). Cases missing here were not run.",
+  "cases": {
+    "185853-ezyang": {
+      "caught": []
+    },
+    "185990-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "186290-albanD": {
+      "caught": [
+        "h5"
+      ]
+    },
+    "186599-albanD": {
+      "caught": [
+        "h1",
+        "h2"
+      ]
+    },
+    "186600-albanD": {
+      "caught": [
+        "h4"
+      ]
+    },
+    "186881-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "187075-albanD": {
+      "caught": []
+    },
+    "187624-janeyx99": {
+      "caught": []
+    },
+    "187814-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "187847-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3"
+      ]
+    },
+    "187949-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3",
+        "h4"
+      ]
+    },
+    "187981-albanD": {
+      "caught": []
+    },
+    "188471-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "188529-albanD": {
+      "caught": []
+    },
+    "188699-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "189284-albanD": {
+      "caught": [
+        "h1",
+        "h6"
+      ]
+    },
+    "189376-albanD": {
+      "caught": [
+        "h5"
+      ]
+    },
+    "189447-ezyang": {
+      "caught": []
+    },
+    "189612-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "189654-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3"
+      ]
+    },
+    "189672-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "189722-albanD": {
+      "caught": [
+        "h1",
+        "h2"
+      ]
+    },
+    "189891-albanD": {
+      "caught": [
+        "h2"
+      ]
+    },
+    "190034-ezyang": {
+      "caught": [
+        "h1",
+        "h2"
+      ]
+    },
+    "190097-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190107-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190152-ezyang": {
+      "caught": []
+    },
+    "190247-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190493-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190575-albanD": {
+      "caught": []
+    },
+    "190597-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190654-ezyang": {
+      "caught": [
+        "h1",
+        "h2"
+      ]
+    },
+    "190685-albanD": {
+      "caught": []
+    },
+    "190754-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190799-ezyang": {
+      "caught": [
+        "h1",
+        "h4"
+      ]
+    },
+    "190888-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "190932-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "191019-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3",
+        "h4"
+      ]
+    },
+    "191115-ezyang": {
+      "caught": []
+    },
+    "191364-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "191417-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "191973-janeyx99": {
+      "caught": []
+    },
+    "191999-ezyang": {
+      "caught": []
+    },
+    "192083-janeyx99": {
+      "caught": []
+    },
+    "192097-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "192517-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "192552-albanD": {
+      "caught": []
+    },
+    "192572-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3"
+      ]
+    },
+    "192774-janeyx99": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "192844-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "193132-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "193398-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "193607-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3",
+        "h5",
+        "h6",
+        "h9"
+      ]
+    },
+    "194240-albanD": {
+      "caught": [
+        "h1",
+        "h5"
+      ]
+    },
+    "194241-albanD": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "194437-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "194655-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "194664-janeyx99": {
+      "caught": [
+        "h1",
+        "h2"
+      ]
+    },
+    "194781-janeyx99": {
+      "caught": []
+    },
+    "194986-albanD": {
+      "caught": [
+        "h3"
+      ]
+    },
+    "195152-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "195398-ezyang": {
+      "caught": []
+    },
+    "195777-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "196064-ezyang": {
+      "caught": []
+    },
+    "196407-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "197175-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "197380-ezyang": {
+      "caught": []
+    },
+    "197560-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "197680-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "197724-ezyang": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "198098-ezyang": {
+      "caught": []
+    },
+    "198527-janeyx99": {
+      "caught": []
+    },
+    "198796-ezyang": {
+      "caught": []
+    },
+    "198797-ezyang": {
+      "caught": []
+    },
+    "199190-albanD": {
+      "caught": [
+        "h1"
+      ]
+    },
+    "199203-janeyx99": {
+      "caught": [
+        "h1",
+        "h2",
+        "h3"
+      ]
+    }
+  }
+}

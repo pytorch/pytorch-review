@@ -1,0 +1,46 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 614,
+      "summary": "The handling/error message here targets a very specific failure case; it should be made more general.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 585,
+      "summary": "This logic is duplicated elsewhere in the code; the other places should reuse this helper.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 760,
+      "summary": "Turn this generated content into a string template like the other one so it's easier to manage.",
+      "type": "style"
+    },
+    {
+      "id": "h4",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 821,
+      "summary": "Platform-specific handling looks unnecessary since this only runs on Linux; add an early exit for Windows/Apple instead.",
+      "type": "design"
+    },
+    {
+      "id": "h5",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 956,
+      "summary": "Typo: doubled word \"not\".",
+      "type": "style"
+    },
+    {
+      "id": "h6",
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 926,
+      "summary": "This code appears to delete the cmake file rather than override it as the earlier comment says it should.",
+      "type": "defect"
+    }
+  ]
+}

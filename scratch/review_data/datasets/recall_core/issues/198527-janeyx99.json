@@ -1,0 +1,46 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "CONTRIBUTING.md",
+      "line": 3,
+      "summary": "Reword the intro sentence to say the section describes how to use issues and pull requests (PRs) to contribute a change to PyTorch.",
+      "type": "style"
+    },
+    {
+      "id": "h2",
+      "path": "CONTRIBUTING.md",
+      "line": 4,
+      "summary": "Reword to say this document is the source of truth for the process, especially for how to engage with issues and PRs most effectively.",
+      "type": "style"
+    },
+    {
+      "id": "h3",
+      "path": "CONTRIBUTING.md",
+      "line": 82,
+      "summary": "Rewrite the issues vs. PRs explanation: issues are for feedback, bug reports, feature requests and design discussion, and PRs are for discussing and verifying the implementation once the design is agreed.",
+      "type": "style"
+    },
+    {
+      "id": "h4",
+      "path": "CONTRIBUTING.md",
+      "line": 84,
+      "summary": "Rephrase the labels sentence to explain that labels track the state of every issue and PR, so everyone can see the next step and who is expected to take it.",
+      "type": "style"
+    },
+    {
+      "id": "h5",
+      "path": "CONTRIBUTING.md",
+      "line": 85,
+      "summary": "Remove the maintainer-specific line from the contributor-facing section, because contributors should only need the labels and the process, not maintainer details.",
+      "type": "design"
+    },
+    {
+      "id": "h6",
+      "path": "CONTRIBUTING.md",
+      "line": 87,
+      "summary": "Move the 'current status' section after the description of the desired workflow so readers have the background they need to understand it.",
+      "type": "design"
+    }
+  ]
+}

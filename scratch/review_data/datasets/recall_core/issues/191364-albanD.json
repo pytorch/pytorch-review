@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "tools/linter/adapters/_stable_shim_utils.py",
+      "line": 505,
+      "summary": "A string literal that interpolates values is missing its `f` prefix, so the placeholders print as literal text and are never filled in.",
+      "type": "defect"
+    }
+  ]
+}

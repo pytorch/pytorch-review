@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/multiprocessing/_atfork.py",
+      "line": 21,
+      "summary": "The code at this line looks like it will always fail, whatever the conditions, so the check or registration logic is wrong.",
+      "type": "defect"
+    }
+  ]
+}

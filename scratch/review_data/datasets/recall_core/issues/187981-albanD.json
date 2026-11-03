@@ -1,0 +1,46 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 155,
+      "summary": "The code or comment at this line is unclear, and the reviewer asks what it means.",
+      "type": "question"
+    },
+    {
+      "id": "h2",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 383,
+      "summary": "The reviewer asks whether the design tradeoff is right: an explicit pass that creates delayed tensors only when they are needed, versus an implicit design where delayed tensors are always created and materialized when used.",
+      "type": "question"
+    },
+    {
+      "id": "h3",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 697,
+      "summary": "Nit: the explicitly passed shape could be dropped in favor of the returned tensor's shape, with a clear error if the two don't match.",
+      "type": "design"
+    },
+    {
+      "id": "h4",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 474,
+      "summary": "The code uses a generator but never relies on it being lazy; it should just build a list.",
+      "type": "style"
+    },
+    {
+      "id": "h5",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 479,
+      "summary": "This value could be computed during the earlier full traversal instead of in a separate pass.",
+      "type": "design"
+    },
+    {
+      "id": "h6",
+      "path": "coda_backward_epilogue_fusion.py",
+      "line": 590,
+      "summary": "The rule silently assumes defer_input_idx is 0; it should either assert defer_input_idx == 0 or take a grad_input_idx parameter.",
+      "type": "defect"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_weights_only_unpickler.py",
+      "line": 330,
+      "summary": "The error message assumes the failure is only due to weights_only restrictions, but genuine reconstruction errors can also occur here; the wording should be updated to account for that possibility.",
+      "type": "style"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/nn/test_module_hooks.py",
+      "line": 1493,
+      "summary": "Make the warning check simpler by using self.assertWarnsRegex (or something similar) instead of catching and inspecting warnings by hand.",
+      "type": "style"
+    }
+  ]
+}
