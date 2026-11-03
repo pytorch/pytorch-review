@@ -1,0 +1,33 @@
+{
+  "name": "maintainer_raw",
+  "schema_version": 1,
+  "stage": "raw_feedback",
+  "columns": [
+    "pr_number",
+    "pr_summary",
+    "current_commit",
+    "review_principle",
+    "severity",
+    "source_url"
+  ],
+  "repository": "pytorch/pytorch",
+  "seed_datasets": ["recall_core", "pre_agent"],
+  "seed_ciforge_commit": "0797f5eefa6ed2e78605bc02a3e0d212091e2126",
+  "collected_on": "2026-11-03",
+  "source_prs": 128,
+  "source_pr_reviewer_pairs": 128,
+  "source_reviewers": 21,
+  "csv_prs": 107,
+  "rows": 539,
+  "inline_comments": 454,
+  "review_bodies": 85,
+  "principles_distilled": false,
+  "severity_labeled": false,
+  "feedback_relocated": false,
+  "csv_sha256": "6c14e38f1eb92a96cac5a4ec2aad469e1f307060d6bd7a9d8e2fdb9e8aa0957e",
+  "export_source": {
+    "repository": "pytorch/ciforge",
+    "commit": "d9e0653e38c9257988eaa8ef0cc703fbeb95f9a5",
+    "path": "scripts/pr_review_eval/datasets/maintainer_raw"
+  }
+}
