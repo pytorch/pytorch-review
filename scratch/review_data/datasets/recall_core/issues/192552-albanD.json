@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/headeronly/util/complex_utils.h",
+      "line": 51,
+      "summary": "This code should be made headeronly (living in torch/headeronly) and re-exposed from the c10 side so the long-term behavior is correct.",
+      "type": "design"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/FakeTensorDispatchTables.h",
+      "line": 7,
+      "summary": "The new code in FakeTensorDispatchTables.h needs documentation explaining what it is and how to use it.",
+      "type": "style"
+    }
+  ]
+}

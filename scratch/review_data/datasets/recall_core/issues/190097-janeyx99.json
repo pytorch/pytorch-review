@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/distributed/tensor/test_matrix_ops.py",
+      "line": 470,
+      "summary": "The tests are skipped or tied to DISABLED issues, but these failures should not be handled with DISABLED issues; they need a proper fix or a different skip/xfail approach.",
+      "type": "design"
+    }
+  ]
+}

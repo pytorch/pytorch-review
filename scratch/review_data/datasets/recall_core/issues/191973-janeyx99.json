@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/cpp_extensions/libtorch_agn_2_14_extension/libtorch_agn_2_14/ops.py",
+      "line": 26,
+      "summary": "The docstring should say the op needs build time 2.14+, e.g. \"Stable ``bitwise_and.Tensor`` (requires build time 2.14+).\"",
+      "type": "style"
+    }
+  ]
+}

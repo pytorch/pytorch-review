@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/profiler/_cupti/monitor.py",
+      "line": 1466,
+      "summary": "The docblock is verbose and reads like LLM-generated boilerplate; it should be rewritten to be concise and natural.",
+      "type": "style"
+    }
+  ]
+}

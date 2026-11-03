@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/native/TensorShape.cpp",
+      "line": 4038,
+      "summary": "The added type conversions look unnecessary and should be removed.",
+      "type": "design"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/core/dispatch/Dispatcher.h",
+      "line": 218,
+      "summary": "The newly added Dispatcher function may be unused and should be removed if so.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "aten/src/ATen/core/dispatch/DispatchKeyExtractor.h",
+      "line": 146,
+      "summary": "The change to the dispatch key extraction hot path may hurt performance, so it should be checked and the function possibly marked C10_ALWAYS_INLINE/forced inline.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": "torch/csrc/utils/python_dispatch.cpp",
+      "line": 1387,
+      "summary": "The reviewer asks why these additions/bindings are needed in python_dispatch.cpp.",
+      "type": "question"
+    },
+    {
+      "id": "h4",
+      "path": "torch/_ops.py",
+      "line": 970,
+      "summary": "The reviewer asks why the API is named/structured as is_enabled rather than an enable function.",
+      "type": "design"
+    }
+  ]
+}

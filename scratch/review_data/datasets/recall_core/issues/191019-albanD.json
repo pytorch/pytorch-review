@@ -1,0 +1,32 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/Generator.cpp",
+      "line": 342,
+      "summary": "The new method should be public and properly documented, since what it returns and how to use it (especially with CUDA graphs) is subtle.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "torch/csrc/Generator.cpp",
+      "line": 248,
+      "summary": "The generator lock should be released right after this line instead of being held longer than needed.",
+      "type": "defect"
+    },
+    {
+      "id": "h3",
+      "path": "test/test_cuda.py",
+      "line": 2960,
+      "summary": "Add a test showing what happens when the offset overflows int64.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h4",
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": 524,
+      "summary": "Don't build a new Tensor from another Tensor's data_ptr; use clone() for a fresh copy or alias() for a view.",
+      "type": "design"
+    }
+  ]
+}

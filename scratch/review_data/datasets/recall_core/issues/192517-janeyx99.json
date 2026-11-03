@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_dynamo/symbolic_convert.py",
+      "line": 550,
+      "summary": "The reviewer asks why this change at this line is needed and wants the motivation explained.",
+      "type": "question"
+    }
+  ]
+}

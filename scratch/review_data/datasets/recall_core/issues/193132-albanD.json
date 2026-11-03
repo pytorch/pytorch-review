@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "Add a Python test that validates the change.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h2",
+      "path": "c10/cuda/impl/CUDAGuardImpl.h",
+      "line": 307,
+      "summary": "Use a DeviceGuard (RAII) here instead of switching the device manually, so the previous device is restored. The same applies at line 332.",
+      "type": "design"
+    }
+  ]
+}

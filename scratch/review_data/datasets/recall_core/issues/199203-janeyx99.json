@@ -1,0 +1,25 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "aten/src/ATen/AccumulateType.h",
+      "line": 12,
+      "summary": "Moving AccumulateType definitions to headeronly breaks backward compatibility, so the PR needs a BC-breaking note written to the project guidelines.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "torch/headeronly/core/AccumulateType.h",
+      "line": 175,
+      "summary": "Generic helper macros such as ACC_TYPE can redefine and then #undef macros the caller already defined; prefix them with TORCH_HEADERONLY_.",
+      "type": "style"
+    },
+    {
+      "id": "h3",
+      "path": "docs/cpp/source/api/stable/utilities.md",
+      "line": 164,
+      "summary": "The docs say acc_type/acc_type_device give a 'wider' dtype, but the accumulate type isn't always wider; change the wording.",
+      "type": "style"
+    }
+  ]
+}

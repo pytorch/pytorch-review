@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "CODEOWNERS",
+      "line": 383,
+      "summary": "The Fused* entries should be grouped together into one category and assigned to the optim maintainer, not listed separately.",
+      "type": "design"
+    }
+  ]
+}

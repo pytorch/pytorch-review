@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "The maintainer doesn't want to accept this approach to differentiable collectives, because `spmd_types` is now the right way to do them and the change should use or defer to it.",
+      "type": "design"
+    }
+  ]
+}

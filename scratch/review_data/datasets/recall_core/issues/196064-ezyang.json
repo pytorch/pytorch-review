@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "The fix is too complicated for the bug it addresses; it needs a simpler approach.",
+      "type": "design"
+    }
+  ]
+}

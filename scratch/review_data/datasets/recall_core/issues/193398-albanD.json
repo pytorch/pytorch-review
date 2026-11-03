@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "README.md",
+      "line": 587,
+      "summary": "This README section is dead/outdated too and should also be removed, as the suggestion shows.",
+      "type": "design"
+    }
+  ]
+}

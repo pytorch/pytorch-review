@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/inductor/test_flex_attention.py",
+      "line": 5474,
+      "summary": "Use the existing @skip_on_rocm decorator (if available) instead of the current custom ROCm skip logic for this test.",
+      "type": "style"
+    }
+  ]
+}

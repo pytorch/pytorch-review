@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "RELEASE.md",
+      "line": 54,
+      "summary": "The C++ standard version stated in RELEASE.md looks wrong or out of date, since PyTorch has at least partly moved to C++20, so the text should be corrected.",
+      "type": "defect"
+    }
+  ]
+}

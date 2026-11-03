@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/inductor/aoti_torch/c/shim_mps.h",
+      "line": null,
+      "summary": "Move the new declaration out of shim_mps.h and into torch/csrc/stable/c/shim.h, with a comment pointing to where the other set_args functions live.",
+      "type": "design"
+    }
+  ]
+}

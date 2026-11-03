@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/DeviceAccelerator.cpp",
+      "line": 102,
+      "summary": "Asks why this check doesn't use the existing isInitialized API, which suggests it should use isInitialized instead.",
+      "type": "question"
+    },
+    {
+      "id": "h2",
+      "path": "torch/accelerator/random.py",
+      "line": 74,
+      "summary": "Asks for a justification of the change at this line, which suggests it may be unnecessary.",
+      "type": "question"
+    }
+  ]
+}

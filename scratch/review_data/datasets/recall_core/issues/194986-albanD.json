@@ -1,0 +1,32 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "docs/source/optim.md",
+      "line": 225,
+      "summary": "Use the decorator form instead of a context manager/explicit call in the doc example to save an indentation level.",
+      "type": "style"
+    },
+    {
+      "id": "h2",
+      "path": "docs/source/optim.md",
+      "line": 303,
+      "summary": "The doc example's hook does something trivial; use a more meaningful example, such as using the profiler API to add a custom range around the optimizer step.",
+      "type": "design"
+    },
+    {
+      "id": "h3",
+      "path": "torch/optim/__init__.py",
+      "line": 11,
+      "summary": "The way Muon is exposed in torch/optim/__init__.py doesn't match how other optimizers are exposed; the reviewer weakly prefers a new public torch.optim.muon module that re-exports the contents of _muon.",
+      "type": "design"
+    },
+    {
+      "id": "h4",
+      "path": "torch/optim/sparse_adam.py",
+      "line": 10,
+      "summary": "If this change fixes the public API binding error, the matching allowlist entry should also be removed, but it wasn't.",
+      "type": "defect"
+    }
+  ]
+}

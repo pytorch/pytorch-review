@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "c10/core/TensorImpl.cpp",
+      "line": 218,
+      "summary": "The maintainer finds it odd that this case needs special handling and suggests the special case should be unnecessary, or should be removed or justified.",
+      "type": "design"
+    }
+  ]
+}

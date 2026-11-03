@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/dynamo/guards.h",
+      "line": 39,
+      "summary": "The maintainer asks why the Fake dispatch key is masked out here, and wants the reason explained or the masking reconsidered.",
+      "type": "question"
+    }
+  ]
+}

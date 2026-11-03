@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "CLAUDE.md",
+      "line": 157,
+      "summary": "The added guidance is in the ghstack workflow section but belongs under the Git section instead.",
+      "type": "style"
+    }
+  ]
+}

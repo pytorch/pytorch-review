@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/csrc/stable/stableivalue_conversions.h",
+      "line": 807,
+      "summary": "Reword the comment to say the returned std::string owns its memory and the string in val is deleted.",
+      "type": "style"
+    }
+  ]
+}

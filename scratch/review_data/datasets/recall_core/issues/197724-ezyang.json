@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_functorch/partitioners.py",
+      "line": 2943,
+      "summary": "The caller's pre-check `_find_infinite_capacity_path` treats a missing capacity as 0, but `minimum_cut` treats it as infinite. So an all-infinite path that includes an edge with no capacity can slip past the check, and `minimum_cut` then caps it at 3*finite_sum and returns a meaningless finite cut instead of raising NetworkXUnbounded.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": "torch/_functorch/partitioners.py",
+      "line": 2943,
+      "summary": "Move unboundedness detection into `minimum_cut` itself: BFS over the edges whose original capacity is inf and raise nx.NetworkXUnbounded if the sink is reachable, like NetworkX's detect_unboundedness. Then drop the caller pre-check and only use `_find_infinite_capacity_path` in the except block to explain the failure.",
+      "type": "design"
+    }
+  ]
+}

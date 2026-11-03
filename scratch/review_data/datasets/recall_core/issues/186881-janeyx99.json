@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/test_nn.py",
+      "line": 14524,
+      "summary": "The new test likely duplicates coverage that another test in test_nn.py already provides, so it may be redundant.",
+      "type": "design"
+    }
+  ]
+}

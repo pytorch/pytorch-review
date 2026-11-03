@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/_inductor/codegen/cutlass/utils.py",
+      "line": null,
+      "summary": "In _gen_ops_cached the second manifest_arch assignment unconditionally overwrites the '103a' value, so SM103 gets manifest_arch '100' and arch-conditional kernel skipping breaks; collapse into a single if/else chain.",
+      "type": "defect"
+    },
+    {
+      "id": "h2",
+      "path": "cmake/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake",
+      "line": null,
+      "summary": "`VERSION_GREATER \"13.4\"` is strict, so CUDA 13.4 itself (which introduces Rubin/sm_107) does not enable the Rubin/10.7 archs; use `VERSION_GREATER \"13.3\"` or `VERSION_GREATER_EQUAL \"13.4\"`.",
+      "type": "defect"
+    }
+  ]
+}

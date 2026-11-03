@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/cpp_extensions/test_libtorch_agnostic.py",
+      "line": 350,
+      "summary": "The code added at this line looks unnecessary and should be removed.",
+      "type": "design"
+    }
+  ]
+}

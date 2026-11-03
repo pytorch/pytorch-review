@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": null,
+      "line": null,
+      "summary": "The PR was only tested by hand; it needs proper automated tests.",
+      "type": "missing_test"
+    },
+    {
+      "id": "h2",
+      "path": null,
+      "line": null,
+      "summary": "The PR contains CI changes unrelated to its purpose, and they should be removed.",
+      "type": "design"
+    }
+  ]
+}

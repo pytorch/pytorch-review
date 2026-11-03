@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/test_torch.py",
+      "line": 2130,
+      "summary": "Rather than adding a new test, extend the dtype for-loop in the existing test above to cover the new case.",
+      "type": "design"
+    }
+  ]
+}

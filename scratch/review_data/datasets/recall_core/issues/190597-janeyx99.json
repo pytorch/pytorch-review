@@ -1,0 +1,18 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/optim/_muon.py",
+      "line": 65,
+      "summary": "The bug fix is bundled into this PR; split it out into its own PR, stacked in front of this one, that includes a use case or test showing the bug.",
+      "type": "design"
+    },
+    {
+      "id": "h2",
+      "path": "torch/optim/_muon.py",
+      "line": 65,
+      "summary": "Remove the permanent code comment explaining that a bug was fixed; that history doesn't belong in the source.",
+      "type": "style"
+    }
+  ]
+}

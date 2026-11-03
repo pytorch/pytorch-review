@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "docs/source/cuda.md",
+      "line": 218,
+      "summary": "The phrase \"Cuspy able to subscribe\" is unclear or looks like a typo, and the reviewer asks what it means; it needs to be explained or reworded.",
+      "type": "style"
+    }
+  ]
+}

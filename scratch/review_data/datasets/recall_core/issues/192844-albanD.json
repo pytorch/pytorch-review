@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "torch/headeronly/cuda/KernelUtils.h",
+      "line": 23,
+      "summary": "The header definition at this line is wrong and needs to change before the PR can be accepted.",
+      "type": "defect"
+    }
+  ]
+}

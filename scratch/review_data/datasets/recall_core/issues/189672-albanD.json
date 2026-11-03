@@ -1,0 +1,11 @@
+{
+  "issues": [
+    {
+      "id": "h1",
+      "path": "test/nn/test_convolution.py",
+      "line": 386,
+      "summary": "The new test should use PyTorch's device-generic testing mechanism so it runs and is verified on all devices, not just one.",
+      "type": "missing_test"
+    }
+  ]
+}
