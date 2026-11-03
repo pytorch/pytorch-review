@@ -1,17 +1,21 @@
 # review_data
 
+> **Superseded.** This predates the design in "Dataset collection for maintainer reviews in PyTorch"
+> (https://docs.google.com/document/d/1fM3A5WaBZMIDvtaB0A13sZaag2qngK_EoiKeJXLMrQI). Its cases are whole maintainer
+> reviews, unlabeled, with no severity or generalized principle, so they don't match the design's unit of data.
+> `select_reviews.py` is a copy of pytorch/ciforge's `scripts/pr_review_eval/select_reviews.py`, which is the
+> maintained one. Kept for reference; don't build on it.
+
 Datasets for evaluating automated code review on pytorch/pytorch pull requests, built from what PyTorch
 maintainers actually said and what authors then changed, and the tools that build them. Paths below are relative
-to the repository root.
+to `scratch/`; run the commands from there.
 
 ## Datasets
 
-These predate the dataset design and live in [`scratch/`](../scratch/README.md); don't build on them.
-
 | Dataset | Cases | What it is |
 |---|---|---|
-| `scratch/recall_core` | 78 | First reviews by ezyang, albanD and janeyx99 on PRs created June-September 2026, where the reviewer requested changes or the author later changed the code under the reviewer's comments |
-| `scratch/recall_rounds` | 132 | The same reviewers and window, every review round (`select_reviews.py --rounds all`): 105 first reviews and 27 later rounds from 109 PRs. Contains every `recall_core` case; it also skips bot accounts that `recall_core`'s selection counted as first reviewers. Split it by PR, since rounds of one PR are related |
+| `review_data/datasets/recall_core` | 78 | First reviews by ezyang, albanD and janeyx99 on PRs created June-September 2026, where the reviewer requested changes or the author later changed the code under the reviewer's comments |
+| `review_data/datasets/recall_rounds` | 132 | The same reviewers and window, every review round (`select_reviews.py --rounds all`): 105 first reviews and 27 later rounds from 109 PRs. Contains every `recall_core` case; it also skips bot accounts that `recall_core`'s selection counted as first reviewers. Split it by PR, since rounds of one PR are related |
 
 Each dataset is a directory with:
 
@@ -21,7 +25,7 @@ Each dataset is a directory with:
   - `pr`
   - `head_sha`: the commit the reviewer saw
   - `merge_base`: where the reviewed diff starts (`git diff <merge_base> <head_sha>`)
-  - `conversation`: path, relative to the directory holding the dataset, of what a reviewer sees
+  - `conversation`: path, relative to `review_data/datasets/`, of what a reviewer sees
   - `label`: `block`
   - `note`
   - `review`: the reviewer's login and the review's time
@@ -51,7 +55,7 @@ It needs an authenticated `gh` and a pytorch/pytorch checkout at a recent main (
 ```
 python3 -m review_data.tools.select_reviews --pytorch ../pytorch \
     --reviewers ezyang,albanD,janeyx99 --since 2026-06-01 --until 2026-09-30 \
-    --out <dataset dir> [--rounds all]
+    --out review_data/datasets/<name> [--rounds all]
 ```
 
 `review_data/tools/build_dataset.py` alone builds `block` / `clean` cases from maintainer decisions in a date window.
