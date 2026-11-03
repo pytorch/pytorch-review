@@ -1,0 +1,21 @@
+{
+  "pr": 191999,
+  "head_sha": "41cbc0ff156ee0801f7f94089bc1e367a5be26e7",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-07T00:08:28Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/profiler/_cupti/monitor.py",
+      "line": null,
+      "original_line": 1466,
+      "body": "this docblock is soooooo llm lmao",
+      "diff_hunk": "@@ -1457,6 +1457,18 @@ def configure(\n         CuptiMonitor._configured = True\n \n \n+def has_live_subscription() -> bool:\n+    \"\"\"True when the singleton exists and holds a CUPTI subscription.\n+\n+    The gate a capture-time callback consumer checks before choosing the CUPTI path.\n+    Deliberately does NOT construct the monitor: doing so would take the subscription, and\n+    once we hold one, kineto's one-shot CUPTI init fails permanently -- so a *probe* must\n+    never be what locks the stock profiler out.",
+      "outdated": true
+    }
+  ]
+}

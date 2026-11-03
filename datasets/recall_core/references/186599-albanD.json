@@ -1,0 +1,29 @@
+{
+  "pr": 186599,
+  "head_sha": "e0dd65737a0747b7483515b7945763081feb53aa",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-17T20:19:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/DeviceAccelerator.cpp",
+      "line": null,
+      "original_line": 102,
+      "body": "Why not isInitialized ?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/accelerator/random.py",
+      "line": 74,
+      "original_line": 73,
+      "body": "Why?",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

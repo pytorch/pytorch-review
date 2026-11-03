@@ -1,0 +1,37 @@
+{
+  "pr": 194243,
+  "head_sha": "fef5b59499aca3eaec8547a84b175c3748ece4c0",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-02T20:16:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": "tools/native_aot/build_stage2.py",
+      "line": null,
+      "original_line": 733,
+      "body": "This parts looks like a comment about the code, not for the user seeing this error?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/build_stage2.py",
+      "line": null,
+      "original_line": 827,
+      "body": "Wrong variable name",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/build_stage2.py",
+      "line": null,
+      "original_line": 795,
+      "body": "Shouldn't we make sure that the exact same cache as the previous build is used here? And nothing is triggering a change in configuration?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

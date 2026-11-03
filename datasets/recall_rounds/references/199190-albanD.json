@@ -1,0 +1,21 @@
+{
+  "pr": 199190,
+  "head_sha": "846be1bb3fe3104c528bd36c464f8c1e5395973b",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "You need to validate that the base sha is safe!\nOtherwise sounds ok.\nbtw the pr-review skill should catch these, you can run it locally!",
+    "submitted_at": "2026-10-01T14:28:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".github/scripts/tryrebase.py",
+      "line": null,
+      "original_line": 295,
+      "body": "The comment can be triggered by anyone. So it's no ok to assume this base sha is good!",
+      "diff_hunk": "@@ -247,7 +289,20 @@ def main() -> None:\n             with git_config_guard(repo):\n                 rc = rebase_ghstack_onto(pr, repo, onto_branch, dry_run=args.dry_run)\n         else:\n-            rc = rebase_onto(pr, repo, onto_branch, dry_run=args.dry_run)\n+            # Only approve CI for the commit the merge command was issued on,\n+            # not for commits pushed since.\n+            approve_ci_sha = (\n+                pr.get_commit_sha_at_comment(args.comment_id)",
+      "outdated": true
+    }
+  ]
+}

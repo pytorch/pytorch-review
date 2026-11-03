@@ -1,0 +1,21 @@
+{
+  "pr": 188699,
+  "head_sha": "407967d2d462125151f0236dc3a0617e9c4b636e",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-06T20:26:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_decomp/__init__.py",
+      "line": null,
+      "original_line": 100,
+      "body": "silently falling through here is sus",
+      "diff_hunk": "@@ -89,6 +89,15 @@ def _add_op_to_registry(registry, op, fn):\n         # to filter those out, e.g aten.add.float_int\n         if torch._C._dispatch_has_kernel(op_overload.name()):\n             registry[op_overload] = fn\n+            schema = op_overload._schema\n+            if registry is decomposition_table:\n+                torch._C._fake_dispatch_register_decomp(\n+                    schema.name, schema.overload_name\n+                )\n+            elif registry is meta_table:\n+                torch._C._fake_dispatch_register_meta(\n+                    schema.name, schema.overload_name\n+                )",
+      "outdated": true
+    }
+  ]
+}

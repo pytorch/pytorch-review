@@ -1,0 +1,21 @@
+{
+  "pr": 191364,
+  "head_sha": "440840ef9fc78b81e4facd5d1799ff5f1bba9429",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Sounds ok!",
+    "submitted_at": "2026-07-28T21:32:25Z"
+  },
+  "inline_comments": [
+    {
+      "path": "tools/linter/adapters/_stable_shim_utils.py",
+      "line": null,
+      "original_line": 505,
+      "body": "f string missing",
+      "diff_hunk": "@@ -465,110 +468,109 @@ def _run_git_network_cmd(\n     )\n \n \n-def ensure_diff_blob_local(commit: str, filename: str) -> None:\n-    \"\"\"\n-    Prefetch the blob for `filename` at `commit` so a subsequent\n-    `git diff commit..HEAD -- filename` runs entirely from local objects.\n-\n-    CI checks out a blobless partial clone (git clone --filter=blob:none), so\n-    fetching a commit brings down its trees but not file contents. Left alone,\n-    `git diff` notices the merge-base blob is missing and triggers an on-demand\n-    lazy fetch in the middle of the diff -- an uncontrolled network round-trip\n-    that races the diff's short timeout under the network contention of\n-    lintrunner running adapters concurrently.\n-\n-    Trees are present locally under blob:none, so we resolve the blob's OID\n-    offline and fetch exactly that one object through the retrying network\n-    helper. In a full (non-partial) clone the blob is already present and this\n-    is a no-op with no network access. GIT_NO_LAZY_FETCH keeps the local\n-    resolution and presence checks from themselves triggering a fetch.\n+def run_git_object_command(\n+    args: list[str], *, cwd: Path = REPO_ROOT\n+) -> subprocess.CompletedProcess[str]:\n+    \"\"\"Run an object-reading Git command.\n+\n+    If on a partial clone, only if the first local attempt fails, retry 3\n+    times and allow lazily fetching over the network.\n     \"\"\"\n     no_lazy = {**os.environ, \"GIT_NO_LAZY_FETCH\": \"1\"}\n+    try:\n+        result = subprocess.run(\n+            [\"git\", *args],\n+            cwd=cwd,\n+            env=no_lazy,\n+            capture_output=True,\n+            text=True,\n+            timeout=5,\n+        )\n+        if result.returncode == 0:\n+            return result\n+        local_error = result.stderr.strip() or result.stdout.strip()\n+    except subprocess.TimeoutExpired:\n+        local_error = \"timed out after 5s\"\n \n+    allow_lazy = os.environ.copy()\n+    allow_lazy.pop(\"GIT_NO_LAZY_FETCH\", None)\n     try:\n-        rel = Path(filename).resolve().relative_to(REPO_ROOT).as_posix()\n-    except ValueError:\n-        return  # path is outside the repo; nothing we can prefetch\n-\n-    rev = subprocess.run(\n-        [\"git\", \"rev-parse\", f\"{commit}:{rel}\"],\n-        capture_output=True,\n-        text=True,\n-        timeout=5,\n-        env=no_lazy,\n-    )\n-    blob_oid = rev.stdout.strip()\n-    if rev.returncode != 0 or not blob_oid:\n-        # Path does not exist at `commit` (e.g. a newly added file), or the tree\n-        # is unavailable (treeless clone). There is no merge-base blob to\n-        # prefetch; the diff falls back to its own handling.\n-        return\n-\n-    present = subprocess.run(\n-        [\"git\", \"cat-file\", \"-e\", blob_oid],\n-        capture_output=True,\n-        timeout=5,\n-        env=no_lazy,\n-    )\n-    if present.returncode == 0:\n-        return\n+        return run_with_retries(\n+            [\"git\", *args], cwd=cwd, env=allow_lazy, timeout=120, attempts=3\n+        )\n+    except RuntimeError as e:\n+        raise RuntimeError(\n+            f\"Git command failed first attempt with no lazy fetching: {local_error}. \"\n+            f\"Second, slower, attempt while allowing fetching over the network also \"\n+            \"failed, even with retries: {e}\"",
+      "outdated": true
+    }
+  ]
+}

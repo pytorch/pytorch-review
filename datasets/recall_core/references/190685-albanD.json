@@ -1,0 +1,21 @@
+{
+  "pr": 190685,
+  "head_sha": "fc16a995b9723d28ad2252915bf83fae32a49c83",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Thx",
+    "submitted_at": "2026-07-21T17:40:42Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/nn/test_module_hooks.py",
+      "line": null,
+      "original_line": 1493,
+      "body": "You have self.assertWarnsRegex or something along those line to simplify this.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

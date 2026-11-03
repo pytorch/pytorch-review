@@ -1,0 +1,21 @@
+{
+  "pr": 198098,
+  "head_sha": "e2964afb8225fbcb4a056723240d4b86a684a383",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-22T16:41:12Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/cuda.md",
+      "line": 218,
+      "original_line": 218,
+      "body": "what's \"Cuspy able to subscribe\"?",
+      "diff_hunk": "@@ -212,6 +212,39 @@ Because annotations live in a process-global registry keyed by ids that\n match the profiler's, the pickle of ``dict(get_kernel_annotations())``\n can equally be saved next to a trace and joined offline.\n \n+To capture Python launch stacks as well, set\n+``annotation_config={\"record_py_stacks\": True}`` with ``enable_annotations=True``.\n+This uses CUPTI node-creation callbacks and requires `cupti-python`, Cuspy able\n+to subscribe, and single-threaded autograd. Like ``backend=\"cupti\"``, it takes",
+      "outdated": false
+    }
+  ]
+}

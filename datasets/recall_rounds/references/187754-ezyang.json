@@ -1,0 +1,12 @@
+{
+  "pr": 187754,
+  "head_sha": "dcdeb0489ae41b295c89181d3c3d3c26c77eea3d",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "Besides that review, I think it's important that we setup a feedback loop (could be as simple as some text on the comments) by which we users can send you issues (or self service fix issues). Right now I think it's unclear how to fix problems if there are problems, and we need to make it obvious how to fix problems.",
+    "submitted_at": "2026-06-24T14:17:39Z"
+  },
+  "inline_comments": []
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 188471,
+  "head_sha": "86ec2c5d80203ccf343a6e2390e8eb33f52ce640",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-29T20:35:03Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/lazy/python/init.cpp",
+      "line": null,
+      "original_line": 324,
+      "body": "wuld be good to keep the pattern where the endif has thecomment about the if conditional",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 190210,
+  "head_sha": "401f3531ba824a67d8d9fc3230f8021bc1acbebe",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-20T14:29:18Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/core/TensorImpl.cpp",
+      "line": null,
+      "original_line": 398,
+      "body": "have an LLM fix spelling typos lol",
+      "diff_hunk": "@@ -388,11 +388,38 @@ c10::SymBool TensorImpl::sym_is_non_overlapping_and_dense_custom() const {\n }\n \n IntArrayRef TensorImpl::sizes_custom() const {\n-  if (C10_UNLIKELY(\n-          matches_python_custom(SizesStridesPolicy::CustomSizes) ||\n-          has_symbolic_sizes_strides_)) {\n+  // for faketensors with symints, a return type of IntArrayRef is problematic\n+  // because in order to return a ref you need to have smth owning it and for\n+  // SymInts this is not materialized yet\n+  if (C10_UNLIKELY(matches_python_custom(SizesStridesPolicy::CustomSizes))) {\n     return (*c10::impl::getGlobalPyInterpreter())->sizes(this);\n   }\n+  if (C10_UNLIKELY(has_symbolic_sizes_strides_)) {\n+    // to detemrine if a tensor is Python FakeTensor",
+      "outdated": true
+    }
+  ]
+}

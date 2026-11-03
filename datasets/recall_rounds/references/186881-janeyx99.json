@@ -1,0 +1,21 @@
+{
+  "pr": 186881,
+  "head_sha": "bdae510516510cd4dbcd6338ce41d91370048d5b",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-10T17:21:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_nn.py",
+      "line": null,
+      "original_line": 14524,
+      "body": "i would suspect this is already tested in this file somewhere in another test, no?",
+      "diff_hunk": "@@ -14518,6 +14518,16 @@ def compare_scaling(grads):\n             self.assertEqual(len(w), 1)\n             self.assertEqual(str(w[0].message), \"`parameters` is an empty generator, no gradient clipping will occur.\")\n \n+    # issue #133586: skip no-op .to(first_device) in _get_total_norm\n+    @onlyCPU\n+    @parametrize_test('norm_type', (1.0, 2.0, float('inf')))\n+    def test_clip_grad_norm_skip_to_single_device(self, norm_type, device):",
+      "outdated": true
+    }
+  ]
+}

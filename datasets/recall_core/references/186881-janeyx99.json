@@ -1,0 +1,21 @@
+{
+  "pr": 186881,
+  "head_sha": "bdae510516510cd4dbcd6338ce41d91370048d5b",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-10T17:21:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_nn.py",
+      "line": null,
+      "original_line": 14524,
+      "body": "i would suspect this is already tested in this file somewhere in another test, no?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

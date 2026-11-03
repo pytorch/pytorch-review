@@ -1,0 +1,45 @@
+{
+  "pr": 186600,
+  "head_sha": "61afaa46d401592d36175370c60551119fb858a2",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-17T20:25:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/accelerator/__init__.py",
+      "line": null,
+      "original_line": 32,
+      "body": "Same about not having these in top level module",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/accelerator/random.py",
+      "line": 122,
+      "original_line": 132,
+      "body": "What is this seed arguement?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/accelerator/random.py",
+      "line": null,
+      "original_line": 185,
+      "body": "Can we make it very clear that we give the same seed to all devices?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/accelerator/random.py",
+      "line": 120,
+      "original_line": 130,
+      "body": "nit: doesn't cuda use `int(seed)` ?",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

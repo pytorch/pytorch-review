@@ -1,0 +1,1 @@
+{"pr_author":"malfet","head_sha":"befdbe77bd145f7771c1b9aa390e8608e1df3baf","title":"Drop unmonitored Slack signup form from README","body":"Fixes https://github.com/pytorch/pytorch/issues/193283","truncated":false,"reactions_truncated":false,"omitted_items":0,"items":[]}

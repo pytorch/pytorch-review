@@ -1,0 +1,45 @@
+{
+  "pr": 195152,
+  "head_sha": "48863cb888431e909f9f803fac0c8a74ac0b3958",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-31T15:40:01Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": 252,
+      "original_line": 255,
+      "body": "```suggestion\n\n**You are told which version is current \u2014 never guess it.** Your prompt carries a\n`RELEASE CONTEXT` block giving the most recent released minor version. If the block\nsays `unknown`, skip the two version-dependent criteria below and judge the rest on their\nown merits.\n```",
+      "diff_hunk": "@@ -234,6 +240,51 @@ High priority criteria:\n - Many users affected\n - Core component or popular model impact\n \n+#### 5b) release triage \u2014 Affects an Upcoming Release\n+\n+Add `release triage` when an issue would affect a release if it went unfixed. The label\n+only surfaces the issue for whoever owns the release; it is not a cherry-pick request and\n+does not decide anything.\n+\n+**You are told which version is current \u2014 never guess it.** Your prompt carries a\n+`RELEASE CONTEXT` block giving the most recent released minor version, resolved from the\n+newest non-prerelease [GitHub release](https://github.com/pytorch/pytorch/releases) at run\n+time. Use that value only. Do not use a version written in this file, and do not rely on\n+what you remember about PyTorch releases \u2014 that is stale by construction. If the block\n+says `unknown`, skip the two version-dependent criteria below and judge the rest on their\n+own merits.",
+      "outdated": false
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 259,
+      "body": "```suggestion\n```\nNot sure what this is about",
+      "diff_hunk": "@@ -234,6 +240,51 @@ High priority criteria:\n - Many users affected\n - Core component or popular model impact\n \n+#### 5b) release triage \u2014 Affects an Upcoming Release\n+\n+Add `release triage` when an issue would affect a release if it went unfixed. The label\n+only surfaces the issue for whoever owns the release; it is not a cherry-pick request and\n+does not decide anything.\n+\n+**You are told which version is current \u2014 never guess it.** Your prompt carries a\n+`RELEASE CONTEXT` block giving the most recent released minor version, resolved from the\n+newest non-prerelease [GitHub release](https://github.com/pytorch/pytorch/releases) at run\n+time. Use that value only. Do not use a version written in this file, and do not rely on\n+what you remember about PyTorch releases \u2014 that is stale by construction. If the block\n+says `unknown`, skip the two version-dependent criteria below and judge the rest on their\n+own merits.\n+\n+The other side of the comparison usually comes from the issue itself: the environment dump\n+reports the `torch` version the reporter is on, and regressions normally name the version\n+that last worked.",
+      "outdated": true
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 274,
+      "body": "```suggestion\n- **Binary / packaging:** anything affecting wheels, Docker images,\n```\n\nWe don't have those right?",
+      "diff_hunk": "@@ -234,6 +240,51 @@ High priority criteria:\n - Many users affected\n - Core component or popular model impact\n \n+#### 5b) release triage \u2014 Affects an Upcoming Release\n+\n+Add `release triage` when an issue would affect a release if it went unfixed. The label\n+only surfaces the issue for whoever owns the release; it is not a cherry-pick request and\n+does not decide anything.\n+\n+**You are told which version is current \u2014 never guess it.** Your prompt carries a\n+`RELEASE CONTEXT` block giving the most recent released minor version, resolved from the\n+newest non-prerelease [GitHub release](https://github.com/pytorch/pytorch/releases) at run\n+time. Use that value only. Do not use a version written in this file, and do not rely on\n+what you remember about PyTorch releases \u2014 that is stale by construction. If the block\n+says `unknown`, skip the two version-dependent criteria below and judge the rest on their\n+own merits.\n+\n+The other side of the comparison usually comes from the issue itself: the environment dump\n+reports the `torch` version the reporter is on, and regressions normally name the version\n+that last worked.\n+\n+Add it when **any** of these hold:\n+\n+- **Regression against the most recent released minor version.** The issue reports\n+  something that worked on that minor (or later) and is broken now. Pair it with\n+  `module: regression`. If the last-working version is older than that minor, it is not\n+  release-relevant.\n+- **Critical correctness or stability:** silent correctness (wrong results, no error),\n+  backwards-compatibility break, crash / segfault, deadlock or hang, or a large memory\n+  leak.\n+- **Critical fix to a feature introduced in the most recent minor release** \u2014 new surface\n+  that shipped broken. Go by what the issue says (\"new in 2.x\", \"added in 2.x\", \"since\n+  upgrading to 2.x\") checked against the version in `RELEASE CONTEXT`; do not try to recall\n+  which features shipped in which release.\n+- **Binary / packaging:** anything affecting wheels, conda packages, Docker images,",
+      "outdated": true
+    },
+    {
+      "path": ".github/workflows/claude-issue-triage-run.yml",
+      "line": null,
+      "original_line": 131,
+      "body": "```suggestion\n            release version; ignore any version written in the skill files and do not rely\n```",
+      "diff_hunk": "@@ -99,6 +127,11 @@ jobs:\n           prompt: |\n             /triaging-issues #${{ steps.issue.outputs.number }}\n \n+            RELEASE CONTEXT (authoritative -- use this and nothing else for the current\n+            release train; ignore any version written in the skill files and do not rely",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "pr": 190034,
+  "head_sha": "56fb833cecfe938c3718f546b855f557c7e142cc",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "manual testing insufficient, there are unrelated CI changes",
+    "submitted_at": "2026-07-21T13:43:20Z"
+  },
+  "inline_comments": []
+}

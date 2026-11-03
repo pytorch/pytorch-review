@@ -1,0 +1,12 @@
+{
+  "pr": 187198,
+  "head_sha": "0657c8f44080b5f340b330bf7c98f95472d9715d",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "If you want this landed as is, you need to argue why it's acceptable to not fuse the assert into the main kernel body",
+    "submitted_at": "2026-07-21T13:47:41Z"
+  },
+  "inline_comments": []
+}

@@ -1,0 +1,77 @@
+{
+  "pr": 189376,
+  "head_sha": "09e6fc33e613b0f18dda3a796cf25e6f38bbdf27",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-09T18:37:06Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 38,
+      "body": "Actually shouldn't these never be ran by OOT backends. Core CI does run this for all supported CPU arch already ?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 68,
+      "body": "What does this one mean?\n",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 65,
+      "body": "I guess this would be a noop for OOT backends?\n\nBut we should have a PU1 one? That contains the basic PU1 logic validation test in core that check if PU1 backend was registered properly?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 94,
+      "body": "Can you provide the full path?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": 67,
+      "original_line": 101,
+      "body": "Can you clarify if it's ok to call this multiple times? Or every config should be in a single call",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": 115,
+      "original_line": 152,
+      "body": "Should we state here that users should send PRs to core to update?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 170,
+      "body": "I think there is some details about which test file to run and how this would apply ",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/accelerator/testing.md",
+      "line": null,
+      "original_line": 179,
+      "body": "Would this link actually work?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

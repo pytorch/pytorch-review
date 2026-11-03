@@ -1,0 +1,21 @@
+{
+  "pr": 192844,
+  "head_sha": "d4d2081b9764732825c306c6cae4fa6102240b66",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Header definition needs changing, but sounds good after",
+    "submitted_at": "2026-08-10T20:53:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/headeronly/cuda/KernelUtils.h",
+      "line": null,
+      "original_line": 23,
+      "body": "not good?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

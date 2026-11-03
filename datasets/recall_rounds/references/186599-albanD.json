@@ -1,0 +1,29 @@
+{
+  "pr": 186599,
+  "head_sha": "e0dd65737a0747b7483515b7945763081feb53aa",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-17T20:19:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/DeviceAccelerator.cpp",
+      "line": null,
+      "original_line": 102,
+      "body": "Why not isInitialized ?",
+      "diff_hunk": "@@ -99,6 +99,20 @@ void initModule(PyObject* module) {\n     return at::getDeviceAllocator(device_type)->initialized();\n   });\n \n+  m.def(\"_accelerator_isLazyInitialized\", []() {",
+      "outdated": true
+    },
+    {
+      "path": "torch/accelerator/random.py",
+      "line": 74,
+      "original_line": 73,
+      "body": "Why?",
+      "diff_hunk": "@@ -55,4 +57,54 @@ def get_rng_state_all() -> list[Tensor]:\n     return [get_rng_state(i) for i in range(torch.accelerator.device_count())]\n \n \n-__all__ = [\"initial_seed\", \"get_rng_state\", \"get_rng_state_all\"]\n+def set_rng_state(new_state: Tensor, device: _device_t = None) -> None:\n+    r\"\"\"Set the RNG state of the default :class:`torch.Generator` for the current :ref:`accelerator<accelerators>` on the given device.\n+\n+    Args:\n+        new_state (:class:`torch.Tensor`): The desired RNG state, a tensor of dtype `torch.uint8`.\n+        device (:class:`torch.device`, str, int, optional): The device to set the RNG state for.\n+            If not given, uses :func:`torch.accelerator.current_device_index` by default.\n+\n+    .. note::\n+        If the accelerator runtime is not yet initialized, the state is deferred\n+        and applied once the runtime is ready. See :ref:`lazy-initialization-and-fork-safety-note`.\n+    \"\"\"\n+    if not torch._C._accelerator_isLazyInitialized():\n+        with torch._C._DisableFuncTorch():",
+      "outdated": false
+    }
+  ]
+}

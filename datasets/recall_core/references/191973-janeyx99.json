@@ -1,0 +1,21 @@
+{
+  "pr": 191973,
+  "head_sha": "f58e7897d0f2d7d787fc7cad54a5e066b7c3834a",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-03T20:06:10Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp_extensions/libtorch_agn_2_14_extension/libtorch_agn_2_14/ops.py",
+      "line": null,
+      "original_line": 26,
+      "body": "```suggestion\n    \"\"\"Stable ``bitwise_and.Tensor`` (requires build time 2.14+).\"\"\"\n```\nimportant to call out build time ",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

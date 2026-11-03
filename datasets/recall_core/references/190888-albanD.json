@@ -1,0 +1,21 @@
+{
+  "pr": 190888,
+  "head_sha": "ea299124b4b6b4b4c3fa4351154217916d117c55",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-24T15:44:59Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_weights_only_unpickler.py",
+      "line": null,
+      "original_line": 330,
+      "body": "There can actually be geniune reconstruction errors here as well right? Can we update the language to keep that in mind?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

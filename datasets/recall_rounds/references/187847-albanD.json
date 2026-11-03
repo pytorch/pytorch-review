@@ -1,0 +1,21 @@
+{
+  "pr": 187847,
+  "head_sha": "7b65195a333f3257d7e53af7d27025bb3c05108c",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Looks pretty ok. Only small updates.\n\nWe can also fix the logic below in prune.py to stop using \"temp\" name right:\n    container._tensor_name = \"temp\"  # to make it match that of `method`\n\nAlso the base class typing should be changed to optional\n    _tensor_name: str\n",
+    "submitted_at": "2026-07-23T13:20:07Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/nn/test_pruning.py",
+      "line": 395,
+      "original_line": 395,
+      "body": "I think the test for multi-arg is missing PruningContainer(m1, m2) ?",
+      "diff_hunk": "@@ -392,6 +392,28 @@ def test_pruning_container(self):\n         with self.assertRaises(TypeError):\n             container.add_pruning_method(\"ugh\")\n \n+    def test_pruning_container_add_to_empty_adopts_tensor_name(self):",
+      "outdated": false
+    }
+  ]
+}

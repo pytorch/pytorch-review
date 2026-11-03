@@ -1,0 +1,29 @@
+{
+  "pr": 189891,
+  "head_sha": "a2f2e064817e15cec91210c8f8603e3fbfd36523",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-14T16:50:03Z"
+  },
+  "inline_comments": [
+    {
+      "path": "cmake/public/utils.cmake",
+      "line": null,
+      "original_line": 559,
+      "body": "Let's keep quotation to protect against empty/space here and above",
+      "diff_hunk": "@@ -542,19 +542,21 @@ function(target_compile_options_if_supported target flag)\n   endif()\n endfunction()\n \n-# Check if a global link option is supported\n-function(add_link_options_if_supported flag)\n-  check_linker_flag(C \"LINKER:${flag}\" _supported)\n-  if(\"${_supported}\")\n+# Check if a global link option is supported. The caller must pass\n+# a unique var name per flag which is used to create a cmake cache\n+# entry that stores whether the flag is supported or not.\n+function(add_link_options_if_supported flag var)\n+  check_linker_flag(C \"LINKER:${flag}\" ${var})\n+  if(${var})\n     add_link_options(\"LINKER:${flag}\")\n   else()\n     message(WARNING \"Attempted to use unsupported link option : ${flag}.\")\n   endif()\n endfunction()\n \n-function(target_link_options_if_supported tgt flag)\n-  check_linker_flag(C \"LINKER:${flag}\" _supported)\n-  if(\"${_supported}\")\n+function(target_link_options_if_supported tgt flag var)\n+  check_linker_flag(C \"LINKER:${flag}\" ${var})\n+  if(${var})",
+      "outdated": true
+    },
+    {
+      "path": "cmake/public/utils.cmake",
+      "line": null,
+      "original_line": 548,
+      "body": "Could we do the same as append_cxx_flag_if_supported and build a unique name internally rather than requiring the user to provide it?",
+      "diff_hunk": "@@ -542,19 +542,21 @@ function(target_compile_options_if_supported target flag)\n   endif()\n endfunction()\n \n-# Check if a global link option is supported\n-function(add_link_options_if_supported flag)\n-  check_linker_flag(C \"LINKER:${flag}\" _supported)\n-  if(\"${_supported}\")\n+# Check if a global link option is supported. The caller must pass\n+# a unique var name per flag which is used to create a cmake cache\n+# entry that stores whether the flag is supported or not.\n+function(add_link_options_if_supported flag var)",
+      "outdated": true
+    }
+  ]
+}

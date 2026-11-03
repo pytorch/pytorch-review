@@ -1,0 +1,21 @@
+{
+  "pr": 187814,
+  "head_sha": "9ae0cd8a06dee24ec044dc4e11aba02aece1f6d8",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-03T21:21:14Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/optim/test_lrscheduler.py",
+      "line": null,
+      "original_line": 478,
+      "body": "can you combine the tests together? calling something test1 and test2 is notably not great, even if it's the existing pattern \ud83d\ude05",
+      "diff_hunk": "@@ -475,6 +475,16 @@ def test_linearlr_start_factor_limits2(self):\n         with self.assertRaises(ValueError):\n             LinearLR(self.opt, start_factor=start_factor, total_iters=iters)\n \n+    def test_constantlr_factor_limits1(self):",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 192097,
+  "head_sha": "cb760bb831420502c80f49fa7881c6050a029807",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-05T22:40:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp_extensions/test_libtorch_agnostic.py",
+      "line": null,
+      "original_line": 350,
+      "body": "this should be extraneous",
+      "diff_hunk": "@@ -313,6 +313,46 @@ def test_my_view_dtype(self, device):\n         self.assertEqual(result.shape, expected.shape)\n         self.assertEqual(result.data_ptr(), t.data_ptr())\n \n+    @skipIfTorchVersionLessThan(2, 10)\n+    def test_my_index_select(self, device):\n+        import libtorch_agn_2_10 as libtorch_agnostic\n+\n+        t = torch.randn(3, 4, device=device)\n+        index = torch.tensor([0, 2], device=device)\n+        result = libtorch_agnostic.ops.my_index_select(t, 0, index)\n+        self.assertEqual(result, torch.index_select(t, 0, index))\n+\n+    @skipIfTorchVersionLessThan(2, 10)\n+    def test_my_floor_divide(self, device):\n+        import libtorch_agn_2_10 as libtorch_agnostic\n+\n+        a = torch.randint(1, 20, (3, 4), device=device, dtype=torch.int64)\n+        b = torch.randint(1, 5, (3, 4), device=device, dtype=torch.int64)\n+        self.assertEqual(\n+            libtorch_agnostic.ops.my_floor_divide(a, b), torch.floor_divide(a, b)\n+        )\n+\n+        # Test broadcasting\n+        b_1d = torch.randint(1, 5, (4,), device=device, dtype=torch.int64)\n+        self.assertEqual(\n+            libtorch_agnostic.ops.my_floor_divide(a, b_1d),\n+            torch.floor_divide(a, b_1d),\n+        )\n+\n+    @onlyCPU\n+    @skipIfTorchVersionLessThan(2, 10)\n+    def test_my_is_pinned(self, device):\n+        import libtorch_agn_2_10 as libtorch_agnostic\n+\n+        t = torch.randn(2, 3, device=device)\n+        self.assertFalse(libtorch_agnostic.ops.my_is_pinned(t))\n+\n+        if not torch.cuda.is_available():",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "pr": 196064,
+  "head_sha": "8b66ca935542a221d49bae71585321b25a23d1ae",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "While I am somewhat sympathetic for the bug report the fix seems overly complicated",
+    "submitted_at": "2026-09-21T20:04:24Z"
+  },
+  "inline_comments": []
+}

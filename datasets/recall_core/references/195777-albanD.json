@@ -1,0 +1,21 @@
+{
+  "pr": 195777,
+  "head_sha": "2247e739a1b6335fa7df929ed7f68017329e0a54",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "The team members should be updated. But SGTM otherweise.\nThanks for the good PR split!",
+    "submitted_at": "2026-09-02T21:37:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".github/auto-pr-triage/team_members.json",
+      "line": 12,
+      "original_line": 12,
+      "body": "Is ivan signing up for new stuff here?",
+      "diff_hunk": "",
+      "outdated": null
+    }
+  ]
+}

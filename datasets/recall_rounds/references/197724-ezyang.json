@@ -1,0 +1,21 @@
+{
+  "pr": 197724,
+  "head_sha": "2d33c384e0e8ed71d3790e64c789b7fd89325a68",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-23T19:13:42Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_functorch/partitioners.py",
+      "line": null,
+      "original_line": 2943,
+      "body": "*(Posted by Opus 5.5, an AI assistant, on behalf of @ezyang.)*\n\nUnboundedness detection now lives here in the caller rather than inside the solver, and the two disagree on what a missing `capacity` means:\n\n- `_find_infinite_capacity_path` uses `edge_data.get(\"capacity\", 0)`, so a missing capacity counts as **0**.\n- `minimum_cut` uses `graph.edges(data=\"capacity\", default=math.inf)`, so a missing capacity counts as **infinite** (matching NetworkX).\n\nEvery `add_edge` in the partitioner sets `capacity` today, so this isn't a live bug. But if someone later adds an edge without one, an all-infinite source\u2192sink path slips past this check. `minimum_cut` then quietly caps it at `3 * finite_sum` and returns a finite cut that means nothing. Before this PR, `nx.minimum_cut` would have raised `NetworkXUnbounded` there.\n\nSuggestion: have `minimum_cut` detect unboundedness itself, the way NetworkX's `detect_unboundedness` does. It can run a BFS over the edges whose original capacity is `inf`, using the index/adjacency arrays it already builds, and raise `nx.NetworkXUnbounded` if the sink is reachable. That makes `minimum_cut` safe to call on its own and lets this pre-check go away. `_find_infinite_capacity_path` then goes back to being a helper that only runs in the `except` block to explain the failure.\n",
+      "diff_hunk": "@@ -2939,7 +2940,9 @@ def find_first_unfusible(start_nodes: list[fx.Node], max_range: int) -> int:\n                         heapq.heappush(fusible, (node_info.get_fw_order(user), user))\n \n     try:\n-        cut_value, partition = nx.minimum_cut(nx_graph, \"source\", \"sink\")\n+        if _find_infinite_capacity_path(nx_graph) is not None:",
+      "outdated": true
+    }
+  ]
+}

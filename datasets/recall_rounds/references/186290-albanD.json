@@ -1,0 +1,53 @@
+{
+  "pr": 186290,
+  "head_sha": "0f6073e8f11f0d56c97733265ec0f0a4f186fcfe",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "Only a couple of nits.",
+    "submitted_at": "2026-07-06T14:05:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/distributed/fake_pg.py",
+      "line": null,
+      "original_line": 9,
+      "body": "I'm confused by the BC argument here?\nHaving FakeProcessGoup in `__all__` is definitely new?",
+      "diff_hunk": "@@ -1,14 +1,13 @@\n # mypy: allow-untyped-defs\n \n import torch.distributed as dist\n-from torch._C._distributed_c10d import FakeProcessGroup\n+from torch._C._distributed_c10d import FakeProcessGroup, FakeStore\n \n \n-class FakeStore(dist.Store):\n-    \"\"\"\n-    A fake store is a fake Key-Value store simply for initialization usage\n-    the of fake process group, one can either use FakeStore or HashStore.\n-    \"\"\"\n+# FakeStore is a no-op Key-Value store (implemented in C++) for initialization\n+# of the fake process group; one can either use FakeStore or HashStore. It is\n+# re-exported here for backwards compatibility.",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeStore.hpp",
+      "line": null,
+      "original_line": 12,
+      "body": "nit: I would say here that we need a pure C++ object to be held by our pure C++ ProcessGroup. So this cannot live in Python without extra indirection.\n\nEither way, not sure we need to argue so hard on having this a C++ class haha",
+      "diff_hunk": "@@ -0,0 +1,50 @@\n+#pragma once\n+\n+#include <torch/csrc/distributed/c10d/Store.hpp>\n+\n+namespace c10d {\n+\n+// A no-op Store for use with the fake process group. The fake backend performs\n+// no real communication, so the store is never used for rendezvous and every\n+// operation is a stub. Crucially clone() is a real C++ method (not a Python\n+// trampoline override), so it stays callable after Python drops its reference\n+// to the store -- e.g. when only the process group holds it -- which is what\n+// split_group relies on.",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 408,
+      "body": "Don't you already make sure to have a real option in the new call above? Why this change?",
+      "diff_hunk": "@@ -365,7 +403,9 @@ class FakeProcessGroup : public Backend {\n \n   // Private constructor used by official APIs\n   FakeProcessGroup(int rank, int size, c10::intrusive_ptr<Options> options)\n-      : Backend(rank, size), options_(std::move(options)) {\n+      : Backend(rank, size),\n+        options_(\n+            options ? std::move(options) : c10::make_intrusive<Options>()) {",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 79,
+      "body": "Based on claude and quick check, this seems to logically merge conflict with main. These are dead code now.",
+      "diff_hunk": "@@ -47,6 +50,41 @@ class FakeProcessGroup : public Backend {\n     return c10::static_intrusive_pointer_cast<Backend::Options>(options_);\n   }\n \n+  bool supportsSplitting() const override {\n+    return true;\n+  }\n+\n+  // Create a sub-group from a subset of the parent's ranks. The fake backend\n+  // performs no real communication, so unlike NCCL there is no split collective\n+  // to join: ranks outside the subgroup simply return nullptr (signalling\n+  // non-membership), and members return a fresh FakeProcessGroup whose rank is\n+  // their position within the sorted subgroup.\n+  c10::intrusive_ptr<Backend> split(\n+      const c10::intrusive_ptr<Store>& /* store */,\n+      const std::vector<int>& ranks,\n+      const c10::intrusive_ptr<Backend::Options>& opts) override {\n+    auto it = std::find(ranks.begin(), ranks.end(), rank_);\n+    if (it == ranks.end()) {\n+      return nullptr;\n+    }\n+    auto groupRank = static_cast<int>(std::distance(ranks.begin(), it));\n+    auto fakeOpts = c10::dynamic_intrusive_pointer_cast<Options>(opts);\n+    if (!fakeOpts) {\n+      fakeOpts = c10::make_intrusive<Options>();\n+    }\n+    return c10::make_intrusive<FakeProcessGroup>(\n+        groupRank, static_cast<int>(ranks.size()), std::move(fakeOpts));\n+  }\n+\n+  // The fake backend has nothing to synchronize, so sequence numbers are a",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/distributed/c10d/FakeProcessGroup.hpp",
+      "line": null,
+      "original_line": 73,
+      "body": "Nit: NCCL considers this an error. Not sure why we want to be more flexible here?",
+      "diff_hunk": "@@ -47,6 +50,41 @@ class FakeProcessGroup : public Backend {\n     return c10::static_intrusive_pointer_cast<Backend::Options>(options_);\n   }\n \n+  bool supportsSplitting() const override {\n+    return true;\n+  }\n+\n+  // Create a sub-group from a subset of the parent's ranks. The fake backend\n+  // performs no real communication, so unlike NCCL there is no split collective\n+  // to join: ranks outside the subgroup simply return nullptr (signalling\n+  // non-membership), and members return a fresh FakeProcessGroup whose rank is\n+  // their position within the sorted subgroup.\n+  c10::intrusive_ptr<Backend> split(\n+      const c10::intrusive_ptr<Store>& /* store */,\n+      const std::vector<int>& ranks,\n+      const c10::intrusive_ptr<Backend::Options>& opts) override {\n+    auto it = std::find(ranks.begin(), ranks.end(), rank_);\n+    if (it == ranks.end()) {\n+      return nullptr;\n+    }\n+    auto groupRank = static_cast<int>(std::distance(ranks.begin(), it));\n+    auto fakeOpts = c10::dynamic_intrusive_pointer_cast<Options>(opts);\n+    if (!fakeOpts) {\n+      fakeOpts = c10::make_intrusive<Options>();",
+      "outdated": true
+    }
+  ]
+}

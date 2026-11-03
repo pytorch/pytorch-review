@@ -1,0 +1,21 @@
+{
+  "pr": 190597,
+  "head_sha": "3acc58b036dbcc6c53b36f65b39be2c1fb014fc7",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-24T21:09:42Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/optim/_muon.py",
+      "line": 65,
+      "original_line": 71,
+      "body": "move the bug to a diff PR stacked in front of this one with a use case. no need to explain in a forever comment that a bug has been fixed",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

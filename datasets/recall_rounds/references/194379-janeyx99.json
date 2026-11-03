@@ -1,0 +1,21 @@
+{
+  "pr": 194379,
+  "head_sha": "85be4251da33bc2ac6502a4c6afea9edae22e03f",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-21T16:42:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "c10/util/Exception.cpp",
+      "line": 130,
+      "original_line": 130,
+      "body": "oh does this no lint not apply anymore? ig not",
+      "diff_hunk": "@@ -127,7 +126,7 @@ void torchCheckFail(\n     const char* file,\n     uint32_t line,\n     const char* msg) {\n-  // NOLINTNEXTLINE(modernize-use-designated-initializers)",
+      "outdated": false
+    }
+  ]
+}

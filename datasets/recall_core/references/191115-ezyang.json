@@ -1,0 +1,12 @@
+{
+  "pr": 191115,
+  "head_sha": "aa144a96139c362f0ba5cd7a0b30448ecc73c0ef",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "I'm not excited about accepting this as `spmd_types` is the correct way to do differentiable collectives in the modern world",
+    "submitted_at": "2026-07-27T19:22:41Z"
+  },
+  "inline_comments": []
+}

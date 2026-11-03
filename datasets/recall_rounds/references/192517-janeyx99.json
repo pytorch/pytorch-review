@@ -1,0 +1,21 @@
+{
+  "pr": 192517,
+  "head_sha": "7a4c187dddc3772e26c168aaec75956871d9205c",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-07T16:24:37Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_dynamo/symbolic_convert.py",
+      "line": null,
+      "original_line": 550,
+      "body": "why?",
+      "diff_hunk": "@@ -547,11 +547,11 @@ def get_assert_bytecode_sequence(with_msg: bool) -> list[str]:\n     if with_msg:\n \n         def fn(x: Any) -> None:\n-            assert x, \"msg\"  # noqa: S101\n+            assert x, \"msg\"  # noqa: S101  # @allow-plain-assert",
+      "outdated": true
+    }
+  ]
+}

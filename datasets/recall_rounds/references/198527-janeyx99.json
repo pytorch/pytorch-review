@@ -1,0 +1,61 @@
+{
+  "pr": 198527,
+  "head_sha": "ebb2d7235f76ccfb3c916d901b1f094e9442696d",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-10-01T18:29:57Z"
+  },
+  "inline_comments": [
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 3,
+      "body": "```suggestion\nsection, which describes how to use issues and pull requests (PRs) to contribute a change to PyTorch.\n```",
+      "diff_hunk": "@@ -1,7 +1,7 @@\n Thank you for your interest in contributing to PyTorch!\n-If you're a new contributor, please first take a read through our\n-[Contributing Guide](https://github.com/pytorch/pytorch/wiki/The-Ultimate-Guide-to-PyTorch-Contributions), specifically the [Submitting a Change](https://github.com/pytorch/pytorch/wiki/The-Ultimate-Guide-to-PyTorch-Contributions#submitting-a-change) section\n-that walks through the process of contributing a change to PyTorch.\n+If you're a new contributor, please first read the [Issue and PR Workflow](#issue-and-pr-workflow)\n+section, which describes how issues and pull requests move from being opened to being closed or merged.",
+      "outdated": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 4,
+      "body": "```suggestion\nThis document is the source of truth for that process, in particular how to most effectively engage with issues and PRs.\n```",
+      "diff_hunk": "@@ -1,7 +1,7 @@\n Thank you for your interest in contributing to PyTorch!\n-If you're a new contributor, please first take a read through our\n-[Contributing Guide](https://github.com/pytorch/pytorch/wiki/The-Ultimate-Guide-to-PyTorch-Contributions), specifically the [Submitting a Change](https://github.com/pytorch/pytorch/wiki/The-Ultimate-Guide-to-PyTorch-Contributions#submitting-a-change) section\n-that walks through the process of contributing a change to PyTorch.\n+If you're a new contributor, please first read the [Issue and PR Workflow](#issue-and-pr-workflow)\n+section, which describes how issues and pull requests move from being opened to being closed or merged.\n+This document is the source of truth for that process.",
+      "outdated": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 82,
+      "body": "```suggestion\nIssues are where we receive feedback and decide what should be done about it: bug reports, feature requests and design discussions all happen there.\nOnce a change and design is agreed upon, pull requests are the place to discuss and verify the implementation.\n```",
+      "diff_hunk": "@@ -71,6 +76,147 @@ aspects of contributing to PyTorch.\n \n <!-- tocstop -->\n \n+## Issue and PR Workflow\n+\n+Issues are where we receive all feedback and decide what should be done about it: bug reports, feature requests and design discussions all happen there.\n+PRs are only the place to discuss the implementation of a change and make sure it is correct.",
+      "outdated": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 84,
+      "body": "```suggestion\nFor clarity, PyTorch uses Llbels track the state of every issue and PR, so that both contributors and maintainers can tell what the next step is and who is expected to take it.\n```",
+      "diff_hunk": "@@ -71,6 +76,147 @@ aspects of contributing to PyTorch.\n \n <!-- tocstop -->\n \n+## Issue and PR Workflow\n+\n+Issues are where we receive all feedback and decide what should be done about it: bug reports, feature requests and design discussions all happen there.\n+PRs are only the place to discuss the implementation of a change and make sure it is correct.\n+\n+Labels track the state of every issue and PR, so that both contributors and maintainers can tell what the next step is and who is expected to take it.",
+      "outdated": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 85,
+      "body": "this line feels unnecessary here. like if i am a contributor i wanna know the labels + the process without seeing the maintainer stuff. in fact, i shouldn't ever need to read the maintainer stuff.",
+      "diff_hunk": "@@ -71,6 +76,147 @@ aspects of contributing to PyTorch.\n \n <!-- tocstop -->\n \n+## Issue and PR Workflow\n+\n+Issues are where we receive all feedback and decide what should be done about it: bug reports, feature requests and design discussions all happen there.\n+PRs are only the place to discuss the implementation of a change and make sure it is correct.\n+\n+Labels track the state of every issue and PR, so that both contributors and maintainers can tell what the next step is and who is expected to take it.\n+What we expect from maintainers is described in the [maintainer guide](docs/source/community/maintainer_guide.md).",
+      "outdated": true
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "line": null,
+      "original_line": 87,
+      "body": "current status section should go after introducing the desired workflow. otherwise i don't have enough background to understand.",
+      "diff_hunk": "@@ -71,6 +76,147 @@ aspects of contributing to PyTorch.\n \n <!-- tocstop -->\n \n+## Issue and PR Workflow\n+\n+Issues are where we receive all feedback and decide what should be done about it: bug reports, feature requests and design discussions all happen there.\n+PRs are only the place to discuss the implementation of a change and make sure it is correct.\n+\n+Labels track the state of every issue and PR, so that both contributors and maintainers can tell what the next step is and who is expected to take it.\n+What we expect from maintainers is described in the [maintainer guide](docs/source/community/maintainer_guide.md).\n+\n+### Current status",
+      "outdated": true
+    }
+  ]
+}

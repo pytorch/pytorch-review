@@ -1,0 +1,21 @@
+{
+  "pr": 194664,
+  "head_sha": "39d401d114c8fd8846fa1f5b2e7087c2bf313c92",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-25T16:22:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_optim.py",
+      "line": null,
+      "original_line": 2705,
+      "body": "move the test to TestOptimRenewed, delete the long unreadable comment: \n\n```\n      @dtypes(torch.float32, torch.bfloat16)\n      @parametrize(\"nesterov\", [False, True])\n      def test_muon_orthogonalization_does_not_alias_momentum_buffer(self, device, dtype, nesterov):\n          momentum = 0.9\n          param = Parameter(torch.zeros(8, 5, device=device, dtype=dtype))\n          param.grad = torch.ones_like(param)\n          optimizer = torch.optim.Muon(\n              [param],\n              lr=0,\n              weight_decay=0,\n              momentum=momentum,\n              nesterov=nesterov,\n          )\n          expected = torch.zeros_like(param)\n          expected.lerp_(param.grad, 1 - momentum)\n          optimizer.step()\n          self.assertEqual(\n              optimizer.state[param][\"momentum_buffer\"],\n              expected,\n          )\n```",
+      "diff_hunk": "@@ -2701,8 +2701,32 @@ def fwd_bwd(optim, mod, i):\n         self.assertEqual(counter, 6)\n \n \n+class TestMuon(TestCase):\n+    def test_muon_does_not_alias_momentum_buffer(self, device):",
+      "outdated": true
+    }
+  ]
+}

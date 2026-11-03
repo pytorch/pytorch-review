@@ -1,0 +1,21 @@
+{
+  "pr": 187075,
+  "head_sha": "b40b78312f6dcd49a10c49b529a8573e758660b4",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "APPROVED",
+    "body": "nit on C++ version, SGTM otherwise.",
+    "submitted_at": "2026-06-11T20:03:20Z"
+  },
+  "inline_comments": [
+    {
+      "path": "RELEASE.md",
+      "line": null,
+      "original_line": 54,
+      "body": "We're not on C++20? I guess only partially?",
+      "diff_hunk": "@@ -51,6 +51,7 @@ Following is the Release Compatibility Matrix for PyTorch releases:\n \n | PyTorch version | Python | C++ | Stable CUDA | Experimental CUDA | Stable ROCm |\n | --- | --- | --- | --- | --- | --- |\n+| 2.13 | >=3.10, <=(3.15, 3.15t experimental) | C++17 | CUDA 12.6 (CUDNN 9.10.2.21) (NCCL 2.29.3), CUDA 13.0 (CUDNN 9.20.0.48) (NCCL 2.29.7) | CUDA 13.2 (CUDNN 9.20.0.48) (NCCL 2.29.7) | ROCm 7.2 |",
+      "outdated": true
+    }
+  ]
+}

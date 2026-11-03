@@ -1,0 +1,29 @@
+{
+  "pr": 189891,
+  "head_sha": "a2f2e064817e15cec91210c8f8603e3fbfd36523",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-14T16:50:03Z"
+  },
+  "inline_comments": [
+    {
+      "path": "cmake/public/utils.cmake",
+      "line": null,
+      "original_line": 559,
+      "body": "Let's keep quotation to protect against empty/space here and above",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "cmake/public/utils.cmake",
+      "line": null,
+      "original_line": 548,
+      "body": "Could we do the same as append_cxx_flag_if_supported and build a unique name internally rather than requiring the user to provide it?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

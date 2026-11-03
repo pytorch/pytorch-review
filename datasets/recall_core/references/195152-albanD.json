@@ -1,0 +1,37 @@
+{
+  "pr": 195152,
+  "head_sha": "e37e5412563a063948dd865058be21f05b5bb495",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-28T17:43:18Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".claude/skills/triaging-issues/labels.json",
+      "line": 1099,
+      "original_line": 1099,
+      "body": "Why label vs milestone?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 37,
+      "body": "Why 5.5 and not a separate step? This is not just for high pri issues?\n",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": ".claude/skills/triaging-issues/SKILL.md",
+      "line": null,
+      "original_line": 251,
+      "body": "I'm not sure what's the intent of the paragraph above and this one?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

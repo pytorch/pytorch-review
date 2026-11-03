@@ -1,0 +1,29 @@
+{
+  "pr": 190493,
+  "head_sha": "3c4256a151798918918dcba2354d542900166289",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "APPROVED",
+    "body": "Thanks for the catch! When I wrote that I probably didn\u2019t realize that std::string copy is by value, welp! (I guess it\u2019s slow but not too slow for short strings that are on the stack)",
+    "submitted_at": "2026-07-20T04:58:35Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/cpp/shim/test_stable_ivalue.cpp",
+      "line": 47,
+      "original_line": 47,
+      "body": "Good follow up for me is to add this for all our heap-allocated types (list, Tensor, etc).",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/csrc/stable/stableivalue_conversions.h",
+      "line": null,
+      "original_line": 807,
+      "body": "```suggestion\n// Returns a std::string which owns its memory; the string in val is deleted.\n```",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

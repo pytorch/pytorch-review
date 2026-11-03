@@ -1,0 +1,37 @@
+{
+  "pr": 199203,
+  "head_sha": "5f33a71fcdf510c0e78c59d5c043bdaac59828a2",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "APPROVED",
+    "body": "thank you!\n\nleft some nits you should address before landing",
+    "submitted_at": "2026-10-01T16:55:58Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/AccumulateType.h",
+      "line": 12,
+      "original_line": 12,
+      "body": "This is BC breaking, though I think this is the preferred setup in the future (things are in headeronly and exposed elsewhere). \n\nCould you add a BC breaking note following the guidelines in https://docs.google.com/document/d/14OmgGBr1w6gl1VO47GGGdwrIaUNr92DFhQbY_NEk8mQ/edit?tab=t.0#heading=h.a9htwgvvec1m",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/headeronly/core/AccumulateType.h",
+      "line": null,
+      "original_line": 175,
+      "body": "nit, but codex says:\n\n```\n`torch/headeronly/core/AccumulateType.h:82-90` \u2014 Generic macros such as `ACC_TYPE` can redefine and then erase caller macros. Prefix them with `TORCH_HEADERONLY_` before undefining them.\n```\n\nthis was true before already, but since torch/headeronly is more visible we can be more intentional about it.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/cpp/source/api/stable/utilities.md",
+      "line": null,
+      "original_line": 164,
+      "body": "```suggestion\n`acc_type<T, is_cuda>` and `acc_type_device<T, DeviceType>` give the dtype a\n```\n\nwider isn't always accurate, right?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

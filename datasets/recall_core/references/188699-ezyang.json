@@ -1,0 +1,21 @@
+{
+  "pr": 188699,
+  "head_sha": "2933de26bf2adbfc4e5b5d0f65186016bf35cd30",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-06T14:29:21Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/FakeTensorDispatchTables.h",
+      "line": 7,
+      "original_line": 7,
+      "body": "needs docs",
+      "diff_hunk": "",
+      "outdated": false
+    }
+  ]
+}

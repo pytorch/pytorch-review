@@ -1,0 +1,109 @@
+{
+  "pr": 193607,
+  "head_sha": "390632a5f66e316866eadf4fda15e6b116abea61",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Looks great!\nMostly small nits!",
+    "submitted_at": "2026-08-19T15:36:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": null,
+      "original_line": 1583,
+      "body": "For consistency with eveyrthing else, let's call this one \"inputs\" as well?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": 1197,
+      "original_line": 1305,
+      "body": "let's make value kwarg only for all of these!",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": 1288,
+      "original_line": 1380,
+      "body": "kwarg only",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": 1601,
+      "original_line": 1703,
+      "body": "kwarg only",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": 734,
+      "original_line": 757,
+      "body": "Claude flagged that, because the one without alpha and the one with alpha have weird Scalar overload. This might behave weird.\nI don't think we need to fix, but maybe we should document. Or always pass alpha=1 if that overload is better and we always want it to be called?\n",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": null,
+      "original_line": 1256,
+      "body": "claude claims that this one and minimum one actually doesn't uniformally go to clamp as we have some specialized kernels. Would be worth double checking and deleting if not true.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/overrides.py",
+      "line": 1572,
+      "original_line": 1572,
+      "body": "Why no inplace variants here?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/testing/_internal/common_methods_invocations.py",
+      "line": 11429,
+      "original_line": 11430,
+      "body": "The same logic is in test/test_meta.py at the top and can re-use this one now!",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": null,
+      "original_line": 195,
+      "body": "If func() is inplace. This might be a bit weird. We should warn that the function was actually run even though we're complaining about arguments here.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": null,
+      "original_line": 206,
+      "body": "Why empty return?\n",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/foreach/__init__.py",
+      "line": 184,
+      "original_line": 184,
+      "body": "This bind can be expensive. Would you be able to do a quick benchmark for an optimizer use-case to see how bad it is?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "docs/source/torch.md",
+      "line": null,
+      "original_line": 929,
+      "body": "Are we linking to this anchor in the wild? Will this break it?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

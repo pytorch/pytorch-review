@@ -1,0 +1,12 @@
+{
+  "pr": 186008,
+  "head_sha": "e871e4b872f19f04fd556bbae68c8fb7953e7e93",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "CHANGES_REQUESTED",
+    "body": "ScriptObject is not guaranteed to not have memory footprint, it can hold tensors internally. Test is insufficient, need to do an actual full test, not a unit test of `_size_of`. Some design consideration here necessary; need a way to probe a fake script object for size. @angelayi @zou3519 do you have some guidance on the API design here?\n\nIf need unblock, I could be persuaded to add a config flag \"assume all script objects are zero size\" which you can unblock your flow on.",
+    "submitted_at": "2026-06-03T17:13:17Z"
+  },
+  "inline_comments": []
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 197680,
+  "head_sha": "4289e6e068dbb996dae57d84fde9fddd38de1d79",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-21T20:35:02Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/distributed/tensor/_dispatch.py",
+      "line": null,
+      "original_line": 382,
+      "body": "[P2] Account for the output device of factory-like random ops\n\nThis checks the input device, but `rand_like` and `randn_like` can generate on an explicitly different output device. With the CPU-local DTensor on a CUDA mesh constructed in the new test, `torch.rand_like(dt, device=\"cuda\")` previously entered the CUDA tracker's `_distribute_region` and generated CUDA output with the appropriate RNG. This guard now rejects it solely because the input is on CPU.\n\nPlease check the effective generation device for these factory-like operators, accounting for an explicit `device` override, and add regression coverage for CPU input with CUDA output (`rand_like` and `randn_like`).\n\nVerified by tracing the source; I have not run a runtime reproduction.\n\n\u2014 Astra agent",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}
