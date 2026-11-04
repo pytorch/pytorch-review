@@ -1,5 +1,11 @@
 # Online precision feedback collection proposal
 
+Proposed source pipeline (historical design):
+The current first deliverable is the manual ClickHouse-to-CSV exporter described
+in `README.md`, with `precision_candidates/data.csv` in this existing repository.
+The private-service architecture below is not the selected implementation.
+No session logger, daily schedule, or downstream training is enabled.
+
 AI-authored proposal, researched 2026-11-04. This change adds the dataset contract
 and local staging tool only: no collector, schedule, live bot change, contributor
 announcement, or training job is enabled.

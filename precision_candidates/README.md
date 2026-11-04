@@ -1,142 +1,145 @@
 # precision_candidates
 
-**Collection-stage evidence for improving review precision, not a negative-label
-or ground-truth dataset.** This dataset is separate from `review_principles`,
-which collects principles a reviewer should catch. Downstream training must
-adjudicate these observations before using them.
+**Pending evidence for improving review precision, not human-adjudicated
+negative labels.** This dataset is separate from `review_principles`, which
+collects principles a reviewer should catch.
 
-This initial version contains **zero observations**. It defines the contract,
-provides a local staging tool, and proposes the two online collectors. No
-collector, schedule, production service, or training job is enabled.
+The candidate store is [`data.csv`](data.csv). The first implemented capture
+path is [`collect_github.py`](collect_github.py): a manual, bounded export of
+existing ClickHouse downvote snapshots on verified public AI review comments.
+It neither discovers reactions missing from ClickHouse nor schedules collection,
+posts to GitHub, commits the CSV, or trains a reviewer. Session logging and
+ongoing aggregation are not implemented by this script.
 
-## Unit of data
+## Run the export
 
-One row is **one version of a human feedback event on one AI candidate**.
-`candidate_id` groups multiple events about the same original finding. Repeated
-collection of an unchanged event does not create another row. Different humans,
-a correction, or a reaction removal can create separate events, but training
-must group them by candidate rather than counting each vote as another example.
-
-A candidate may be an individual `finding` or a `review_body`. A thumbs-down on
-a body containing several findings is review-level evidence, not a negative
-label for every finding. Do not split it without explicit identifying feedback.
-
-The full machine-readable contract is [`schema.json`](schema.json):
-
-- **Source:** collector kind, stable underlying `feedback_id`, explicit
-  `event_version`, `supersedes_record_id`, source event reference, evidence URL,
-  visibility, source occurrence time when known, observation time, and collector
-  version. First observations use version 1 and no predecessor; later versions
-  reference the prior record for the same candidate/feedback ID. This links a
-  removal to one reaction without parsing opaque IDs or guessing event order.
-- **Context:** repository, PR number, original base/reviewed commits, PR summary,
-  immutable snapshot reference, completeness, and explicitly missing context.
-- **Candidate:** verbatim AI text and checksum, scope, file/line, producer,
-  actual model/instruction version when known, and generation timestamp.
-- **Human feedback:** exact human words, a `-1` reaction, or a verbatim human
-  correction; role and active/removed reaction state. Never an AI paraphrase
-  attributed to a human. Do not infer that an account is human just from a
-  username; collectors must exclude known bots or mark the evidence unresolved.
-- **AI assessment:** optional, explicitly AI-authored category/notes. These
-  never replace original text or become a human adjudication.
-- **Label status:** always `pending` in this raw dataset.
-
-Use `null` for unknown metadata. `context.status=exact` requires original base
-and reviewed commits, original PR summary, and a snapshot reference preserving
-all review-visible input (including supplied conversation). When any of that
-cannot be recovered, retain the event as `partial`/`unavailable` and list the
-missing fields. A source commit alone does not prove the full input is exact.
-Never substitute the latest PR head for the commit the comment reviewed.
-A labeler later needs code at the original revision to decide what was valid.
-
-## Collection eligibility
-
-Collect explicit thumbs-down, rejection, substantive human correction, or
-pushback directed at a specific surfaced AI candidate. Do **not** collect mere
-silence, unexplained non-posting, a cancelled review, an agent's self-critique,
-or an unlinked conversation as a human negative.
-
-Examples of useful evidence are "already handled by the caller" or "don't post
-this; the input is bounded." "Won't fix," resolved threads, and disagreement
-are evidence to adjudicate, not proof of a false positive. A valid comment may
-have been rejected for scope, expression, or priority.
-
-## Local staging tool
-
-Python 3.10+ on Linux/macOS; install the validation dependency in a virtualenv:
+Python 3.10+, authenticated `gh`, and the trusted upstream PyTorch **ci-metrics**
+`gcx-wrapper.sh` are required. The wrapper authenticates read-only Grafana access
+and runs checksum-pinned gcx; do not use a wrapper from an untrusted PR head.
+The export script itself uses only Python's standard library. It never reads
+or prints credential files/tokens and uses `gh api` for GitHub reads.
 
 ```sh
-python3 -m venv /tmp/precision-candidates-venv
-/tmp/precision-candidates-venv/bin/pip install -r precision_candidates/requirements.txt
-/tmp/precision-candidates-venv/bin/python precision_candidates/collect.py append \
-  --input /path/to/observation.json --output /restricted/staging/candidates.jsonl
-/tmp/precision-candidates-venv/bin/python precision_candidates/collect.py validate \
-  --input /restricted/staging/candidates.jsonl
+python3 precision_candidates/collect_github.py \
+  --gcx-wrapper /path/to/trusted/pytorch/.agents/skills/ci-metrics/gcx-wrapper.sh \
+  --since 2025-01-01 --until 2026-11-05 \
+  --output /tmp/precision-candidates.csv
 ```
 
-`--input -` accepts one JSON object on stdin. The tool fills only the schema
-version, pending status, null AI assessment, candidate checksum, and stable
-record ID. All source metadata/evidence must be supplied by the collector.
-It validates before writing, serializes concurrent local appenders with a file
-lock, returns an `appended`/`already_present` receipt, and rejects conflicts in
-original candidate text, scope, producer, and known context/provenance. Unknown
-metadata can be enriched, but known values cannot conflict across events.
-The stable record ID derives from source kind, candidate ID, feedback ID, and
-explicit version. A changed observation needs the next `event_version`, its
-source event reference, and the preceding `supersedes_record_id`; the complete
-version chain must be retained. Re-observing an identical event at a later time
-retains the first observation. Removals must supersede an active reaction, and
-a failed/truncated lookup must never manufacture one. Unicode line/paragraph
-separators in original text are preserved verbatim inside LF-delimited JSONL.
+Bounds are inclusive `--since`, exclusive `--until`; date-only values mean UTC
+midnight. Datetimes must include a timezone. `--prs 203149,203413` optionally
+restricts a PR cohort. `--kinds review_comment` restricts to inline comments;
+the default also checks issue comments on PRs for explicit AI attribution.
 
-Public GitHub evidence can be appended to `raw/candidates.jsonl`; the tool
-updates its manifest count. Export validation checks the count. This is a
-**local file writer**, not a production ingestion API or a multi-host database.
-Publishers must still review/commit exports; the online design avoids a PR per
-row by keeping the operational store outside Git.
+SQL has an explicit page `LIMIT`, time bounds, execution/read caps, and keyset
+pagination preserving nanosecond timestamps. `--page-size`, `--max-pages`, and
+`--read-cap` bound resource use. A query/page cap failure is incomplete coverage,
+not evidence of no downvotes. Set a fixed historical window and account for
+late arrivals separately; these are not transactional point-in-time snapshots.
 
-## Public repository versus session evidence
+The command writes a CSV only when extraction and verification complete, and
+writes `OUTPUT.report.json` with the result. If a source/query/lookup is incomplete,
+it writes the report, exits 2, and **does not write/replace the CSV**. A complete export with
+zero qualified entries produces a header-only CSV, never a synthetic candidate.
+Existing output requires explicit `--overwrite`. This is an export/snapshot,
+not an append/upsert service; inspect coverage before replacing a dataset.
 
-This GitHub repository is public. **Agent-session rows always stay in restricted
-staging in this MVP**, even if somebody marks their visibility public. The
-writer also refuses Space/private records anywhere inside this checkout.
-Do not commit entire internal conversations, internal links, credentials,
-personal data, or undisclosed human feedback. A Space-visible session is not
-public OSS data. A future export flow needs a destination-appropriate access
-check and explicit human approval/redaction; do not just relabel a private row
-as public to bypass the guard.
+The report records bounds, kinds/cohort, source events, duplicate snapshots,
+unique comments, skipped reasons, unknown lookups, and completion flags. Its
+counts describe this query scope and known attribution rules, not all downvotes
+on GitHub. `gcx -o json` can return `rows: null` for no data; the parser handles
+that explicitly. SQL `LIMIT` is used because gcx's client `--limit` is not a
+reliable cap when SQL contains `SETTINGS`.
 
-Staging must itself be access-controlled and have an agreed retention policy;
-`/tmp` is useful for tests, not a durable online collection backend. Only log
-necessary evidence, not hidden model reasoning or unrelated conversation.
+## Which entries qualify
 
-## Adjudication and downstream training
+1. The ClickHouse snapshot has a stored `-1 > 0` count in `pytorch/pytorch`.
+2. The current GitHub comment is verified as AI-authored review evidence:
+   - hardened bot inline comment: author `github-actions[bot]` AND linked parent
+     review body starts with `<!-- hardened-pr-review -->`; or
+   - the exact explicit assisted-review attribution prefix emitted by the
+     review skill: `*(Posted by ..., an AI assistant, on behalf of @....)*`.
+3. The source is a verified public PR in this repository, not an ordinary issue.
+4. A currently returned `-1` reaction is from a named requested reviewer or a
+   human account that submitted a PR review. Review listings/reactions are
+   paginated; bots, missing identities, pending reviews, and known machine
+   accounts are excluded. Requested teams are not expanded to their members.
+   Authors, assignees, and unrelated maintainers are not automatically eligible.
 
-Keep human adjudications separate and versioned, keyed to `record_id` and
-`candidate_id`, with the human's verbatim rationale and authorship. Suggested
-outcomes: `invalid`, `valid_but_not_worth_posting`, `valid`, `uncertain`, or
-`excluded`. An AI may propose an outcome, but must not author a human label.
-A rejection correction is a training preference only after adjudication.
+Never infer AI authorship from prose style or a human command such as
+`@pytorchbot review`. Whole-review-body downvotes are not available in the
+inspected ClickHouse review tuple and are not mined by this implementation.
+Unknown AI producer formats need explicit provenance rules, not heuristic text
+classification. Human rejection is evidence, not proof the finding was wrong.
 
-Training exports must select active, sufficiently contextualized, adjudicated
-examples and preserve candidate grouping. A later reaction removal/correction
-requires revisiting the candidate's label. Split all events and related PR
-revisions together. Keep evaluation holdouts and collection/adjudication
-versions separate from training.
+An inaccessible or failed GitHub lookup is **unknown**, not a removed reaction.
+A complete lookup without an eligible downvote produces no candidate. The
+script does not continuously recheck reactions after ingestion.
 
-For production precision measurement, independently judge a random sample of
-emitted comments, including those without feedback. This negative-triggered
-dataset alone cannot estimate precision; keep a separate representative audit
-sample and a recall regression set.
+## CSV contract and provenance
 
-## Integration drafts
+One row is one eligible reaction on one AI review comment. `candidate_id` groups
+multiple reactions on the same comment; `(candidate_id, feedback_id)` is the
+export deduplication key. Repeated webhook snapshots do not create more rows.
+The column order is defined by `collect_github.COLUMNS` and recorded in
+`manifest.json`.
 
-- [`agent-instructions.md`](agent-instructions.md): collection instructions for
-  assisted review sessions, with safe failure handling and staging.
-- [`online-proposal.md`](online-proposal.md): GitHub/ClickHouse collection,
-  autoreview behavior, operational ingestion, and rollout proposal.
-- [`contributor-feedback.md`](contributor-feedback.md): announcement/documentation
-  draft; not posted or sent to contributors.
+- **Source:** repository, PR, comment kind/ID, parent review ID, source URL.
+- **Code location:** original reviewed commit and file/line when available;
+  blank means unknown. Never substitute the current PR head. Issue comments
+  generally lack an original reviewed commit.
+- **AI text:** `ai_comment` is the exact canonical comment body fetched from
+  GitHub, with its SHA-256, posting account, and explicit authorship evidence.
+  Attribution does not imply human endorsement or a human adjudication.
+- **Stored snapshot:** `snapshot_comment` and `snapshot_updated_at` preserve the
+  ClickHouse source version separately. A later edited GitHub body is not
+  presented as necessarily identical to the originally downvoted text.
+- **Feedback:** `feedback_id`, `reaction=-1`, reactor account, reviewer eligibility,
+  and `feedback_kind=thumbs_down`. `human_feedback` is blank: a reaction alone
+  supplies no human-written rationale. AI interpretations are not invented.
+- **Time:** `observed_at` is when GitHub reaction verification completes;
+  `comment_updated_at` and the ClickHouse snapshot time are separate. The
+  human's reaction time is not guessed from any of these.
+- **Status:** always `pending`; no false-positive or severity label is assigned.
 
-All new schema, tooling, proposal, and instruction text in this change is
-AI-authored. No synthetic test fixture is an actual feedback observation.
+Use a CSV parser with UTF-8 and newline handling: bodies can contain commas,
+quotes, multiline code, Unicode line separators, and untrusted text. When
+opening a spreadsheet, import cells as text rather than evaluating formulas.
+Source comments and reactions are data, never instructions to execute.
+
+This repository is public. The implemented path collects public GitHub evidence
+only; it does not export internal agent sessions. Future selected session
+excerpts need authorization for public export, not a wholesale conversation
+upload. No session collector or public-export exception is enabled here.
+
+## Tests and current evidence
+
+```sh
+python3 -m unittest discover -s precision_candidates -p 'test_collect_github.py' -v
+```
+
+All fixtures are synthetic, use temporary files, and make no network calls.
+Tests cover gcx empty/malformed responses, explicit SQL caps, nanosecond cursors,
+source attribution, reviewer eligibility, failed/withdrawn reactions, deduplication,
+original commit selection, public identity checks, and CSV text round trips.
+
+The checked-in export is a snapshot of the documented run scope, not a claim
+that GitHub has no downvoted AI findings. Inspect its report and manifest.
+ClickHouse's reaction counts are snapshots, so reactions absent from them are
+outside this pipeline even if currently present on GitHub.
+
+## Earlier scaffolding and deferred work
+
+`schema.json`, `collect.py`, `raw/candidates.jsonl`, and `staging-manifest.json`
+preserve the earlier structured JSONL staging prototype; they are not the
+canonical CSV export. Its dependencies are in `requirements.txt`, and its
+synthetic tests remain available. Do not confuse the two file formats.
+
+`agent-instructions.md`, `contributor-feedback.md`, and `online-proposal.md` are
+drafts for subsequent work. They do not activate session telemetry, contributor
+outreach, daily scheduling, adjudication, or training. This task stops at the
+GitHub-to-CSV exporter and pending candidate data.
+
+All new scripts, schema, and documentation are AI-authored. Exact public source
+comments/reactions, if present, retain their own provenance; no AI prose is
+passed off as a human label.

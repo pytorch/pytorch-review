@@ -1,0 +1,1 @@
+candidate_id,repository,pr_number,comment_kind,comment_id,review_id,reviewed_commit,path,line,ai_comment,ai_comment_sha256,comment_author,ai_authorship,authorship_evidence,feedback_id,feedback_kind,reaction,human_feedback,reactor,reactor_eligibility,source_url,observed_at,comment_updated_at,snapshot_updated_at,snapshot_comment,label_status

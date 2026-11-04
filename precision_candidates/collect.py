@@ -16,7 +16,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 DATASET_DIR = Path(__file__).resolve().parent
 PUBLIC_DATA = DATASET_DIR / "raw" / "candidates.jsonl"
-MANIFEST = DATASET_DIR / "manifest.json"
+MANIFEST = DATASET_DIR / "staging-manifest.json"
 SCHEMA = json.loads((DATASET_DIR / "schema.json").read_text(encoding="utf-8"))
 Draft202012Validator.check_schema(SCHEMA)
 VALIDATOR = Draft202012Validator(SCHEMA, format_checker=FormatChecker())
