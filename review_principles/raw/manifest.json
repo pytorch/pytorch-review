@@ -1,15 +1,14 @@
 {
   "name": "maintainer_raw",
-  "schema_version": 2,
+  "schema_version": 3,
   "stage": "draft_principles",
   "columns": [
     "pr_number",
     "pr_summary",
     "current_commit",
+    "reviewer",
     "reviewer_comment",
     "reviewer_principle",
-    "severity",
-    "severity_reason",
     "source_url"
   ],
   "repository": "pytorch/pytorch",
@@ -27,9 +26,8 @@
   "inline_comments": 454,
   "review_bodies": 85,
   "principles_distilled": false,
-  "severity_labeled": false,
   "feedback_relocated": false,
-  "csv_sha256": "e37be5aa8cc476de82fd983c5eea5ca293261e70491f83cb766e21753bac3875",
+  "csv_sha256": "4a9aa0aed9ed34a8c25346f27374cf0ee1b6792acab4b5753dc4872976f18d93",
   "export_source": {
     "repository": "pytorch/ciforge",
     "commit": "d9e0653e38c9257988eaa8ef0cc703fbeb95f9a5",
@@ -37,12 +35,6 @@
   },
   "principles_drafted": true,
   "draft_principles": 336,
-  "severity_suggestions": 335,
-  "severity_suggestion_counts": {
-    "P2": 126,
-    "P1": 204,
-    "P0": 5
-  },
   "principle_status_counts": {
     "resolved": 4,
     "needs_context": 29,
@@ -68,11 +60,5 @@
       "470-538"
     ],
     "audit_row_order_commit": "6abef264b77fde6cffc9b45f3b9e558133120a73"
-  },
-  "sort_order": [
-    "P0",
-    "P1",
-    "P2",
-    ""
-  ]
+  }
 }

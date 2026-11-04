@@ -1,7 +1,7 @@
 # Raw feedback and draft principles
 
 The CSV preserves **original GitHub feedback** alongside **AI-drafted review
-principles and severity suggestions**. These are candidates for human labeling,
+principles**. These are candidates for human labeling,
 not accepted ground truth. Original messages are never rewritten by distillation.
 Some source feedback explicitly discloses AI authorship or assistance; provenance
 records those disclosures separately from the authorship of the new drafts.
@@ -13,18 +13,17 @@ records those disclosures separately from the authorship of the new drafts.
 | `pr_number`          | PR number in `pytorch/pytorch`.                                           |
 | `pr_summary`         | Title and full description as of the review's submission.                 |
 | `current_commit`     | Commit SHA recorded on the submitted review.                              |
+| `reviewer`           | GitHub account that posted the original feedback, copied from provenance. |
 | `reviewer_comment`   | Verbatim original review body or inline comment.                          |
 | `reviewer_principle` | AI-drafted reusable rule, or blank when unsupported.                      |
-| `severity`           | AI suggestion: `P0`, `P1`, or `P2`; blank when uncertain or inapplicable. |
-| `severity_reason`    | Explanation of the suggestion, including uncertainty.                     |
 | `source_url`         | Link to the original GitHub review or inline comment.                     |
 
 There is no base or previous-review commit column. Multiple comments on the same
 reviewed commit are separate rows; a nonempty review body is one row. Use a CSV
 parser: summaries and feedback can contain quotes, commas, and newlines.
 
-Rows are sorted by severity: P0, P1, P2, then blanks. The existing order within
-each severity is preserved, and provenance row numbers follow the sorted CSV.
+The existing CSV record order is preserved, and provenance row numbers follow
+the CSV.
 
 ## First batch
 
@@ -34,7 +33,7 @@ datasets. All submitted review cycles for those selected reviewers are included.
 - 539 entries across 107 PRs: 454 inline comments and 85 review bodies.
 - 128 PR/reviewer pairs were collected, covering 21 reviewers; 21 PRs had no
   nonempty feedback from their selected reviewer.
-- 336 rows have draft principles; 335 have severity suggestions. Human labels
+- 336 rows have draft principles. Human labels
   have not been collected. Feedback has not been moved between cycles.
 
 ## Drafting and labeling
@@ -50,21 +49,8 @@ those are drafted when code context or the review thread establishes the issue.
 The original messages remain available in every row, including excluded entries.
 Retractions are recorded in provenance rather than turned into standing rules.
 
-Severity suggestions use this scale:
-
-- **P0:** absolutely must fix; fundamental correctness, synchronization, or trust
-  invariant failure.
-- **P1:** a substantive improvement to behavior, API design, maintainability, or
-  test coverage.
-- **P2:** nits, clarity, and preferences.
-
-A review requesting changes does not by itself imply P0. Severity describes the
-specific concern at the reviewed commit. For a review body with multiple concerns,
-the suggestion reflects the highest severity among the supported concerns.
-An uncertain severity stays blank with an explanation in `severity_reason`.
-
-All nonempty `reviewer_principle`, `severity`, and `severity_reason` values in this
-revision are AI drafts. Labelers should compare them with `reviewer_comment` and
+All nonempty `reviewer_principle` values in this revision are AI drafts.
+Labelers should compare them with `reviewer_comment` and
 the source before accepting or editing them. Explicitly AI-authored source
 findings without a disclosed human endorsement require human adjudication.
 
@@ -73,7 +59,9 @@ findings without a disclosed human endorsement require human adjudication.
 `provenance.jsonl` has one record per CSV entry, containing the reviewer,
 original source ID and URL, review timestamp, and original file/line location.
 `csv_row` counts logical CSV records, starting at 2 after the header. The source
-URL also appears directly in the CSV.
+URL and reviewer also appear directly in the CSV. The `reviewer` account identifies
+who posted the message; source authorship disclosures are recorded separately,
+including when that account posts feedback written by an AI agent.
 
 Provenance additionally records each original comment's checksum, disclosed
 source authorship, draft authorship, principle status and reasoning, and whether
@@ -86,7 +74,7 @@ Feedback bodies are the versions available when collected. Titles and descriptio
 are reconstructed from edit history. An inline comment's original commit can
 differ from the parent review's commit; that original commit is in provenance.
 
-`manifest.json` records the scope, CSV checksum, draft counts and severity counts,
+`manifest.json` records the scope, CSV checksum, draft counts,
 and exact original export commit. The raw export's older schema is preserved in
 that historical commit; the current sheet separates comments from drafted rules.
 The collector and exporter are in that commit under `scripts/pr_review_eval`
