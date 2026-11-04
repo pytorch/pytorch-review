@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pytorch/pytorch-review/precision_candidates/schema.json",
+  "title": "Precision candidate observation (not an adjudicated label)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_id", "candidate_id", "source", "context", "candidate", "human_feedback", "ai_assessment", "label_status"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "label_status": {"const": "pending"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "event_id", "feedback_id", "event_version", "supersedes_record_id", "occurred_at", "url", "visibility", "observed_at", "collector_version"],
+      "properties": {
+        "kind": {"enum": ["github", "agent_session"]},
+        "event_id": {"type": "string", "minLength": 1},
+        "feedback_id": {"type": "string", "minLength": 1},
+        "event_version": {"type": "integer", "minimum": 1},
+        "supersedes_record_id": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "occurred_at": {"type": ["string", "null"], "format": "date-time"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "visibility": {"enum": ["public", "space", "private"]},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "collector_version": {"type": "string", "minLength": 1}
+      },
+      "allOf": [{
+        "if": {"properties": {"event_version": {"const": 1}}},
+        "then": {"properties": {"supersedes_record_id": {"const": null}}},
+        "else": {"properties": {"supersedes_record_id": {"type": "string"}}}
+      }]
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "pr_number", "base_commit", "reviewed_commit", "pr_summary", "status", "missing", "snapshot_ref"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
+        "pr_number": {"type": ["integer", "null"], "minimum": 1},
+        "base_commit": {"$ref": "#/$defs/commit"},
+        "reviewed_commit": {"$ref": "#/$defs/commit"},
+        "pr_summary": {"type": ["string", "null"]},
+        "status": {"enum": ["exact", "partial", "unavailable"]},
+        "missing": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "snapshot_ref": {"type": ["string", "null"], "minLength": 1}
+      },
+      "allOf": [{
+        "if": {"properties": {"status": {"const": "exact"}}},
+        "then": {"properties": {
+          "base_commit": {"type": "string"},
+          "reviewed_commit": {"type": "string"},
+          "pr_summary": {"type": "string"},
+          "missing": {"maxItems": 0},
+          "snapshot_ref": {"type": "string"}
+        }},
+        "else": {"properties": {"missing": {"minItems": 1}}}
+      }]
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "sha256", "scope", "authorship", "producer", "model", "instruction_version", "path", "line", "generated_at"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "scope": {"enum": ["finding", "review_body"]},
+        "authorship": {"const": "agent"},
+        "producer": {"type": "string", "minLength": 1},
+        "model": {"type": ["string", "null"], "minLength": 1},
+        "instruction_version": {"type": ["string", "null"], "minLength": 1},
+        "path": {"type": ["string", "null"], "minLength": 1},
+        "line": {"type": ["integer", "null"], "minimum": 1},
+        "generated_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "human_feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "verbatim_text", "reaction", "corrected_text", "actor_role", "state", "authorship"],
+      "properties": {
+        "kind": {"enum": ["thumbs_down", "rejected", "revised", "pushback"]},
+        "verbatim_text": {"type": ["string", "null"], "minLength": 1},
+        "reaction": {"enum": ["-1", null]},
+        "corrected_text": {"type": ["string", "null"], "minLength": 1},
+        "actor_role": {"enum": ["author", "maintainer", "reviewer", "unknown"]},
+        "state": {"enum": ["active", "removed"]},
+        "authorship": {"const": "human"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "thumbs_down"}}},
+          "then": {"properties": {"reaction": {"const": "-1"}}},
+          "else": {"properties": {"verbatim_text": {"type": "string"}, "reaction": {"const": null}, "state": {"const": "active"}}}
+        },
+        {
+          "if": {"properties": {"kind": {"const": "revised"}}},
+          "then": {"properties": {"corrected_text": {"type": "string"}}}
+        }
+      ]
+    },
+    "ai_assessment": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["category", "notes", "authorship"],
+      "properties": {
+        "category": {"enum": ["factual_error", "missing_context", "inapplicable", "low_value", "duplicate", "expression", "unknown"]},
+        "notes": {"type": ["string", "null"]},
+        "authorship": {"const": "agent"}
+      }
+    }
+  },
+  "allOf": [{
+    "if": {"properties": {"human_feedback": {"properties": {"state": {"const": "removed"}}}}},
+    "then": {"properties": {"source": {"properties": {"event_version": {"minimum": 2}}}}}
+  }],
+  "$defs": {
+    "commit": {"type": ["string", "null"], "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"}
+  }
+}

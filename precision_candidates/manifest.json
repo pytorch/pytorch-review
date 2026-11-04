@@ -1,0 +1,14 @@
+{
+  "name": "precision_candidates",
+  "schema_version": 1,
+  "stage": "unadjudicated_feedback",
+  "format": "jsonl",
+  "data": "raw/candidates.jsonl",
+  "schema": "schema.json",
+  "rows": 0,
+  "human_adjudicated_rows": 0,
+  "authorship_policy": "Original AI candidates and verbatim human evidence are preserved separately; AI assessments are provisional, never human labels.",
+  "collection_enabled": false,
+  "training_ready": false,
+  "visibility_policy": "Only public source evidence may be checked into this public repository. Space/private session evidence stays in a restricted staging store."
+}
