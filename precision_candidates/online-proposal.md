@@ -76,9 +76,9 @@ Source pins:
    comments use `/repos/{repo}/pulls/comments/{id}` and `.../{id}/reactions`.
 4. **Still has eligible human `-1`:** emit a pending observation for each
    distinct reaction, retaining candidate grouping. Use the reaction ID as
-   `source.feedback_id`; do not infer who/when from a count. Start with author/
-   maintainer feedback, matching current bot context policy; broader feedback
-   scope is a deployment decision. Exclude known bots.
+   `source.feedback_id`; do not infer who/when from a count. Eligible reactors
+   are the human PR author plus named requested/submitted reviewers. Exclude
+   bots, assignees who are not reviewers, and unrelated maintainers.
 5. **Complete lookup confirms no eligible `-1`:** skip candidate creation.
    **Lookup fails/incomplete/inaccessible:** quarantine/retry as unknown; never
    manufacture an active downvote or call it a confirmed removal. Rate-limit

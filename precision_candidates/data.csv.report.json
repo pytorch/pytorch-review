@@ -7,6 +7,7 @@
     "review_comment",
     "issue_comment"
   ],
+  "reactor_policy": "pr_author_or_named_requested_or_submitted_reviewer",
   "snapshot_events": 20,
   "queries": 2,
   "unique_comments": 20,

@@ -60,11 +60,12 @@ reliable cap when SQL contains `SETTINGS`.
    - the exact explicit assisted-review attribution prefix emitted by the
      review skill: `*(Posted by ..., an AI assistant, on behalf of @....)*`.
 3. The source is a verified public PR in this repository, not an ordinary issue.
-4. A currently returned `-1` reaction is from a named requested reviewer or a
-   human account that submitted a PR review. Review listings/reactions are
-   paginated; bots, missing identities, pending reviews, and known machine
-   accounts are excluded. Requested teams are not expanded to their members.
-   Authors, assignees, and unrelated maintainers are not automatically eligible.
+4. A currently returned `-1` reaction is from the human PR author, a named
+   requested reviewer, or a human account that submitted a PR review. Review
+   listings/reactions are paginated; bots, missing identities, pending reviews,
+   and known machine accounts are excluded. Requested teams are not expanded
+   to their members. Assignees and unrelated maintainers are not automatically
+   eligible. Author feedback is recorded with `reactor_eligibility=author`.
 
 Never infer AI authorship from prose style or a human command such as
 `@pytorchbot review`. Whole-review-body downvotes are not available in the

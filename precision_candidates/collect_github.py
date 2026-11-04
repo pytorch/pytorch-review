@@ -218,6 +218,9 @@ class GitHub:
                 user = review.get("user") or {}
                 if human_account(user) and review.get("submitted_at") and review.get("state") != "PENDING":
                     names[user["login"]] = "requested_and_submitted" if user["login"] in names else "submitted"
+            author = pull.get("user") or {}
+            if human_account(author):
+                names[author["login"]] = "author"
             self.pr_cache[pr] = reviews, names
         return self.pr_cache[pr]
 
@@ -254,7 +257,7 @@ def verify(snapshot: dict, github: GitHub, observed_at: str | None = None) -> li
     if (parsed.scheme != "https" or parsed.netloc != "github.com"
             or parsed.path.strip("/").split("/")[:4] != ["pytorch", "pytorch", "pull", str(pr)]):
         raise CollectionError("comment URL does not identify the requested PR")
-    reviews, reviewers = github.pr_context(pr)
+    reviews, eligible_reactors = github.pr_context(pr)
     authored = provenance(comment, kind, reviews)
     if authored is None:
         return []
@@ -263,7 +266,7 @@ def verify(snapshot: dict, github: GitHub, observed_at: str | None = None) -> li
     records = []
     for reaction in reactions:
         user = reaction.get("user") or {}
-        if reaction.get("content") != "-1" or not human_account(user) or user["login"] not in reviewers:
+        if reaction.get("content") != "-1" or not human_account(user) or user["login"] not in eligible_reactors:
             continue
         body = comment["body"]
         commit = comment.get("original_commit_id") or comment.get("commit_id") or ""
@@ -275,7 +278,7 @@ def verify(snapshot: dict, github: GitHub, observed_at: str | None = None) -> li
             comment.get("path") or "", comment.get("original_line") or comment.get("line") or "",
             body, hashlib.sha256(body.encode("utf-8")).hexdigest(), comment["user"]["login"],
             "agent", authored, str(integer(reaction.get("id"))), "thumbs_down", "-1", "",
-            user["login"], reviewers[user["login"]], url, observed_at,
+            user["login"], eligible_reactors[user["login"]], url, observed_at,
             comment.get("updated_at") or "", snapshot["updated_at"], snapshot["body"], "pending",
         ])))
     return records
@@ -303,7 +306,9 @@ def write_csv(path: Path, rows: list[dict], overwrite: bool = False) -> None:
 
 def export(clickhouse: ClickHouse, github: GitHub, args: argparse.Namespace) -> tuple[list[dict], dict]:
     report = {"repository": REPOSITORY, "since": args.since.isoformat(), "until": args.until.isoformat(),
-              "prs": args.prs, "kinds": args.kinds, "snapshot_events": 0, "queries": 0,
+              "prs": args.prs, "kinds": args.kinds,
+              "reactor_policy": "pr_author_or_named_requested_or_submitted_reviewer",
+              "snapshot_events": 0, "queries": 0,
               "unique_comments": 0, "duplicates": 0, "verification_attempts": 0,
               "csv_rows": 0, "unknown": [],
               "skipped": {}, "source_complete": False, "verification_complete": True}

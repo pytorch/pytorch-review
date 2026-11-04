@@ -149,7 +149,7 @@ class VerificationTests(unittest.TestCase):
 
     def test_absent_and_ineligible_reactions(self):
         for reaction in (None, {"id": 4, "content": "+1", "user": user()},
-                         {"id": 4, "content": "-1", "user": user("author")},
+                         {"id": 4, "content": "-1", "user": user("unrelated")},
                          {"id": 4, "content": "-1", "user": user("maintainer")},
                          {"id": 4, "content": "-1", "user": user("reviewer", "Bot")},
                          {"id": 4, "content": "-1", "user": user("reviewer[bot]")}):
@@ -294,6 +294,31 @@ class VerificationTests(unittest.TestCase):
         with patch.object(gh, "get", side_effect=get):
             _, names = gh.pr_context(2)
         self.assertEqual(names, {"requested": "requested", "submitted": "submitted"})
+
+    def test_pr_author_reaction_is_eligible(self):
+        gh = FakeGH()
+        gh.reviewers["author"] = "author"
+        gh.reactions = [{"id": 4, "content": "-1", "user": user("author")}]
+        rows = c.verify(snapshot(), gh, WHEN)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["reactor"], "author")
+        self.assertEqual(rows[0]["reactor_eligibility"], "author")
+
+    def test_pr_context_adds_human_author_but_not_bot_author(self):
+        for author, eligible in ((user("author"), {"author": "author"}),
+                                 (user("robot[bot]", "Bot"), {}),
+                                 (user("facebook-github-bot"), {})):
+            with self.subTest(author=author["login"]):
+                gh = c.GitHub()
+                def get(endpoint):
+                    if endpoint.endswith("/pulls/2"):
+                        return {"user": author, "base": {"repo": {"full_name": c.REPOSITORY, "private": False}}}
+                    if "requested_reviewers" in endpoint:
+                        return {"users": []}
+                    return []
+                with patch.object(gh, "get", side_effect=get):
+                    _, names = gh.pr_context(2)
+                self.assertEqual(names, eligible)
 
     def test_private_or_unknown_visibility_is_rejected(self):
         for private in (True, None):
