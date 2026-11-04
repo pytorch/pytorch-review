@@ -1,6 +1,6 @@
 {
   "name": "maintainer_raw",
-  "schema_version": 3,
+  "schema_version": 4,
   "stage": "draft_principles",
   "columns": [
     "pr_number",
@@ -9,6 +9,7 @@
     "reviewer",
     "reviewer_comment",
     "reviewer_principle",
+    "ai_notes",
     "source_url"
   ],
   "repository": "pytorch/pytorch",
@@ -27,7 +28,7 @@
   "review_bodies": 85,
   "principles_distilled": false,
   "feedback_relocated": false,
-  "csv_sha256": "4a9aa0aed9ed34a8c25346f27374cf0ee1b6792acab4b5753dc4872976f18d93",
+  "csv_sha256": "5b17338a5408eebc266b48120096ba1723c791f630c1f5df1a861526c9acd35d",
   "export_source": {
     "repository": "pytorch/ciforge",
     "commit": "d9e0653e38c9257988eaa8ef0cc703fbeb95f9a5",
@@ -60,5 +61,24 @@
       "470-538"
     ],
     "audit_row_order_commit": "6abef264b77fde6cffc9b45f3b9e558133120a73"
-  }
+  },
+  "ai_notes_rows": 203,
+  "ai_note_counts": {
+    "resolved": 4,
+    "needs more context": 29,
+    "exclude: acknowledgement": 8,
+    "exclude: question": 63,
+    "exclude: praise": 3,
+    "exclude: approval": 25,
+    "exclude: negotiation": 39,
+    "exclude: administrative": 9,
+    "exclude: non-actionable feedback": 11,
+    "exclude: thanks": 9,
+    "exclude: automated notice": 3
+  },
+  "sort_order": [
+    "drafted principles",
+    "needs more context",
+    "other blank principles"
+  ]
 }

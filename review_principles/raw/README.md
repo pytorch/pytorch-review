@@ -16,14 +16,16 @@ records those disclosures separately from the authorship of the new drafts.
 | `reviewer`           | GitHub account that posted the original feedback, copied from provenance. |
 | `reviewer_comment`   | Verbatim original review body or inline comment.                          |
 | `reviewer_principle` | AI-drafted reusable rule, or blank when unsupported.                      |
+| `ai_notes`           | AI explanation of a blank principle; blank for rows with draft principles. |
 | `source_url`         | Link to the original GitHub review or inline comment.                     |
 
 There is no base or previous-review commit column. Multiple comments on the same
 reviewed commit are separate rows; a nonempty review body is one row. Use a CSV
 parser: summaries and feedback can contain quotes, commas, and newlines.
 
-The existing CSV record order is preserved, and provenance row numbers follow
-the CSV.
+Rows with draft principles come first. Rows with blank principles follow, with
+those needing more context before the remaining blanks. Existing order is
+preserved within each group, and provenance row numbers follow the sorted CSV.
 
 ## First batch
 
@@ -49,7 +51,14 @@ those are drafted when code context or the review thread establishes the issue.
 The original messages remain available in every row, including excluded entries.
 Retractions are recorded in provenance rather than turned into standing rules.
 
-All nonempty `reviewer_principle` values in this revision are AI drafts.
+`ai_notes` explains all 203 blank principles using the existing AI triage in
+provenance. Notes include `exclude: approval`, `exclude: question`,
+`exclude: negotiation`, `needs more context`, and `resolved`. Context-dependent
+and resolved entries include a specific explanation. A resolved discussion does
+not necessarily mean the reviewer retracted a finding. These notes are provisional
+AI judgments for labelers to inspect; they do not remove entries or accept labels.
+
+All nonempty `reviewer_principle` and `ai_notes` values in this revision are AI drafts.
 Labelers should compare them with `reviewer_comment` and
 the source before accepting or editing them. Explicitly AI-authored source
 findings without a disclosed human endorsement require human adjudication.
@@ -64,7 +73,7 @@ who posted the message; source authorship disclosures are recorded separately,
 including when that account posts feedback written by an AI agent.
 
 Provenance additionally records each original comment's checksum, disclosed
-source authorship, draft authorship, principle status and reasoning, and whether
+source authorship, draft and note authorship, principle status and reasoning, and whether
 a human has reviewed the row. `not_disclosed` source authorship means the message
 does not identify its writer beyond the recorded GitHub account. The draft
 statuses are `draft`, `needs_human_adjudication`, `needs_context`, `resolved`, and
@@ -74,7 +83,7 @@ Feedback bodies are the versions available when collected. Titles and descriptio
 are reconstructed from edit history. An inline comment's original commit can
 differ from the parent review's commit; that original commit is in provenance.
 
-`manifest.json` records the scope, CSV checksum, draft counts,
+`manifest.json` records the scope, CSV checksum, draft and note counts, row order,
 and exact original export commit. The raw export's older schema is preserved in
 that historical commit; the current sheet separates comments from drafted rules.
 The collector and exporter are in that commit under `scripts/pr_review_eval`
