@@ -1,0 +1,37 @@
+{
+ "case_id": "194241-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/gen_aot_lib.py",
+   "line": 585,
+   "summary": "This logic is duplicated elsewhere in the code; the other places should reuse this helper.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a6362f8a6e12425a42175d0c296f771d18f3c5d5",
+   "adoption_evidence": "The commented line `def surviving_sidecars(op: str, sidecars: list[dict]) -> list[dict]:` is the same in the merged code. Only its docstring changed, which now says \"Idempotent, so a caller may filter and pass the result on.\" The other copy of this logic was in gen_op, which re-ran the survivor filter inline: before review it had `sidecars = [sc for scs in groups.values() for sc in scs]`. In the merged code that line is `sidecars = surviving_sidecars(op, sidecars)`, and its comment says \"Through the helper main() uses -- it is idempotent, so filtering an already-filtered list is silent and cheap.\" So the duplicated code now calls the helper, which is what the maintainer asked for. The diff shows no other inline copies left.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "gen_op flattened the survivors itself (`sidecars = [sc for scs in groups.values() for sc in scs]`), copying logic that the new `surviving_sidecars` helper exists to own. The helper's docstring says every consumer must agree on the surviving set, so keeping two copies risks them drifting apart. The merged code switched gen_op to `sidecars = surviving_sidecars(op, sidecars)`, which is what the maintainer asked for.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194241#discussion_r3898061478",
+   "human_review": "pending"
+  },
+  {
+   "id": "h4",
+   "path": "tools/native_aot/gen_aot_lib.py",
+   "line": 821,
+   "summary": "Platform-specific handling looks unnecessary since this only runs on Linux; add an early exit for Windows/Apple instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a6362f8a6e12425a42175d0c296f771d18f3c5d5",
+   "adoption_evidence": "Before, the exclude-libs block had its own guard: `\"if(UNIX AND NOT APPLE)\",` wrapping `target_link_options(torch_cuda PRIVATE \"SHELL:-Xlinker --exclude-libs ...\")`. In the merged code that per-block guard is gone. CMAKE_DSL_RUNTIME_TMPL now emits `target_link_libraries(torch_cuda PRIVATE {runtime})` followed by `target_link_options(torch_cuda PRIVATE \"SHELL:-Xlinker --exclude-libs -Xlinker \\\"{runtime_name}\\\"\")` with no condition around it. A single early exit, CMAKE_PLATFORM_GUARD, was added near the top: `if(NOT UNIX OR APPLE)  message(STATUS \"native-AOT: not Linux, not embedding kernels\")  return() endif()`. Its comment says \"Linux only, deliberately... One exit rather than a guard per linker block\". This is the early exit for Windows/Apple that the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "This is a question about platform scope (\"Don't we only ever run this on linux anyways?\"), not a defect. The `if(UNIX AND NOT APPLE)` guard already handles non-Linux platforms correctly. The visible diff shows no change near this line and no early exit for Windows or Apple, and knowing that the tool only runs on Linux is outside knowledge.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194241#discussion_r3898129876",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "184865-drisspg",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/_inductor/codegen/cutedsl/cutedsl_scheduling.py",
+   "line": 237,
+   "summary": "Pulling CLUSTER_M/N out of the rendered template source with a regex is fragile and hacky; the cluster config should come from a more direct source.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "1a8864e9e1bfb49f563b1bb0d006fb899c64dc11",
+   "adoption_evidence": "Before: `m_match = re.search(r\"CLUSTER_M\\b.*?=\\s*(\\d+)\", src_code_str)` (and the same regex for CLUSTER_N). After the merge, the regex parsing of the rendered source is gone. The values are now read directly: `template_kwargs = getattr(kernel, \"_template_kwargs\", None)` and `cluster_m = template_kwargs.get(\"CLUSTER_M\")` / `cluster_n = template_kwargs.get(\"CLUSTER_N\")`. The `src_code_str` parameter was also removed, and the docstring now says \"Reads CLUSTER_M/N from kernel template kwargs\". That is the more direct source the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "Recovering config by regex-scanning the generated kernel source (`re.search(r\"CLUSTER_M\\b.*?=\\s*(\\d+)\", src_code_str)`) is brittle, since it can match the wrong text or quietly return None when the template's formatting changes. The merged code reads `template_kwargs.get(\"CLUSTER_M\")` from the kernel directly, which is exactly the fix.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/184865#discussion_r3289374475",
+   "human_review": "pending"
+  }
+ ]
+}

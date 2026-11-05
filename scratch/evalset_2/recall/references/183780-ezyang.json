@@ -1,0 +1,21 @@
+{
+  "pr": 183780,
+  "head_sha": "c5270cc3c64a896678f83b99881827b9066b14d1",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-05-15T03:09:56Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/cudagraph_utils.py",
+      "line": null,
+      "original_line": 301,
+      "body": "It would be better to query the memory allocator state directly to get this info rather than re-inferring it from env",
+      "diff_hunk": "@@ -288,10 +289,28 @@ def check_multiple_devices_or_any_cpu_nodes(\n     return format_default_skip_message(f\"multiple devices: {', '.join(keys_repr)}\")\n \n \n+def check_caching_allocator_for_cudagraphs() -> str | None:\n+    \"\"\"Skip cudagraphs when the CUDA/HIP caching allocator has been forced off\n+    via PYTORCH_NO_(CUDA|HIP)_MEMORY_CACHING. Cudagraph capture pools allocations\n+    through the caching allocator; with it bypassed, capture appears to succeed\n+    but pool tracking diverges (see check_memory_pool in cudagraph_trees.py),\n+    surfacing as 'storage data ptrs not allocated in pool ...' at replay time.\n+    Truthy match follows c10::utils::check_env: only the literal \"1\" counts.\"\"\"\n+    if (\n+        os.environ.get(\"PYTORCH_NO_CUDA_MEMORY_CACHING\") == \"1\"\n+        or os.environ.get(\"PYTORCH_NO_HIP_MEMORY_CACHING\") == \"1\"",
+      "outdated": true
+    }
+  ]
+}

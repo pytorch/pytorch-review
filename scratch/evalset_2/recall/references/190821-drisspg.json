@@ -1,0 +1,21 @@
+{
+  "pr": 190821,
+  "head_sha": "93a2e2657280571b2ac78dab721deb37415ca01c",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-06T21:21:22Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/codegen/cutedsl/cutedsl_op_overrides.py",
+      "line": null,
+      "original_line": 110,
+      "body": "we already have all this in the overrides no?",
+      "diff_hunk": "@@ -86,6 +98,113 @@ def tensorssa_reduction(reduction_type: ReductionType) -> TensorSSAReduction:\n     return reduction\n \n \n+def _sum_combine(lhs, rhs):\n+    return lhs + rhs\n+\n+\n+def _prod_combine(lhs, rhs):\n+    return lhs * rhs\n+\n+\n+def _max_combine(lhs, rhs):\n+    import cutlass",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 173241,
+  "head_sha": "4891ee963cad895ae7dd819cf705a059aec7e14a",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "APPROVED",
+    "body": "thanks!",
+    "submitted_at": "2026-01-26T15:47:53Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_foreach.py",
+      "line": null,
+      "original_line": 1025,
+      "body": "no need for onlyCUDA\r\n```suggestion\r\n```",
+      "diff_hunk": "@@ -1022,6 +1022,23 @@ def test_foreach_l2_large_value_input(self, device, dtype, op):\n             )\n         self.assertEqual(expect, actual, equal_nan=False)\n \n+    @onlyCUDA",
+      "outdated": true
+    }
+  ]
+}

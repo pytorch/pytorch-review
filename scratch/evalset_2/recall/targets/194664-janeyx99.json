@@ -1,0 +1,21 @@
+{
+ "case_id": "194664-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_optim.py",
+   "line": 2705,
+   "summary": "The new Muon momentum-buffer aliasing test should be moved into TestOptimRenewed and use its device/dtype parametrization (@dtypes float32/bfloat16, nesterov parametrize).",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4e1ffee606abbdf229dcaab6e58b6aeba5a011d8",
+   "adoption_evidence": "Before: `class TestMuon(TestCase):` / `def test_muon_does_not_alias_momentum_buffer(self, device):` followed by a long comment (\"# With nesterov=False the momentum buffer is handed straight to Newton-Schulz...\"). Merged: the TestMuon class and its instantiate_device_type_tests call are gone. The test now sits inside TestOptimRenewed as `@dtypes(torch.float32, torch.bfloat16) @parametrize(\"nesterov\", [False, True]) def test_muon_orthogonalization_does_not_alias_momentum_buffer(self, device, dtype, nesterov):`. The long comment was removed, `dtypes` was added to the imports, and the body matches the maintainer's suggested code line for line.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code does what was asked: it removes `class TestMuon(TestCase)` and moves the test into `TestOptimRenewed` as `test_muon_orthogonalization_does_not_alias_momentum_buffer` without the long comment. But this is about test placement and comment length, not a defect. The standalone `TestMuon` class with its own `instantiate_device_type_tests` call worked fine, so this is a style/organization nit.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194664#discussion_r3855023660",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "173694-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": ".spin/cmds.py",
+   "line": 412,
+   "summary": "The change makes the earlier lint_found logic (around line 385) confusing or redundant: lint_found now seems to always be True, so the command would always exit with sys.exit(1). The control flow needs clarifying or fixing.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "237186ae391bd36c9a1ad0837bcbf2a6583d33e9",
+   "adoption_evidence": "The comment sits on a blank line (412, just after `spin.util.run(cmd)`), but it is about the `lint_found` logic in `_run_lintrunner`/`lint`. That logic had been inverted: `lint_found = not bool(p.returncode)` made lint_found True on success, and the early `if not lint_found_all: ... raise SystemExit(1)` meant the command effectively always exited with status 1. The merged code fixes this. It changes the assignment to `lint_found = bool(p.returncode)`, deletes the confusing early-exit block (`if not lint_found_all: if write_json_output: ... raise SystemExit(1)`), and sets `lint_found = False` when no linters are left after the --take/--skip filters. Now the final `if lint_found: click.secho(\"Lint failed!\", fg=\"red\"); raise SystemExit(1)` runs only when lintrunner returns non-zero. That answers the maintainer's question: lint_found is no longer always True and the exit is no longer unconditional.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The comment is phrased as a question, but it points at a real inverted-logic bug: `lint_found = not bool(p.returncode)` is True when lintrunner succeeds, so the `if not lint_found_all: raise SystemExit(1)` and the final `if lint_found` checks fire backwards. The merged code changed it to `lint_found = bool(p.returncode)` and removed the inverted early exit, and a reviewer reading the code could spot the inversion.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/173694#discussion_r2738911115",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "177530-albanD",
+ "targets": [
+  {
+   "id": "h6",
+   "path": "torch/csrc/utils/disable_torch_function.cpp",
+   "line": 256,
+   "summary": "Building py_args with py::make_tuple creates a full tuple when it isn't needed; a ternary would avoid the allocation.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4480f61c862452f9c0867335956596a4d50e2bf1",
+   "adoption_evidence": "Before: `py::tuple py_args; if (args == Py_None) { py_args = py::make_tuple(); } else { py_args = py::reinterpret_borrow<py::tuple>(args); }`. Merged: `py::tuple py_args = args == Py_None ? py::make_tuple() : py::reinterpret_borrow<py::tuple>(args);`. The if/else became the ternary the maintainer suggested, so py_args is no longer default-constructed and then reassigned.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code adopted the suggested ternary (`py::tuple py_args = args == Py_None ? py::make_tuple() : ...`). But avoiding one throwaway empty tuple from the default-constructed `py::tuple py_args;` is a micro-optimization nit, not a defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/177530#discussion_r2941960926",
+   "human_review": "pending"
+  }
+ ]
+}

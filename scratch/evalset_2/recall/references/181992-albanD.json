@@ -1,0 +1,29 @@
+{
+  "pr": 181992,
+  "head_sha": "748ddadb2f98d5886a57b3715879161d4b7008a1",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-04-30T16:31:31Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_cuda.py",
+      "line": 5104,
+      "original_line": 5104,
+      "body": "Why move this out?\n",
+      "diff_hunk": "@@ -5100,8 +5114,9 @@ def test_memory_snapshot_skip_actions(self):\n \n     @serialTest()\n     def test_max_split_expandable(self):\n+        orig = torch.cuda.get_per_process_memory_fraction()\n+        restore_alloc_settings = _allocator_settings_for_restore()\n         try:\n-            orig = torch.cuda.get_per_process_memory_fraction()",
+      "outdated": true
+    },
+    {
+      "path": "test/test_cuda.py",
+      "line": null,
+      "original_line": 5871,
+      "body": "Why is this setting a setting during setup?",
+      "diff_hunk": "@@ -5842,6 +5860,15 @@ def checkFunction(self, fn, inputs, pool=None):\n \n     def setUp(self):\n         super().setUp()\n+        # Pin allocator settings around this test class. Segment-count\n+        # assertions in this suite depend on whether expandable_segments is\n+        # active, and that knob is sticky in parseArgs \u2014 see issue #158764\n+        # for the cross-test leak this guards against. Force the runtime to\n+        # match self.expandable_segments so a leaked True from another test\n+        # cannot make these assertions flaky.\n+        self._restore_alloc_settings = _allocator_settings_for_restore()\n+        es = \"True\" if self.expandable_segments else \"False\"\n+        torch._C._accelerator_setAllocatorSettings(f\"expandable_segments:{es}\")",
+      "outdated": true
+    }
+  ]
+}

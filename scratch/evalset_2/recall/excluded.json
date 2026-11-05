@@ -1,0 +1,386 @@
+[
+ {
+  "case": "173032-ezyang",
+  "issue": "h1",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Splitting `.mul_(3. / N)` into `.mul_(3.).div_(N)` makes the code worse because it adds an extra in-place tensor op; a better fix for the narrowing-conversion issue is needed."
+ },
+ {
+  "case": "173670-janeyx99",
+  "issue": "h4",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Add an 'Included benchmark results (for PRs improving perf)' item to the checklists in both the fix_issue and preapproved PR templates."
+ },
+ {
+  "case": "175578-albanD",
+  "issue": "h1",
+  "reason": "C: naming nit labelled design",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Hardcoded line numbers for coverage_ignore_functions/classes in conf.py will go stale; use a greppable marker in conf.py instead."
+ },
+ {
+  "case": "176280-albanD",
+  "issue": "h3",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Decide what this ops/__init__.py should contain at this point in the stack: remove it, or keep only the smallest kernel as a working example."
+ },
+ {
+  "case": "176280-albanD",
+  "issue": "h22",
+  "reason": "C: naming nit labelled design",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "runtime_available returns the raw global, which may not be a bool; wrap it in bool()."
+ },
+ {
+  "case": "177530-albanD",
+  "issue": "h8",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The __reduce_ex__ override on RedispatchTensor looks unnecessary because the tensor is never serialized."
+ },
+ {
+  "case": "177530-albanD",
+  "issue": "h9",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Copy call_log over to newly wrapped output tensors so the log covers child tensors and chains of ops."
+ },
+ {
+  "case": "179421-janeyx99",
+  "issue": "h1",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The new stable-IValue functions should move from the AOTI shim to the non-AOTI torch/csrc/shim_common.cpp and drop the aoti_ prefix."
+ },
+ {
+  "case": "183323-janeyx99",
+  "issue": "h3",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The new shims are versioned for 2.13 but must target 2.14 now, which means setting up the 2.14 version scaffolding."
+ },
+ {
+  "case": "183930-janeyx99",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The PR swaps STABLE_TORCH_ERROR_CODE_CHECK back to the old TORCH_ERROR_CODE_CHECK, which reverts an upstream rename; rebase and use STABLE_TORCH_ERROR_CODE_CHECK, including in the new nativeHandle()."
+ },
+ {
+  "case": "184182-ezyang",
+  "issue": "h1",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The test checks for complete fusion in a brittle way (counting '.run(' calls and grepping generated code for 'empty_strided_cuda'); it should use a better, more robust way to assert that the compiled region fused fully."
+ },
+ {
+  "case": "184625-ezyang",
+  "issue": "h1",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The test asserts on generated IR/graph code strings (absence of aten.index.Tensor, presence of aten.select.int); the reviewer dislikes these brittle IR checks and wants the test to verify behavior instead (e.g., numerical correctness)."
+ },
+ {
+  "case": "184865-drisspg",
+  "issue": "h2",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Questions whether src_code_str needs a default of None in _build_precompile_metadata, and when it can actually be None; suggests making it required."
+ },
+ {
+  "case": "185990-ezyang",
+  "issue": "h1",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The code here is overly defensive; the unnecessary defensive checks or handling should be simplified or removed."
+ },
+ {
+  "case": "187075-albanD",
+  "issue": "h1",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The C++ standard version stated in RELEASE.md looks wrong or out of date, since PyTorch has at least partly moved to C++20, so the text should be corrected."
+ },
+ {
+  "case": "187949-albanD",
+  "issue": "h4",
+  "reason": "C: naming nit labelled design",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The reviewer asks why the API is named/structured as is_enabled rather than an enable function."
+ },
+ {
+  "case": "189284-albanD",
+  "issue": "h2",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The hook should propagate to any worker thread from any system, not only some threads."
+ },
+ {
+  "case": "189376-albanD",
+  "issue": "h5",
+  "reason": "D: evidence does not show the fix",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Say whether this function can be called more than once, or whether every config has to go into a single call."
+ },
+ {
+  "case": "189376-albanD",
+  "issue": "h7",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The section leaves out which test file to run and how it applies."
+ },
+ {
+  "case": "189376-albanD",
+  "issue": "h8",
+  "reason": "D: evidence does not show the fix",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "This link may not resolve in the rendered docs and should be checked or fixed."
+ },
+ {
+  "case": "189447-ezyang",
+  "issue": "h1",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The added type conversions look unnecessary and should be removed."
+ },
+ {
+  "case": "190575-albanD",
+  "issue": "h1",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The reviewer asks why this extra (non-Tensor) version of the function is needed when the Tensor version looks like it should be enough, implying it could be removed."
+ },
+ {
+  "case": "190820-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Branching on the string `local_reduce_type == \"online_softmax\"` is brittle; the reduction type should be dispatched in a more robust way."
+ },
+ {
+  "case": "190820-drisspg",
+  "issue": "h2",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "`mbar_helpers_bytes` jumps from 1024 to 2048 with no justification. If the extra space is for the new sLocalReduce scratch, the size should be derived (as the EFC kernel does with local_reduce_smem_bytes) or explained in a comment."
+ },
+ {
+  "case": "190932-janeyx99",
+  "issue": "h1",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Move the new declaration out of shim_mps.h and into torch/csrc/stable/c/shim.h, with a comment pointing to where the other set_args functions live."
+ },
+ {
+  "case": "191019-albanD",
+  "issue": "h4",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Don't build a new Tensor from another Tensor's data_ptr; use clone() for a fresh copy or alias() for a view."
+ },
+ {
+  "case": "191513-drisspg",
+  "issue": "h1",
+  "reason": "borderline: pending decision",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The GemmEpilogueIRCodegen class (and related codegen helpers) may belong in gemm_epilogue_ir rather than a separate gemm_epilogue_codegen module."
+ },
+ {
+  "case": "192132-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Asks what the current `pull` runtime is and suggests setting a lower runtime cap than 90 minutes."
+ },
+ {
+  "case": "192132-albanD",
+  "issue": "h5",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Link a dashboard that shows the `pull` workflow runtime so owners can check the 90-minute limit."
+ },
+ {
+  "case": "192774-janeyx99",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The branch cut has already happened, so the new shim function should be versioned as 2_15 instead of the version currently listed."
+ },
+ {
+  "case": "193398-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "This README section is dead/outdated too and should also be removed, as the suggestion shows."
+ },
+ {
+  "case": "194853-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Appending to the module-global _active_scopes in the backward prehook isn't exception-safe: if node execution raises, the posthook is skipped and the pop never happens. ThreadLocalStateGuard won't restore the list, so if Python catches the exception and the capture continues, later unannotated nodes inherit the stale backward annotation. The code comment's assumption that the capture gets aborted doesn't always hold."
+ },
+ {
+  "case": "194853-drisspg",
+  "issue": "h3",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Having the CUPTI backward bracket publish itself by pushing onto the global _active_scopes is a 'cursed' design and should be reconsidered."
+ },
+ {
+  "case": "194854-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "A second 'stream' key is appended to an args object that already has the hardware stream, producing duplicate JSON keys that parsers handle inconsistently; the existing field should be replaced and the old value kept as original_stream."
+ },
+ {
+  "case": "194986-albanD",
+  "issue": "h2",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "The doc example's hook does something trivial; use a more meaningful example, such as using the profiler API to add a custom range around the optimizer step."
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h10",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Replace the global _CACHE plus cached_plan with functools.cache on a private helper keyed by the resolved device index, so hardware-property lookup is not tied to the launch-plan cache."
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "_offsets assumes threads_per_row is a power of two. A value like 3 gives a butterfly that does not combine every lane, so the reduction is silently wrong. The invariant should be enforced at the compile/plan boundary."
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h9",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Skip the whole file when CuTeDSL is unavailable and then import cutlass/traits at module level, instead of importing inside every test body. Handle __main__ so running the file directly still exits successfully."
+ },
+ {
+  "case": "195051-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The custom `_magic` magic-number division duplicates CuTe's built-in FastDivmodDivisor; consider using that instead."
+ },
+ {
+  "case": "195052-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Wide-load alignment depends only on N, not on the input's actual pointer alignment, so offset views (e.g. torch.randn(1025)[1:].view(2,512)) get a falsely 16-byte-aligned descriptor; check pointer alignment, fall back or specialize, and put alignment in the cache key."
+ },
+ {
+  "case": "195777-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "The team members list needs updating; the maintainer asks whether Ivan has actually agreed to be included, which implies the roster should be checked and corrected."
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Backward support should not be inferred from the forward hook's signature; keep append_flex_attention_choices forward-only and make append_flex_attention_backward_choices a separate no-op default that TLX overrides explicitly."
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h2",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Remove the signature-inspection compatibility layer (_accepts_flex_attention_mutated_inputs, the compatibility adapter, _flex_attention_backward_dispatcher*) and let the normal composed-hook dispatch select the backward override."
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h3",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Inferring backward support from a forward hook that accepts mutated_inputs or **kwargs can accidentally run a forward-only template on the backward payload."
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h4",
+  "reason": "A: maintainer comment relays AI text",
+  "stage2": "drop",
+  "stage3": "keep",
+  "summary": "Make mutated_inputs a required keyword-only argument (*, mutated_inputs: list[Any]) on append_flex_attention_backward_choices."
+ },
+ {
+  "case": "198527-janeyx99",
+  "issue": "h5",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Remove the maintainer-specific line from the contributor-facing section, because contributors should only need the labels and the process, not maintainer details."
+ },
+ {
+  "case": "198527-janeyx99",
+  "issue": "h6",
+  "reason": "vague, a question or a nit (specificity rule)",
+  "stage2": "keep",
+  "stage3": "drop",
+  "summary": "Move the 'current status' section after the description of the desired workflow so readers have the background they need to understand it."
+ },
+ {
+  "case": "198648-albanD",
+  "issue": "h2",
+  "reason": "D: evidence does not show the fix",
+  "stage2": "drop",
+  "stage3": "drop",
+  "summary": "Remove the vendored kineto .github folder because its workflows won't trigger inside the PyTorch repo."
+ }
+]

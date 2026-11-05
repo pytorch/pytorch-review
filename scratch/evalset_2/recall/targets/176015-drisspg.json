@@ -1,0 +1,37 @@
+{
+ "case_id": "176015-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/native/native_functions.yaml",
+   "line": 15261,
+   "summary": "The op is called an 'out_variant', but it isn't really an out op or a variant. It is effectively a new pseudo-inplace op, so it should be renamed and redefined that way.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ef578cd5b558e10b7bf9d22bdb46e22d57bf2cac",
+   "adoption_evidence": "Before: `- func: _flash_attention_forward_out_variant(Tensor(a!) out, ..., Tensor? page_table=None) -> (Tensor softmax_logsumexp, Tensor rng_state, Tensor unused, Tensor debug_attn_mask)` with dispatch `CUDA: _flash_attention_forward_out`. Merged: `- func: _flash_attention_forward_no_dropout_inplace(Tensor(a!) out, ..., Tensor? block_table=None) -> Tensor softmax_logsumexp` with dispatch `CUDA: _flash_attention_forward_no_dropout_inplace`. The maintainer asked for two things, and both were done. First, the op is no longer named as an out variant. It is now a pseudo-inplace op named \"_no_dropout_inplace\". Second, the rng_state, unused and debug_attn_mask outputs were removed, so only softmax_logsumexp is returned. The dropout_p and return_debug_mask input arguments are still in the signature, but the request was about the unused returned tensors, and those are gone.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "`_flash_attention_forward_out_variant(Tensor(a!) out, ...)` takes an `out` it never returns, so it doesn't follow PyTorch's out-variant conventions. It also returns `rng_state`, `unused` and `debug_attn_mask`, which this no-dropout API doesn't need. The merged code made the requested change: it became `_flash_attention_forward_no_dropout_inplace(...) -> Tensor softmax_logsumexp`. A reviewer who knows native_functions.yaml conventions could spot the API problem from the schema alone.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176015#discussion_r2881860713",
+   "human_review": "pending"
+  },
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/native/native_functions.yaml",
+   "line": 15261,
+   "summary": "Drop the rng_state, unused and debug_attn_mask outputs (and the matching inputs such as return_debug_mask) from the schema and implementation, since this API won't support dropout or use the debug mask.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ef578cd5b558e10b7bf9d22bdb46e22d57bf2cac",
+   "adoption_evidence": "Before: `- func: _flash_attention_forward_out_variant(Tensor(a!) out, Tensor query, ..., float dropout_p, bool is_causal, bool return_debug_mask, *, ..., Tensor? page_table=None) -> (Tensor softmax_logsumexp, Tensor rng_state, Tensor unused, Tensor debug_attn_mask)` with dispatch `CUDA: _flash_attention_forward_out`.\n\nMerged: `- func: _flash_attention_forward_no_dropout_inplace(Tensor(a!) out, Tensor query, ..., float dropout_p, bool is_causal, bool return_debug_mask, *, ..., Tensor? block_table=None) -> Tensor softmax_logsumexp` with dispatch `CUDA: _flash_attention_forward_no_dropout_inplace`.\n\nThe maintainer asked for two things, and both were done. First, the op is no longer named as an \"out variant\". It is now a separate pseudo-inplace op called `_flash_attention_forward_no_dropout_inplace`. Second, the `rng_state`, `unused` and `debug_attn_mask` outputs were removed, so the op now returns only `softmax_logsumexp`. One gap: the `dropout_p` and `return_debug_mask` inputs are still in the schema. The comment itself only asked to drop the outputs, though, so I'm treating the request as adopted.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "Exact duplicate of h1 (same comment, line and diff). The issue is real, the fix was adopted, and a reviewer could catch it: the op was renamed to `_flash_attention_forward_no_dropout_inplace` and now returns only `softmax_logsumexp`. It is dropped only so the dataset doesn't count the same target twice.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176015#discussion_r2881860713",
+   "human_review": "pending"
+  }
+ ]
+}

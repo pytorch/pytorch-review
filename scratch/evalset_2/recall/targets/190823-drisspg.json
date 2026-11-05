@@ -1,0 +1,21 @@
+{
+ "case_id": "190823-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/kernel/gemm_epilogue.py",
+   "line": 146,
+   "summary": "The shared GEMM reduction helpers (statically_known*, GemmReductionGeometry, GemmReductionExpression, GemmReductionConfig, GemmReductionPlan, etc.) were moved out to gemm_epilogue_ir; move them back, because shared code belongs in gemm_epilogue.py.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c6c42714b400605050ec93b7a051a3a401fb2d6b",
+   "adoption_evidence": "In the reviewed version, gemm_epilogue.py imported the shared helpers from the separate module: `from torch._inductor.kernel.gemm_epilogue_ir import GemmReductionDescriptor`. The merged diff deletes that import. It defines the shared classes in gemm_epilogue.py again: `class GemmReductionGeometry`, `class GemmReductionDescriptor`, `class GemmReductionConfig` and `class GemmReductionPlan`, with GemmReductionArguments after them. So the shared reduction types were moved back into gemm_epilogue.py, as the maintainer asked. One thing doesn't fully match: the `statically_known*` helpers are not in gemm_epilogue.py. The file imports them from `.gemm_epilogue_utils` (`from .gemm_epilogue_utils import statically_known_shape_equal`), probably because the utils module is a common shared home for them. The main request, moving the shared GEMM reduction classes out of gemm_epilogue_ir and back into this file, is applied.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code does what was asked: shared types such as `GemmReductionDescriptor` and `GemmReductionGeometry` now live in gemm_epilogue.py, and the `from torch._inductor.kernel.gemm_epilogue_ir import GemmReductionDescriptor` import is gone. But the comment is a preference about which module holds what, not a defect, and the reasoning is in a screenshot of the maintainer's planned layout that a reviewer could not get from the code alone.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/190823#discussion_r3678800653",
+   "human_review": "pending"
+  }
+ ]
+}

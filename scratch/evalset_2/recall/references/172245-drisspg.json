@@ -1,0 +1,21 @@
+{
+  "pr": 172245,
+  "head_sha": "77f284426523ea25f0dd1446538754d567800fe0",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-13T17:35:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_varlen_attention.py",
+      "line": null,
+      "original_line": 108,
+      "body": "it shoudl probably window right = 0 and left == -1? right",
+      "diff_hunk": "@@ -108,6 +105,7 @@ def forward_sdpa(\n             batch_size, self.num_heads, seq_len, seq_len\n         )\n \n+        is_causal = window_size[1] == 0",
+      "outdated": true
+    }
+  ]
+}

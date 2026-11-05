@@ -1,0 +1,21 @@
+{
+ "case_id": "186183-drisspg",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/_inductor/codegen/nv_universal_gemm/nv_universal_gemm.py",
+   "line": 556,
+   "summary": "EFC kernels should probably be filtered out when no epilogue is being fused, so plain GEMM autotuning doesn't include the extra EFC candidates.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "bf9ea7b0a83587fa2b027958323f1c1bf9ced16e",
+   "adoption_evidence": "The maintainer asked whether EFC kernels should be filtered out when no epilogue is used. The commented call `non_efc_kernels = get_compatible_kernels(args, cc_int, metadata_filter=_exclude_efc_kernels)` stays the same. The EFC lookup right after it, `efc_kernels = get_compatible_kernels(args, cc_int, metadata_filter=_include_efc_kernels_only)`, is now wrapped in `if config.epilogue_fusion: efc_kernels = get_compatible_kernels(...)` with `else: efc_kernels = []`. So EFC candidates are dropped from autotuning when epilogue fusion is off, which is the filtering the maintainer suggested. One caveat: the check uses the global `config.epilogue_fusion` flag rather than whether this particular GEMM gets an epilogue. That is still a reasonable equivalent, because fusion is decided later in the scheduler, after the candidate kernels are chosen.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "EFC (epilogue-fusion-compatible) kernels were always collected via `get_compatible_kernels(..., metadata_filter=_include_efc_kernels_only)`, even when epilogue fusion is off. That adds autotuning choices that can never be used. The merged code wraps the call in `if config.epilogue_fusion:` and otherwise sets `efc_kernels = []`, which is what the maintainer asked for. The kernel split by EFC and the inductor config flag are both visible in the code, so a reviewer could infer this.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/186183#discussion_r3383584008",
+   "human_review": "pending"
+  }
+ ]
+}

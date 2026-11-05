@@ -1,0 +1,21 @@
+{
+ "case_id": "182537-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_flop_counter.py",
+   "line": 1395,
+   "summary": "The sparsity_hint tests allocate real CUDA tensors, some of them large (1x32x2048x128). They should use fake tensors so they don't need real GPU allocation.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "e14a08f8b59196bd8e9305819eb116202af8f5a3",
+   "adoption_evidence": "Before: `q = torch.randn(1, 32, 2048, 128, device=\"cuda\", dtype=torch.bfloat16)`, a real CUDA allocation. After the merge, that line sits inside `with FakeTensorMode():` and reads `q = torch.randn(1, 8, 64, 64, device=\"cpu\", dtype=torch.bfloat16)`. The export calls that follow are inside the fake mode too. The `@unittest.skipIf(not HAS_CUDA, ...)` decorator was dropped. The test now checks flop counts instead of the roofline estimate, so it no longer needs real GPU tensors. This is what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The test only inspects exported graph metadata, yet it allocates a real `torch.randn(1, 32, 2048, 128, device=\"cuda\", ...)` and is gated with `@unittest.skipIf(not HAS_CUDA, ...)`, so it is skipped on CPU CI for no good reason. The merged code removed the CUDA skip and builds the inputs under `with FakeTensorMode():` on CPU, which is what the maintainer asked for.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/182537#discussion_r3190955615",
+   "human_review": "pending"
+  }
+ ]
+}

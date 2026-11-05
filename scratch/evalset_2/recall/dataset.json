@@ -1,0 +1,6 @@
+{
+  "name": "evalset_2/recall",
+  "scorer": "maintainer",
+  "description": "53 cases, 69 targets; see ../README.md.",
+  "created": "2026-11-05"
+}

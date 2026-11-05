@@ -1,0 +1,21 @@
+{
+ "case_id": "173241-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_foreach.py",
+   "line": 1025,
+   "summary": "The @onlyCUDA decorator isn't needed on the new test. Remove it so the test also runs on other devices.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "1695509c4031752e6be9760d403f488d4b816f71",
+   "adoption_evidence": "Before: line 1025 `@onlyCUDA` above `@dtypes(...)` on `test_foreach_max_with_different_tensor_sizes_and_negative_values`. Merged: the `@onlyCUDA` line is removed, so the test now starts with `@dtypes(*floating_types_and(torch.half, torch.bfloat16))` and runs on all devices. A new test added later in the file still uses `@onlyCUDA`, but that is a different test.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged diff does remove `@onlyCUDA` from `test_foreach_max_with_different_tensor_sizes_and_negative_values`, so the suggestion was adopted. But it only widens where a correct test runs. Nothing in the PR is broken, so this is a minor test-scope nit rather than a defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/173241#discussion_r2728151519",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,53 @@
+{
+  "pr": 195056,
+  "head_sha": "f8c5f27b0472595e04708f9905d5ee150bafdf01",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-09-14T21:21:36Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_native/ops/reductions/tile.py",
+      "line": 107,
+      "original_line": 105,
+      "body": "nit: types",
+      "diff_hunk": "@@ -99,6 +100,49 @@ def fold_row_rolled(\n     return acc\n \n \n+@cute.jit\n+def fold_linear_rolled(\n+    trait,",
+      "outdated": false
+    },
+    {
+      "path": "torch/_native/ops/reductions/tile.py",
+      "line": null,
+      "original_line": 124,
+      "body": "nit: inline?",
+      "diff_hunk": "@@ -99,6 +100,49 @@ def fold_row_rolled(\n     return acc\n \n \n+@cute.jit\n+def fold_linear_rolled(\n+    trait,\n+    mX,\n+    r,\n+    vec: cutlass.Constexpr,\n+    nchunks,\n+    unroll: cutlass.Constexpr = _ROLL_UNROLL,\n+):\n+    \"\"\"Fold row `r` with a runtime chunk loop. Returns an acc tuple. threads_per_row == 1 only.\"\"\"\n+    reduce_fn, acc_dt = trait.reduce, trait.acc\n+    acc = trait.init()\n+    gv = cute.flat_divide(mX[Int64(r), None], (vec,))\n+    frag = cute.make_rmem_tensor(cute.make_layout(vec), mX.element_type)\n+    for c in cutlass.range(nchunks, unroll=unroll):\n+        cute.autovec_copy(gv[None, c], frag)\n+        for i in cutlass.range_constexpr(vec):\n+            acc = reduce_fn(acc, acc_dt(frag[i]), c * Int32(vec) + Int32(i), True)\n+    return acc\n+\n+\n+def smem_box_layout(N: int, threads: int):",
+      "outdated": true
+    },
+    {
+      "path": "torch/_native/ops/reductions/kernel_rowtile.py",
+      "line": null,
+      "original_line": 199,
+      "body": " TMA still hardcodes the row stride when it shoudl probably be derived form the acutal input tnesor\n",
+      "diff_hunk": "@@ -126,25 +175,28 @@ def reduce_row_tile(\n         nouts=nouts,\n         final=final,\n         unroll=unroll,\n+        use_tma=use_tma,\n     )\n \n     # Final projects nouts; stage 1 stores one raw buffer per field.\n     ndst = nouts if final else trait.nfields\n     outs = [torch.empty(M, device=x.device, dtype=dt) for dt in out_dtypes[:ndst]]\n     nchunks = Int32(N // op.vec)\n     nwaves = Int32(math.ceil((N // op.vec) / threads_per_row))\n-    # Declare alignment to retain wide loads (worth 3x), but narrow it for storage offsets.\n-    # Dynamic extents let each kernel serve a vector class.\n-    align = _L.supported_alignment(x, tile.align_bytes(N, x.element_size()))\n+    # Declare alignment to retain wide loads (worth 3x), narrowed for storage offsets\n+    # outside TMA. Runtime folds share a vector class; TMA bakes its box width.\n+    isz = x.element_size()\n+    align = (\n+        op.tilemap.align_bytes(isz)\n+        if use_tma\n+        else _L.supported_alignment(x, tile.align_bytes(N, isz))\n+    )\n \n     def _fake():\n-        # Dynamic row-major descriptors preserve vec/alignment; None omits costly column args.\n+        # TMA bakes N; runtime folds share a vector class. None omits unused column args.\n+        inner = N if use_tma else _L.sym(op.vec)\n         return (\n-            [\n-                _L.fake_compact(\n-                    dt, (_L.sym(), _L.sym(op.vec)), stride_order=(1, 0), align=align\n-                )\n-            ],\n+            [_L.fake_compact(dt, (_L.sym(), inner), stride_order=(1, 0), align=align)],",
+      "outdated": true
+    },
+    {
+      "path": "torch/_native/ops/reductions/kernel_rowtile.py",
+      "line": 189,
+      "original_line": 166,
+      "body": "Even when someone forces tma we shoudl probs check for alignment still right?",
+      "diff_hunk": "@@ -115,6 +157,13 @@ def reduce_row_tile(\n     threads_per_block -= (\n         threads_per_block % threads_per_row\n     )  # rows_per_block must be whole\n+    if use_tma is None:\n+        natural = tile.align_bytes(N, x.element_size())\n+        use_tma = (\n+            threads_per_row == 1\n+            and _L.supported_alignment(x, natural) == natural\n+            and tma_ok(N, x.element_size(), M, x.device)\n+        )",
+      "outdated": false
+    },
+    {
+      "path": "test/python_native/test_kernel_rowtile.py",
+      "line": null,
+      "original_line": 328,
+      "body": "I think we need some skip if not Hopper + \n",
+      "diff_hunk": "@@ -215,6 +215,196 @@ def _sum_trait(self):\n \n         return T.SumOps(acc=cutlass.Float32)\n \n+    def test_narrow_row_one_thread_per_row(self):\n+        # threads_per_row=1 assigns each row to one thread without lane merging.\n+        import cutlass\n+\n+        from torch._native.ops.reductions import kernel_rowtile, traits as T\n+\n+        x = torch.randn(8192, 16, device=\"cuda\")\n+        (out,) = kernel_rowtile.reduce_row_tile(\n+            T.SumOps(acc=cutlass.Float32),\n+            \"narrow\",\n+            x,\n+            [torch.float32],\n+            threads_per_row=1,\n+            use_tma=False,\n+        )\n+        self.assertEqual(out, x.sum(dim=1), atol=1e-3, rtol=1e-3)\n+\n+    def test_tma_staged_narrow_row_argmax(self):\n+        # TMA rotates smem reads to avoid bank conflicts; an index trait verifies that\n+        # rotated values retain their logical columns.\n+        import cutlass\n+\n+        from torch._native.ops.reductions import kernel_rowtile, traits as T\n+\n+        if not kernel_rowtile.tma_ok(32, 4, 65536, torch.device(\"cuda\")):\n+            self.skipTest(\"TMA path not applicable on this device\")\n+        x = torch.randn(65536, 32, device=\"cuda\")\n+        (idx,) = kernel_rowtile.reduce_row_tile(\n+            T.ArgMaxOps(acc=cutlass.Float32),\n+            \"narrow_tma\",\n+            x,\n+            [torch.int32],\n+            threads_per_row=1,\n+            use_tma=True,\n+        )\n+        self.assertEqual(idx, x.argmax(dim=1).to(torch.int32))\n+\n+    def test_narrow_row_and_tma_gates(self):\n+        # Pin the measured narrow-row tiers and TMA's direct-load stride cliff.\n+        from torch._native.ops.reductions import kernel_rowtile as rt\n+\n+        # Width ceiling applies at any M.\n+        self.assertFalse(rt.narrow_row(rt._MAX_NARROW_N + 1, 4, 1 << 20))\n+        # Larger M permits larger per-thread chunk budgets.\n+        self.assertFalse(\n+            rt.narrow_row(128, 4, 1024)\n+        )  # below the smallest rung's row count\n+        self.assertTrue(rt.narrow_row(16, 4, 1 << 20))  # 4 chunks, plenty of rows\n+        for min_rows, budget in rt._CHUNK_LADDER:\n+            n = budget * 4  # fp32: vec=4, so chunks == n // 4 == budget exactly\n+            with self.subTest(min_rows=min_rows, budget=budget):\n+                self.assertTrue(rt.narrow_row(n, 4, min_rows))\n+                self.assertFalse(\n+                    rt.narrow_row(n + 4, 4, min_rows), \"budget did not bite\"\n+                )\n+        # TMA requires fp32, power-of-two N, and a lane stride of at least 128 bytes.\n+        self.assertFalse(\n+            rt.tma_ok(16, 4, 1 << 20)\n+        )  # 64B lane stride: direct load is at SOL\n+        self.assertTrue(rt.tma_ok(32, 4, 1 << 20))  # 128B: the cliff\n+        self.assertFalse(rt.tma_ok(48, 4, 1 << 20))  # not a power of two\n+        self.assertFalse(\n+            rt.tma_ok(32, 2, 1 << 20)\n+        )  # bf16 does not map one element per 4-byte bank\n+\n+    def test_narrow_row_scalar_vec(self):\n+        # Exercise scalar and short-vector narrow loads.\n+        from torch._native.ops.reductions import kernel_rowtile as rt\n+\n+        for n in (1, 2, 3, 5, 7):\n+            x = torch.randn(1 << 16, n, device=\"cuda\")\n+            with self.subTest(n=n):\n+                # fp32 vec=gcd(N, 4), so these loads are one or two elements wide.\n+                self.assertLess(rt.tile.vec_size(n, 4), 4)\n+                (out,) = rt.reduce_row_tile(\n+                    self._sum_trait(),\n+                    f\"narrow_vec{n}\",\n+                    x,\n+                    [torch.float32],\n+                    threads_per_row=1,\n+                )\n+                self.assertEqual(\n+                    out, x.double().sum(dim=1).float(), atol=1e-5, rtol=1e-5\n+                )\n+\n+    def test_narrow_row_ragged_m(self):\n+        # Nonmultiple M exercises the partial tile and TMA zero-fill.\n+        from torch._native.ops.reductions import kernel_rowtile as rt\n+\n+        for m in (1, 3, 8191, 65537):\n+            for n in (16, 32):\n+                x = torch.randn(m, n, device=\"cuda\")\n+                with self.subTest(m=m, n=n):\n+                    (out,) = rt.reduce_row_tile(\n+                        self._sum_trait(),\n+                        f\"ragged_m{n}\",\n+                        x,\n+                        [torch.float32],\n+                        threads_per_row=1,\n+                    )\n+                    self.assertEqual(\n+                        out, x.double().sum(dim=1).float(), atol=1e-5, rtol=1e-5\n+                    )\n+\n+    def test_tma_second_call_rebinds_the_descriptor(self):\n+        # A cached plan excludes M, but each call must bind TMA to its new pointer and row count.\n+        from torch._native.ops.reductions import kernel_rowtile as rt\n+\n+        n = 32\n+        self.assertTrue(rt.tma_ok(n, 4, 1 << 20), \"shape no longer takes the TMA path\")\n+        first = torch.randn(4096, n, device=\"cuda\")",
+      "outdated": true
+    }
+  ]
+}

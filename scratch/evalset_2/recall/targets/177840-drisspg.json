@@ -1,0 +1,21 @@
+{
+ "case_id": "177840-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/template_heuristics/triton.py",
+   "line": 1753,
+   "summary": "The custom _static_seq_len helper duplicates what existing inductor helpers already do (checking whether a size is statically known without adding guards); use those helpers instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "09440979e0e680461fb349a63cb81152968aa5f3",
+   "adoption_evidence": "Before, the line read `return int(seq_len) if seq_len is not None and isinstance(seq_len, (int, sympy.Integer)) else None`. The merged code deletes the custom `_static_seq_len` helper. At its call sites it now uses inductor's existing sizevars helpers: `sizevars = V.graph.sizevars`, then `if sizevars.statically_known_lt(seq_len, 128):` and `elif sizevars.statically_known_lt(seq_len, 512):`. These check sizes statically without adding guards, which is what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The hand-rolled `int(seq_len) if ... isinstance(seq_len, (int, sympy.Integer)) else None` duplicates inductor's sizevars helpers and treats every symbolic size as unknown, so the concern is reasonable and a reviewer could spot it. But the shown diff is truncated before this subclass. The only related visible change is the base signature going from `seq_len: Any` to `sympy.Expr`, so I can't confirm `_static_seq_len` was replaced with the sizevars helpers.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/177840#discussion_r2966280567",
+   "human_review": "pending"
+  }
+ ]
+}

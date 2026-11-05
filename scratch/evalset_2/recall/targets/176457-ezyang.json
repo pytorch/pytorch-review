@@ -1,0 +1,21 @@
+{
+ "case_id": "176457-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/fx/experimental/symbolic_shapes.py",
+   "line": 5929,
+   "summary": "Instead of checking `not isinstance(inner_t, torch.Tensor)`, check explicitly for the opaque object type, and do it the same way everywhere, so it's clear what the other allowed type is.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "e7c05590485eec8b2adef9f37719e76c1bf10107",
+   "adoption_evidence": "The reviewed code was `if not isinstance(inner_t, torch.Tensor): continue`. In the merged code it became a match statement that names the other allowed type explicitly: `match getattr(t, attr): case torch.Tensor() as inner_t: ... case OpaqueBase(): pass case unexpected: raise AssertionError(f\"expected Tensor or OpaqueBase, got {type(unexpected)}\")`. A new import, `from torch._opaque_base import OpaqueBase`, was added to support it. This is what the maintainer asked for at these lines: the code now checks for the opaque object type by name instead of treating anything that isn't a Tensor as allowed. The diff can't show whether every other place that does this check got the same treatment.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code swaps `if not isinstance(inner_t, torch.Tensor): continue` for a `match` with `case OpaqueBase(): pass` and an AssertionError for anything else, so the request was adopted. But the maintainer asked for clarity ('so it's clear what the other allowed type is') and consistency, not a fix for a defect, and spotting it requires knowing that OpaqueBase is the only other allowed type, which the reviewed lines don't show.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176457#discussion_r2893982850",
+   "human_review": "pending"
+  }
+ ]
+}

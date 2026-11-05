@@ -1,0 +1,53 @@
+{
+  "pr": 187357,
+  "head_sha": "91ef0ad2b154599fad82dd4d17116c42e44ba211",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-06-18T22:01:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/GroupedMMUtils.h",
+      "line": 56,
+      "original_line": 46,
+      "body": "why not; auto strides = c10::contiguous_strides(size);\n?",
+      "diff_hunk": "@@ -35,7 +38,14 @@ inline bool check_valid_strides_and_return_transposed(const Tensor& mat) {\n   }\n }\n \n-inline at::Tensor create_grouped_gemm_output_tensor(const Tensor& mat_a,\n+// Compute the size and stride of a grouped-gemm output. Strides match the\n+// layout `create_grouped_gemm_output_tensor` allocates: on CUDA the last dim\n+// is padded to a 16-byte-aligned stride for TMA transfers; on ROCm the\n+// returned stride vector is empty, denoting default contiguous strides (the\n+// allocator uses at::empty/at::zeros there). Shared by the eager allocator and\n+// the structured TORCH_META_FUNC so the shape/stride math stays single-sourced.",
+      "outdated": false
+    },
+    {
+      "path": "torch/_meta_registrations.py",
+      "line": null,
+      "original_line": 8542,
+      "body": "nit: jsut make this a doc string",
+      "diff_hunk": "@@ -8523,6 +8523,33 @@ def meta_scaled_grouped_mm(\n     )\n \n \n+@register_meta([aten._scaled_grouped_mm_v2.default])\n+def meta_scaled_grouped_mm_v2(\n+    mat_a: torch.Tensor,\n+    mat_b: torch.Tensor,\n+    scale_a: list[torch.Tensor],\n+    scale_recipe_a: list[int],\n+    swizzle_a: list[int],\n+    scale_b: list[torch.Tensor],\n+    scale_recipe_b: list[int],\n+    swizzle_b: list[int],\n+    offs: torch.Tensor | None = None,\n+    bias: torch.Tensor | None = None,\n+    out_dtype: torch.dtype | None = None,\n+    contraction_dim: list[int] | None = None,\n+    use_fast_accum: bool = False,\n+):\n+    # Shape inference only; recipe-independent validation lives in the C++",
+      "outdated": true
+    },
+    {
+      "path": "test/test_scaled_matmul_cuda.py",
+      "line": 808,
+      "original_line": 748,
+      "body": "we should have a test for the new out variant",
+      "diff_hunk": "@@ -745,6 +745,7 @@ def test_float8_scale(self, device) -> None:\n         self.assertEqual(out_fp8, out_fp8_s)\n \n \n+    @onlyCUDA",
+      "outdated": false
+    },
+    {
+      "path": "aten/src/ATen/native/ScaledBlasUtils.cpp",
+      "line": 588,
+      "original_line": 546,
+      "body": "we should probably check that it has at least 2 elements right; \n```py\nif (!contraction_dim.empty()) {\n  TORCH_CHECK_VALUE(\n      contraction_dim.size() == 2,\n      \"contraction_dim must have exactly 2 elements\");\n  auto mat_a_dim = contraction_dim[0];\n  auto mat_b_dim = contraction_dim[1];\n  ...\n}\n```",
+      "diff_hunk": "@@ -515,4 +515,59 @@ void validate_scaled_mm_v2_inputs(\n   }\n }\n \n+// Recipe-independent validation for `_scaled_grouped_mm_v2`. Mirrors the\n+// non-recipe checks at the top of `_scaled_grouped_mm_cuda_v2` so that\n+// torch.compile tracing fails fast with the same messages users get in eager.\n+// Per-recipe scale-shape checks (`_check_scales_*`), the device-capability\n+// gate, and the `find_scaled_gemm_impl` dispatch stay in the kernel -- they\n+// depend on layout/arch and the (data-dependent) offset values.\n+//\n+// Uses sym_size() so dynamic-shape tracing through Dynamo still goes through\n+// this path -- raw size() throws on symbolic shapes.\n+void validate_scaled_grouped_mm_v2_inputs(\n+    const Tensor& mat_a,\n+    const Tensor& mat_b,\n+    at::OptionalTensorRef offs,\n+    at::OptionalTensorRef bias,\n+    ArrayRef<int64_t> contraction_dim,\n+    std::optional<c10::ScalarType> out_dtype) {\n+  TORCH_CHECK_VALUE(mat_a.dim() == 2 || mat_a.dim() == 3, \"mat_a has to be 2 or 3d\");\n+  TORCH_CHECK_VALUE(mat_b.dim() == 2 || mat_b.dim() == 3, \"mat_b has to be 2 or 3d\");\n+  const bool a_is_2d = mat_a.dim() == 2;\n+  const bool b_is_2d = mat_b.dim() == 2;\n+\n+  if (!a_is_2d || !b_is_2d) {\n+    if (!contraction_dim.empty()) {\n+      const int dim_a = contraction_dim[0], dim_b = contraction_dim[1];\n+      TORCH_CHECK_VALUE(mat_a.sym_size(dim_a) == mat_b.sym_size(dim_b),\n+          \"Contraction dimensions (\", dim_a, \",\", dim_b, \") of mat_a and mat_b must match, got: \",\n+          mat_a.sym_size(dim_a), \" and \", mat_b.sym_size(dim_b));\n+      // Note: only (-1, -2) is currently supported\n+      TORCH_CHECK_VALUE(dim_a == -1 && dim_b == -2, \"Currently contraction dims must be (-1, -2) only\");",
+      "outdated": false
+    },
+    {
+      "path": "torch/_meta_registrations.py",
+      "line": 8722,
+      "original_line": 8549,
+      "body": "we should probably remove this regsitrationa nd just make the c++ symint safe right?",
+      "diff_hunk": "@@ -8523,6 +8523,33 @@ def meta_scaled_grouped_mm(\n     )\n \n \n+@register_meta([aten._scaled_grouped_mm_v2.default])\n+def meta_scaled_grouped_mm_v2(\n+    mat_a: torch.Tensor,\n+    mat_b: torch.Tensor,\n+    scale_a: list[torch.Tensor],\n+    scale_recipe_a: list[int],\n+    swizzle_a: list[int],\n+    scale_b: list[torch.Tensor],\n+    scale_recipe_b: list[int],\n+    swizzle_b: list[int],\n+    offs: torch.Tensor | None = None,\n+    bias: torch.Tensor | None = None,\n+    out_dtype: torch.dtype | None = None,\n+    contraction_dim: list[int] | None = None,\n+    use_fast_accum: bool = False,\n+):\n+    # Shape inference only; recipe-independent validation lives in the C++\n+    # TORCH_META_FUNC (validate_scaled_grouped_mm_v2_inputs) and per-recipe\n+    # checks in the kernel. This Python meta exists because the structured C++\n+    # meta sizes its output via IntArrayRef, which specializes symbolic dims\n+    # under fake-tensor tracing (breaking mark_dynamic and unbacked symints).\n+    # Same pattern as meta_mm / meta_scaled_mm_v2. _create_grouped_mm_output_tensor\n+    # is sym-safe and produces the same CUDA padded / ROCm contiguous layout.\n+    _out_dtype = out_dtype or torch.bfloat16",
+      "outdated": false
+    }
+  ]
+}

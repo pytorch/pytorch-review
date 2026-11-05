@@ -1,0 +1,21 @@
+{
+ "case_id": "189891-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "cmake/public/utils.cmake",
+   "line": 548,
+   "summary": "Have the function build a unique result-variable name internally, the way append_cxx_flag_if_supported does, instead of making the caller pass one in.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "8a43e4f7e4cc73b85bcd894c1b5c00a86f52aa5b",
+   "adoption_evidence": "Before: `function(add_link_options_if_supported flag var)` with `check_linker_flag(C \"LINKER:${flag}\" ${var})`. Merged: `function(add_link_options_if_supported flag)`, and the variable name is now built inside the function with `string(TOUPPER \"HAS_LINKER${flag}\" _FLAG_NAME)` and `string(REGEX REPLACE \"[=,-]\" \"_\" _FLAG_NAME ...)`, then passed as `check_linker_flag(C \"LINKER:${flag}\" ${_FLAG_NAME})`. This follows the append_cxx_flag_if_supported pattern, and the comment saying the caller must pass a unique var name was removed.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "`function(add_link_options_if_supported flag var)` makes every caller supply a unique cache variable name. If a caller reuses one, `check_linker_flag` silently returns the cached result for a different flag, and the signature is inconsistent with `append_cxx_flag_if_supported` in the same file. The merged code drops `var` and builds the name itself (`string(TOUPPER \"HAS_LINKER${flag}\" _FLAG_NAME)`), for both the add and target variants.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189891#discussion_r3580975096",
+   "human_review": "pending"
+  }
+ ]
+}

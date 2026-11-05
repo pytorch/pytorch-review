@@ -1,0 +1,21 @@
+{
+ "case_id": "172417-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/codegen/nv_universal_gemm/nv_universal_gemm.py",
+   "line": 136,
+   "summary": "Forcing the grouped GEMM B operand into column-major layout with permute().contiguous().permute() looks odd and may be inconsistent with how existing lowerings handle layout; it should be justified or aligned with them.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "70f93f6e2d41c2f1af35f95f21b08f3d39c56901",
+   "adoption_evidence": "Before, line 136 was `b = b.permute(0, 2, 1).contiguous().permute(0, 2, 1)`. The merged diff deletes that line outright, so `b` now goes straight into `GroupedGemmArguments` with no forced column-major layout. The matching line in `_add_nv_gemm_choices_impl` was also removed. The maintainer questioned this odd forced layout, and removing it addresses the concern.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "`b = b.permute(0, 2, 1).contiguous().permute(0, 2, 1)` quietly copies B into column-major layout on every benchmark call. That adds a hidden copy and can make the benchmarked layout differ from the real input, when the layout should be enforced at the lowering level. The merged code dropped this line in both `_create_gemm_arguments` and `_add_nv_gemm_choices_impl`, and a reviewer reading the diff could spot the forced relayout on their own.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/172417#discussion_r2714701775",
+   "human_review": "pending"
+  }
+ ]
+}

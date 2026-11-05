@@ -1,0 +1,37 @@
+{
+ "case_id": "189284-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/autograd/variable.cpp",
+   "line": 332,
+   "summary": "The hook fires once only ONE of the next_functions is set up, not all of them, so the Node isn't ready to inspect yet; either document that the Node is not ready for inspection or trigger the hook only once it is fully ready.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "b876e45f45ddf6a90ba6460a8d3272707506e942",
+   "adoption_evidence": "Before, line 332 in `set_gradient_edge` was: `if (edge.function) { fire_node_creation_hooks(edge.function); }`. In the merged code that whole call is gone from `set_gradient_edge`, so the hook no longer fires while the node is only partly wired up, which was the case the maintainer pointed out. Two other changes go with this. `rebase_history` now returns the node (`return copy_slices;` / `return fn;`), which looks like it lets callers fire the hook after the node is fully set up; those callers are in other files, so I can't confirm that from this diff. `grad_accumulator` now calls `fire_node_creation_hooks(result)` only when the AccumulateGrad node is newly created. Taken together, the merged code took the maintainer's second option: fire the hook only once the node is ready.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "Firing `fire_node_creation_hooks(edge.function)` inside `set_gradient_edge` runs the hook as soon as the first output edge is set, so the node isn't fully wired yet. That contradicts the docstring's claim that \"the node's next_edges are already set up\". The merged code removed the call from `set_gradient_edge` and rewrote the doc to say hooks fire only once the node is fully populated.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189284#discussion_r3546126265",
+   "human_review": "pending"
+  },
+  {
+   "id": "h4",
+   "path": "torch/csrc/autograd/function.cpp",
+   "line": 54,
+   "summary": "The hook goes through the engine instead of being called directly; it should follow the same pattern as saved_variable_hooks.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b876e45f45ddf6a90ba6460a8d3272707506e942",
+   "adoption_evidence": "Before, the commented line was `auto& engine = Engine::get_default_engine();`, and the loop sent each hook through the engine with `engine.call_node_creation_hook(node, state.stack[i]);`. In the merged code that line and the loop became `auto hooks = Engine::get_default_engine().get_node_creation_hooks(); for (const auto& hook : hooks) { (*hook)(node); }`. The engine now only hands back the list of hooks, and `fire_node_creation_hooks` calls each hook itself. This is the same pattern as saved_variable_hooks, which get their hooks from the engine (`get_default_saved_variable_hooks()`) and then call them directly. The engine no longer sits between the function and the hook call, so the request was adopted.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code does follow the saved_variable_hooks style (`Engine::get_default_engine().get_node_creation_hooks()` and then calling each hook). But the request is an architectural-consistency preference rather than a defect in `engine.call_node_creation_hook(node, state.stack[i])`, and raising it means knowing that convention.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189284#discussion_r3546115036",
+   "human_review": "pending"
+  }
+ ]
+}

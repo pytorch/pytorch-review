@@ -1,0 +1,21 @@
+{
+ "case_id": "191364-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "tools/linter/adapters/_stable_shim_utils.py",
+   "line": 505,
+   "summary": "A string literal that interpolates values is missing its `f` prefix, so the placeholders print as literal text and are never filled in.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "37009e0f5949ec29f866c35cca44ae3a0054057f",
+   "adoption_evidence": "Before: `\"failed, even with retries: {e}\"` (no f prefix). Merged: `f\"failed, even with retries: {e}\"`. The f prefix was added, so `{e}` now gets filled in.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The string `\"failed, even with retries: {e}\"` has no `f` prefix, so the error message would print a literal `{e}` instead of the underlying exception. The merged code changed it to `f\"failed, even with retries: {e}\"`, and anyone reading the diff could spot this.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/191364#discussion_r3669324639",
+   "human_review": "pending"
+  }
+ ]
+}

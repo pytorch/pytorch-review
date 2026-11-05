@@ -1,0 +1,21 @@
+{
+ "case_id": "179421-janeyx99",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/csrc/stable/stableivalue_conversions.h",
+   "line": 273,
+   "summary": "Only the FromImpl<std::optional<T>> path was updated to use the new heap-allocated StableIValue API; the matching ToImpl optional conversion (around line 614) also needs the TORCH_FEATURE_VERSION >= 2.13 handling.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "6c805de38e97c92823603d2020e03e91896868e8",
+   "adoption_evidence": "The comment sits on the `#endif` that closes the TORCH_FEATURE_VERSION >= 2.13 block in FromImpl<std::optional<T>>. It asks for the matching ToImpl<std::optional<T>> code (around line 614, `delete sivp;`) to get the same version guard. In the merged code, that ToImpl code changed from `// free the memory associated with StableIValue* sivp\\n    delete sivp;` to `#if TORCH_FEATURE_VERSION >= TORCH_VERSION_2_13_0\\n    TORCH_ERROR_CODE_CHECK(torch_delete_stable_ivalue(sivp));\\n#else\\n    delete sivp;\\n#endif`. So the other side now frees the value with the new API, matching the heap-allocation path. The FromImpl block itself still ends with `#endif` and now calls `torch_new_stable_ivalue`.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "FromImpl<std::optional<T>> now allocates through `aoti_torch_new_stable_ivalue`, but ToImpl<std::optional<T>> still frees with a raw `delete sivp`. That mismatches the allocator across the ABI boundary. The merged code adds `TORCH_ERROR_CODE_CHECK(torch_delete_stable_ivalue(sivp));` under `#if TORCH_FEATURE_VERSION >= TORCH_VERSION_2_13_0`, which is exactly the requested fix.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/179421#discussion_r3204168883",
+   "human_review": "pending"
+  }
+ ]
+}

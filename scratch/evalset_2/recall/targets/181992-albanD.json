@@ -1,0 +1,21 @@
+{
+ "case_id": "181992-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "test/test_cuda.py",
+   "line": 5871,
+   "summary": "Questions why setUp forces the allocator's expandable_segments setting, which suggests that changing global allocator settings during setup is the wrong approach.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "6dd5f10c066f2246e9b2eea7341a860b72cea0b9",
+   "adoption_evidence": "The maintainer asked why setUp in TestBlockStateAbsorption forced an allocator setting. Before, setUp had `torch._C._accelerator_setAllocatorSettings(f\"expandable_segments:{es}\")` together with the `_restore_alloc_settings = _allocator_settings_for_restore()` save. The merged code deletes both lines and the comment explaining them, so setUp now only has `super().setUp()` and `self.segment_length = len(get_all_cudagraph_segments())`. The matching restore call in tearDown was also removed. The PR handled the leak another way: the tests that toggle the knob (test_max_split_expandable and test_garbage_collect_expandable) now restore the baseline in their own `finally` blocks, and a new tearDown in TestCudaAllocator checks that the baseline is intact. setUp no longer changes global allocator settings.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The question points at a real design problem. `setUp` forces global allocator state with `torch._C._accelerator_setAllocatorSettings(f\"expandable_segments:{es}\")`, which hides the leak from other tests instead of fixing it where it starts. The merged code removed this override and `_allocator_settings_for_restore`, made the leaking tests restore the baseline, and added a tearDown regression assert, so the fix was adopted, and the problem can be spotted from the code alone.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/181992#discussion_r3169419449",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "174333-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_C/_autograd.pyi",
+   "line": 98,
+   "summary": "Adding a constructor with an `_INTERNAL_USE_ONLY` flag to the public SavedTensor class is an odd pattern; move construction into a private factory function that returns a SavedTensor and leave the public class's constructor unchanged.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "3fcba4cbd8240313754258a6ffaf1abc0e098b99",
+   "adoption_evidence": "Before, line 98 was part of the public `SavedTensor.__init__`: `_INTERNAL_USE_ONLY: bool = False,`. In the merged version the whole `__init__` (including the `_INTERNAL_USE_ONLY` flag) is gone from `class SavedTensor`. In its place is a new private factory, `def _make_saved_tensor(tensor: torch.Tensor, is_output: bool, is_inplace_on_view: bool = False) -> SavedTensor: ...`. This is what the maintainer asked for: the arguments now go to a private function that returns a SavedTensor, and the public class no longer exposes them through its constructor.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The PR gave the public `SavedTensor` class a constructor protected only by an `_INTERNAL_USE_ONLY: bool = False` kwarg, which is a real API design problem. The merged code removed that `__init__` and added a private `_make_saved_tensor(tensor, is_output, is_inplace_on_view=False) -> SavedTensor` factory, which is exactly what the maintainer asked for. A reviewer could spot the problem from the stub alone.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/174333#discussion_r2770258722",
+   "human_review": "pending"
+  }
+ ]
+}

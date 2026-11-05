@@ -1,0 +1,21 @@
+{
+  "pr": 176457,
+  "head_sha": "959913655f833b81166f3df1eb6c50eefc3e5af2",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-03-06T05:52:55Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/fx/experimental/symbolic_shapes.py",
+      "line": null,
+      "original_line": 5929,
+      "body": "Can you consistently match the opaque object everywhere, so it's clear what the other allowed type is?",
+      "diff_hunk": "@@ -5926,6 +5926,8 @@ def track_symfloat(source: Source, val: FloatLikeType) -> None:\n                 attrs, _ = t.__tensor_flatten__()\n                 for attr in attrs:\n                     inner_t = getattr(t, attr)\n+                    if not isinstance(inner_t, torch.Tensor):",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "198648-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "third_party/kineto/CODE_OF_CONDUCT.md",
+   "line": 1,
+   "summary": "Remove the vendored kineto repo-level files (code of conduct, contributing, lint, and clang config files) because the core PyTorch versions take over and these won't apply or run any more.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "f239880657b1736636db1bc1e6b77f0479c8cb3a",
+   "adoption_evidence": "Before: the commented line was \"# Code of Conduct\" (line 1 of third_party/kineto/CODE_OF_CONDUCT.md). After: the whole file was deleted (\"deleted file mode 100644\", \"+++ /dev/null\"), so the line has no merged version. Removing the vendored code of conduct is exactly what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged diff deletes `third_party/kineto/CODE_OF_CONDUCT.md`, so the request was adopted. But removing a duplicate `# Code of Conduct` from a vendored subtree is housekeeping. It isn't a defect or design problem in the code, so it's not a fair recall target.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/198648#discussion_r4123575992",
+   "human_review": "pending"
+  }
+ ]
+}

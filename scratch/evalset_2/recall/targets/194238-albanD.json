@@ -1,0 +1,37 @@
+{
+ "case_id": "194238-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/export.py",
+   "line": 140,
+   "summary": "_CLOSURE_EXCLUDED is used for membership checks, so make it a set instead of a tuple.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "93c09f9532fb3af9c0472876d6839ed5cc807523",
+   "adoption_evidence": "The maintainer commented on the comment block above `_CLOSURE_EXCLUDED`. Before: `_CLOSURE_EXCLUDED = (\"gen_aot_lib.py\", \"build_stage2.py\")`, a tuple. Merged: `_CLOSURE_EXCLUDED = frozenset({\"gen_aot_lib.py\", \"build_stage2.py\"})`. That is an immutable set, so membership checks are now set lookups, which is what the maintainer asked for. The comment block was also shortened (\"gen_aot_lib.py only consumes sidecars, and build_stage2.py passes no kernel-affecting option\").",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code does make the change (`_CLOSURE_EXCLUDED = frozenset({\"gen_aot_lib.py\", \"build_stage2.py\"})`). But a membership check against a two-element tuple has no correctness or meaningful performance cost, so this is a style nit, not a defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194238#discussion_r3867026491",
+   "human_review": "pending"
+  },
+  {
+   "id": "h4",
+   "path": "tools/native_aot/export.py",
+   "line": 469,
+   "summary": "runtimes_current quietly falls back to 'cutedsl' when the sidecar has no kind; every sidecar should carry a kind, so this default shouldn't exist.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "93c09f9532fb3af9c0472876d6839ed5cc807523",
+   "adoption_evidence": "The maintainer asked for the 'cutedsl' default to be removed, and it was. Before: `tc = toolchains.get_toolchain(sidecar.get(\"kind\", \"cutedsl\"))`. Merged: `tc = toolchains.get_toolchain(sidecar[\"kind\"])`. The merged code also adds a comment explaining the change: \"sidecar[\"kind\"] rather than a default: both callers reach here past a schema check that proves the field, and guessing would judge one toolchain's artifact by another's compiler versions.\"",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "Falling back silently in `sidecar.get(\"kind\", \"cutedsl\")` could hide a malformed sidecar or point it at the wrong toolchain, so this is a fair design concern. The diff is cut off before line 469, though, so there is no evidence the merged code dropped the default.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194238#discussion_r3881323755",
+   "human_review": "pending"
+  }
+ ]
+}

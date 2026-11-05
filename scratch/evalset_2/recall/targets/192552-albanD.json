@@ -1,0 +1,21 @@
+{
+ "case_id": "192552-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/headeronly/util/complex_utils.h",
+   "line": 51,
+   "summary": "This code should be made headeronly (living in torch/headeronly) and re-exposed from the c10 side so the long-term behavior is correct.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "99f0a8a2d970c0da3d807f689196a530d774ce0d",
+   "adoption_evidence": "Before the change, the commented line was `using c10::is_complex;` (alongside `using c10::scalar_value_type;`). It sat inside `HIDDEN_NAMESPACE_BEGIN(torch, headeronly)`, so it only pulled the c10 definitions into the headeronly namespace. In the merged code those `using` lines are gone. The definitions themselves moved: `namespace c10 {` became `HIDDEN_NAMESPACE_BEGIN(torch, headeronly)` and `} // namespace c10` became `HIDDEN_NAMESPACE_END(torch, headeronly)`. So `is_complex` and `scalar_value_type` are now defined in torch/headeronly itself instead of being aliased from c10, which is what the maintainer asked for. The other half of the request, re-exposing them on the c10 side, presumably happens in a c10 header that isn't part of this diff.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code adopted it: `is_complex`/`scalar_value_type` are now defined inside `HIDDEN_NAMESPACE_BEGIN(torch, headeronly)` and the `using c10::is_complex;` aliases are gone. But this is a call about long-term namespace direction ('right long term behavior'), not a defect. Nothing breaks with the original `c10` definitions plus `using` aliases. The repo isn't consistent here either (e.g. `c10::complex` itself still lives in `namespace c10` under headeronly), so a reviewer couldn't infer the preferred direction from the code.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/192552#discussion_r3752568496",
+   "human_review": "pending"
+  }
+ ]
+}

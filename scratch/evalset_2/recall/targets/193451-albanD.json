@@ -1,0 +1,37 @@
+{
+ "case_id": "193451-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/jit/python/pybind_utils.cpp",
+   "line": 892,
+   "summary": "A standalone PyWarningHandler is the wrong fix because it has to work together with exception handling (set_in_exception). The call should be wrapped in HANDLE_TH_ERRORS / END_HANDLE_TH_ERRORS_PYBIND, which handles both error translation and warnings.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c9fde0ee73870fac0861432dc8bec01df680a5df",
+   "adoption_evidence": "Before: `torch::PyWarningHandler warning_handler;` (line 892). After the merge, that line became `HANDLE_TH_ERRORS`, and `END_HANDLE_TH_ERRORS_PYBIND` was added after `return createPyObjectForStack(std::move(stack));`. This wraps the whole body of invokeOperatorFromPython in the error/warning handling macros, which is what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "A bare `torch::PyWarningHandler warning_handler;` does not coordinate with exception translation: if the op throws while warnings are buffered, the handler's destructor still emits them and never gets `set_in_exception()`. The merged code wraps the body in `HANDLE_TH_ERRORS` ... `END_HANDLE_TH_ERRORS_PYBIND` as asked, and the pattern is visible in torch/csrc/Exceptions.h.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/193451#discussion_r3779492288",
+   "human_review": "pending"
+  },
+  {
+   "id": "h2",
+   "path": "test/test_custom_ops.py",
+   "line": 2873,
+   "summary": "The test doesn't need a load_inline custom C++ op: the problem affects any torch.ops call, so an in-core op that raises a warning would make the test much simpler.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c9fde0ee73870fac0861432dc8bec01df680a5df",
+   "adoption_evidence": "Before review, the commented line was `@scoped_load_inline` on `def test_custom_op_warning_propagation(self, load_inline):`, and the test built a C++ custom op with TORCH_WARN via load_inline. In the merged code, the decorator and the whole load_inline custom op are gone. The test is now `def test_torch_ops_warning_propagation(self):` and calls an in-core op that warns: `torch.ops.aten.ger.out(x, y, out=out)` inside `self.assertWarnsRegex(UserWarning, \"torch.ger is deprecated\")`. This is the simplification the maintainer asked for. The merged code also adds a second similar test that goes through _dispatch_call_boxed.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "This is a suggestion to simplify the test: use an in-core op that warns instead of a `load_inline` custom op. It points to no defect in the PR, even though the merged test switched to `torch.ops.aten.ger.out`.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/193451#pullrequestreview-4931944916",
+   "human_review": "pending"
+  }
+ ]
+}

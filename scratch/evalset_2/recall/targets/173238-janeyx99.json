@@ -1,0 +1,21 @@
+{
+ "case_id": "173238-janeyx99",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/native/ForeachOpsKernels.cpp",
+   "line": null,
+   "summary": "The same fix needs to go into foreach_tensor_norm_slow, the CPU/slow path, because right now only the CUDA path is fixed.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "1956f07dcf085a0545d6caaf1cbe4ca7f086e26f",
+   "adoption_evidence": "The comment is attached to the top of the file (line 1, `#include <vector>`), so it applies to the whole file. For this file, the request was to add the same fix to `foreach_tensor_norm_slow`. Before the merge, that function just ran `result.emplace_back(at::linalg_vector_norm(t, ord, {}, false, dtype));` with no check. In the merged code, it works out `p` from `ord` once, before the loop. Inside the existing loop it then adds `if (p == std::numeric_limits<double>::infinity()) { TORCH_CHECK(t.numel() > 0, \"_foreach_norm cannot compute the infinity norm on an empty tensor ...\"); }`. The merge also adds `#include <limits>` above `#include <vector>`. So the CPU/slow path now gets the empty-tensor infinity-norm check. It sits in the loop that was already there, so the list isn't walked an extra time, which fits point 1. This diff doesn't show whether `onlyCUDA` was removed from the test.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The PR added the empty-tensor infinity-norm check only on the CUDA path, so the CPU fallback `foreach_tensor_norm_slow` still called `at::linalg_vector_norm` with no guard, and CPU and CUDA behaved differently. The merged code adds `TORCH_CHECK(t.numel() > 0, \"_foreach_norm cannot compute the infinity norm on an empty tensor...\")` inside the slow path's existing loop, and a reviewer reading the whole PR could spot the missing CPU-side check.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/173238#pullrequestreview-3706960200",
+   "human_review": "pending"
+  }
+ ]
+}

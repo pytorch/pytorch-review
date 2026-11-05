@@ -1,0 +1,21 @@
+{
+ "case_id": "172671-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/nn/attention/test_fa3.py",
+   "line": 53,
+   "summary": "Test helpers such as flash_vs_math (and the related profiler/dependency utilities) should go in a shared common test utility location, not be defined locally in this test file.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "092ef8c65afad5ef03f783fc6e01bd75afec5f26",
+   "adoption_evidence": "Before: `def flash_vs_math(test_case, q, k, v, is_causal=False, rtol=2):` was defined locally in test_fa3.py, along with `cuda_kernel_profiler` and `SdpaShape`. In the merged code all of these local helpers are gone. The file now has `from _fa_test_common import FlashAttentionTestMixin, SdpaShape`, the test class is `class TestFlashAttentionFA3(FlashAttentionTestMixin, TestCase)`, and the tests call shared mixin methods such as `self._test_kernel_called(...)` and `self._test_compiled_sdpa_matches_math(...)`. So the comparison and profiler helpers were moved into a shared common module, as the maintainer asked.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code did move `flash_vs_math`, `cuda_kernel_profiler` and the helpers into `_fa_test_common.FlashAttentionTestMixin`, so the suggestion was adopted. But it is a code-organization preference, not a defect. The push to share it comes from upcoming FA implementations (e.g. FA4) that would reuse it, which a reviewer can't see from this file alone.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/172671#discussion_r2701862285",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+ "case_id": "192083-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/cpp_extensions/libtorch_agn_2_10_extension/csrc/my_permute.cpp",
+   "line": 9,
+   "summary": "The permute dims parameter should use IntHeaderOnlyArrayRef instead of its current type.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b1f35045bbddf2479f4903ff179270b5c95bd849",
+   "adoption_evidence": "Before: `torch::headeronly::HeaderOnlyArrayRef<int64_t> dims) {` \u2014 merged: `torch::headeronly::IntHeaderOnlyArrayRef dims) {`. The dims parameter now uses IntHeaderOnlyArrayRef, which is what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "Swapping `torch::headeronly::HeaderOnlyArrayRef<int64_t> dims` for the `IntHeaderOnlyArrayRef` alias names the same type, so it only changes style. The merged code made the swap, but behavior is unchanged and there is no defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/192083#discussion_r3724660855",
+   "human_review": "pending"
+  }
+ ]
+}

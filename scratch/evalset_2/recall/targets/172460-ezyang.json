@@ -1,0 +1,21 @@
+{
+ "case_id": "172460-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/config.py",
+   "line": 910,
+   "summary": "The disabled_passes config reads os.environ directly; it should be defined with the inductor Config API (e.g. Config(env_name_force=...)) instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "3599c9635acb782646195fcfa0c1d6b7e7773d9f",
+   "adoption_evidence": "Before: `disabled_passes = os.environ.get(\"TORCHINDUCTOR_DISABLED_PASSES\", \"\").upper()`. Merged: `disabled_passes: str = Config(env_name_force=\"TORCHINDUCTOR_DISABLED_PASSES\", default=\"\",)`. The line now uses the inductor Config API, which is what the maintainer asked for. One difference: the `.upper()` normalization was dropped, and the comment now tells users to give uppercase pass names instead.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The merged code switched `disabled_passes = os.environ.get(\"TORCHINDUCTOR_DISABLED_PASSES\", \"\").upper()` to `Config(env_name_force=\"TORCHINDUCTOR_DISABLED_PASSES\", default=\"\")`, so the request was adopted. But this asks for a consistent config style, not a fix: the plain env-var read already worked, and the file itself still mixes both patterns, so it isn't a defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/172460#discussion_r2696641163",
+   "human_review": "pending"
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 172417,
+  "head_sha": "811fcc03bde3479e441ab0068bbccc6164c57e2d",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-21T23:26:40Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/codegen/nv_universal_gemm/nv_universal_gemm.py",
+      "line": null,
+      "original_line": 136,
+      "body": "hmmm, this feels weird. This is to enforce its column major second operand right? Is this what existing lowerings are doing? ",
+      "diff_hunk": "@@ -107,6 +129,27 @@ def run_kernel():\n \n         return run_kernel\n \n+    def _create_gemm_arguments(self, cutlass_api, input_tensors, out):\n+        \"\"\"Create the appropriate GemmArguments based on variant.\"\"\"\n+        if self.variant == GemmVariant.GROUPED_GEMM:\n+            a, b, offsets = input_tensors\n+            b = b.permute(0, 2, 1).contiguous().permute(0, 2, 1)",
+      "outdated": true
+    }
+  ]
+}

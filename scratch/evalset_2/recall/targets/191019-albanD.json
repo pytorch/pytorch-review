@@ -1,0 +1,21 @@
+{
+ "case_id": "191019-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/csrc/Generator.cpp",
+   "line": 248,
+   "summary": "The generator lock should be released right after this line instead of being held longer than needed.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "c7b99ba4a67abd198a8b20e294250fcdb98842fc",
+   "adoption_evidence": "Before: `std::scoped_lock<std::mutex> lock(gen.mutex());` followed by `auto [seed_t, offset_t, intragraph_t] = gen.philox_state(inc);`, so the lock stayed held for the rest of the function, including the PyTuple building. Merged: `{ std::scoped_lock<std::mutex> lock(gen.mutex()); state = gen.philox_state(inc); }` then `auto& [seed_t, offset_t, intragraph_t] = state;`. The lock now sits in its own block and is released right after the philox_state call, before the tuple is built. That is what the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The `std::scoped_lock<std::mutex> lock(gen.mutex())` stays held through `PyTuple_New` and `THPVariable_Wrap`. Python allocation can trigger GC and finalizers that try to take the same generator lock, so the lock covers more than it needs to. The merged code moves the lock into its own `{ ... state = gen.philox_state(inc); }` block, so it is released before the Python objects are built.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/191019#discussion_r3647161386",
+   "human_review": "pending"
+  }
+ ]
+}

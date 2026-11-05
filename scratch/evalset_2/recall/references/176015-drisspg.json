@@ -1,0 +1,21 @@
+{
+  "pr": 176015,
+  "head_sha": "bac9f0e6d741f55bfb5e86a92064763610a639bd",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-03-04T05:19:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "aten/src/ATen/native/native_functions.yaml",
+      "line": null,
+      "original_line": 15261,
+      "body": "since this is not really an out op or a variant, lets acutally change this this is baiscailly a new op that is a \n`pseudo` inplace op. Alos we probably dont need the debug_atnn_mask, unused or rng state any more right? since we dont plan to support doropout for this API and we rant using debug_attn_mask ?\n\ncan we just drop from the impl ",
+      "diff_hunk": "@@ -15258,6 +15258,12 @@\n     CUDA: _flash_attention_forward\n   tags: nondeterministic_seeded\n \n+- func: _flash_attention_forward_out_variant(Tensor(a!) out, Tensor query, Tensor key, Tensor value, Tensor? cum_seq_q, Tensor? cum_seq_k, SymInt max_q, SymInt max_k, float dropout_p, bool is_causal, bool return_debug_mask, *, float? scale=None, SymInt? window_size_left=None, SymInt? window_size_right=None, Tensor? seqused_k=None, Tensor? alibi_slopes=None, Tensor? page_table=None) -> (Tensor softmax_logsumexp, Tensor rng_state, Tensor unused, Tensor debug_attn_mask)",
+      "outdated": true
+    }
+  ]
+}

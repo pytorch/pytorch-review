@@ -1,0 +1,29 @@
+{
+  "pr": 179421,
+  "head_sha": "496dc511fc55efc007c796d4b583a32db006d7dd",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "Will take a look at tests soon! Leaving one round of review now--looks good so far!",
+    "submitted_at": "2026-05-07T19:29:25Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/inductor/aoti_torch/shim_common.cpp",
+      "line": null,
+      "original_line": null,
+      "body": "Move these to the non-aoti shim, so the torch/csrc/shim_common.cpp + remove aoti prefixes\n\nSimilarly, move declarations to the non aoti shim.h",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/stable/stableivalue_conversions.h",
+      "line": 273,
+      "original_line": 269,
+      "body": "Also handle the flip side: https://github.com/pytorch/pytorch/blob/21b62de20398cf05cb814f48eeb505ad1a777ba5/torch/csrc/stable/stableivalue_conversions.h#L614-L615",
+      "diff_hunk": "@@ -260,9 +260,17 @@ struct FromImpl<std::optional<T>> {\n     if (!val.has_value()) {\n       return torch::stable::detail::from(std::nullopt);\n     }\n+#if TORCH_FEATURE_VERSION >= TORCH_VERSION_2_13_0\n+    StableIValue* ivalue_ptr = nullptr;\n+    TORCH_ERROR_CODE_CHECK(aoti_torch_new_stable_ivalue(&ivalue_ptr));\n+    *ivalue_ptr = detail::FromImpl<T>::call(\n+        val.value(), extension_build_version, is_internal);\n+    return torch::stable::detail::from(ivalue_ptr);\n+#else",
+      "outdated": false
+    }
+  ]
+}

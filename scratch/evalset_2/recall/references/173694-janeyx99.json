@@ -1,0 +1,21 @@
+{
+  "pr": 173694,
+  "head_sha": "b1582293e7c4b73f29174ca95000fd46e3a247c8",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-28T22:38:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".spin/cmds.py",
+      "line": 412,
+      "original_line": 389,
+      "body": "This makes these lines a bit confusing...like at 385, lint_found should always be True then? So do we always expect sys exit 1?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

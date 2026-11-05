@@ -1,0 +1,85 @@
+{
+  "pr": 177530,
+  "head_sha": "e160663c0be1a7aac0e3df4f87b687eaa9624bf9",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "Sounds fair.\nA couple CI failures will need fixing.",
+    "submitted_at": "2026-03-16T17:53:08Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_overrides.py",
+      "line": null,
+      "original_line": 1942,
+      "body": "How is this one recursive?",
+      "diff_hunk": "@@ -1918,6 +1928,80 @@ def get_stack():\n \n \n \n+class TestTorchFunctionRedispatch(TestCase):\n+    def test_simple(self):\n+        x = RedispatchTensor(torch.ones(1))\n+        ret = bar(x)\n+        self.assertIs(ret, x)\n+        self.assertExpectedInline(pprint.pformat(x.call_log), \"\"\"\\\n+[('bar',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1.]),),\n+  {})]\"\"\")\n+\n+    def test_recursive(self):",
+      "outdated": true
+    },
+    {
+      "path": "test/test_overrides.py",
+      "line": null,
+      "original_line": 1987,
+      "body": "Why? haha",
+      "diff_hunk": "@@ -1918,6 +1928,80 @@ def get_stack():\n \n \n \n+class TestTorchFunctionRedispatch(TestCase):\n+    def test_simple(self):\n+        x = RedispatchTensor(torch.ones(1))\n+        ret = bar(x)\n+        self.assertIs(ret, x)\n+        self.assertExpectedInline(pprint.pformat(x.call_log), \"\"\"\\\n+[('bar',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1.]),),\n+  {})]\"\"\")\n+\n+    def test_recursive(self):\n+        x = RedispatchTensor(torch.full((1,), 1))\n+        y = RedispatchTensor(torch.full((1,), 2))\n+        z = RedispatchTensor(torch.full((1,), 3))\n+        ret = foo(x, y, z)\n+        self.assertEqual(ret, torch.full((1,), 6))\n+        self.assertExpectedInline(pprint.pformat(x.call_log), \"\"\"\\\n+[('foo',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1]), RedispatchTensor([2])),\n+  {'c': RedispatchTensor([3])}),\n+ ('TensorBase.add',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1]), RedispatchTensor([2])),\n+  None)]\"\"\")\n+        self.assertExpectedInline(pprint.pformat(y.call_log), \"\"\"\\\n+[('foo',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1]), RedispatchTensor([2])),\n+  {'c': RedispatchTensor([3])}),\n+ ('TensorBase.add',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1]), RedispatchTensor([2])),\n+  None)]\"\"\")\n+        self.assertExpectedInline(pprint.pformat(z.call_log), \"\"\"\\\n+[('foo',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([1]), RedispatchTensor([2])),\n+  {'c': RedispatchTensor([3])}),\n+ ('TensorBase.add',\n+  (<class 'torch.testing._internal.common_subclass.RedispatchTensor'>,),\n+  (RedispatchTensor([3]), RedispatchTensor([3])),\n+  None)]\"\"\")\n+\n+\n+class TestTorchFunctionRedispatchOps(TestCase):\n+    @ops(op_db)\n+    def test_redispatch(self, device, dtype, op):\n+        def clone_preserving_strides(x):\n+            if x.layout != torch.strided:\n+                ret = x.clone()\n+            else:\n+                ret = torch.empty_strided(x.shape, x.stride(), device=x.device, dtype=x.dtype)\n+                ret.copy_(x)\n+            ret.requires_grad_(x.requires_grad)\n+            return ret",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/utils/disable_torch_function.cpp",
+      "line": null,
+      "original_line": 19,
+      "body": "I have to admit, it's a bit hard to convince myself that this consumption is doing the right thing. As we need exactly only in the codepath for it to be correct.\n\nBut maybe careful review is enough to catch these all.",
+      "diff_hunk": "@@ -15,6 +16,10 @@ bool torch_function_enabled() {\n       at::impl::TorchFunctionDisabledState::ENABLED;\n }\n \n+bool should_skip_torch_function() {",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/utils/disable_torch_function.cpp",
+      "line": null,
+      "original_line": 271,
+      "body": "nit: we can say: you cannot skip two levels\n",
+      "diff_hunk": "@@ -239,6 +244,43 @@ PyObject* THPModule_disable_torch_function(PyObject* self, PyObject* a) {\n   END_HANDLE_TH_ERRORS\n }\n \n+PyObject* THPModule_skip_one_hop_torch_function(\n+    PyObject* /*self*/,\n+    PyObject* a) {\n+  HANDLE_TH_ERRORS\n+  PyObject *func = nullptr, *types = nullptr, *args = nullptr,\n+           *kwargs = nullptr;\n+  if (!PyArg_ParseTuple(a, \"OOOO\", &func, &types, &args, &kwargs)) {\n+    return nullptr;\n+  }\n+  py::tuple py_args;\n+  if (args == Py_None) {\n+    py_args = py::make_tuple();\n+  } else {\n+    py_args = py::reinterpret_borrow<py::tuple>(args);\n+  }\n+\n+  if (kwargs == Py_None) {\n+    kwargs = nullptr;\n+  } else {\n+    TORCH_CHECK_TYPE(PyDict_Check(kwargs), \"kwargs must be a dictionary\");\n+  }\n+\n+  TORCH_CHECK(\n+      !at::impl::PythonTorchFunctionTLS::peek_skip_next(),\n+      \"skip_one_hop_torch_function called but skip_next_torch_function was already true!\");",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/utils/disable_torch_function.cpp",
+      "line": null,
+      "original_line": 256,
+      "body": "Note that this creates a full tuple. you can use a ternary here if you want to avoid that.",
+      "diff_hunk": "@@ -239,6 +244,43 @@ PyObject* THPModule_disable_torch_function(PyObject* self, PyObject* a) {\n   END_HANDLE_TH_ERRORS\n }\n \n+PyObject* THPModule_skip_one_hop_torch_function(\n+    PyObject* /*self*/,\n+    PyObject* a) {\n+  HANDLE_TH_ERRORS\n+  PyObject *func = nullptr, *types = nullptr, *args = nullptr,\n+           *kwargs = nullptr;\n+  if (!PyArg_ParseTuple(a, \"OOOO\", &func, &types, &args, &kwargs)) {\n+    return nullptr;\n+  }\n+  py::tuple py_args;",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/utils/disable_torch_function.cpp",
+      "line": null,
+      "original_line": 410,
+      "body": "top of file?",
+      "diff_hunk": "@@ -360,7 +407,13 @@ inline static bool array_has_torch_function(\n   return false;\n }\n \n+using torch::autograd::utils::wrap;",
+      "outdated": true
+    },
+    {
+      "path": "torch/testing/_internal/common_subclass.py",
+      "line": null,
+      "original_line": 257,
+      "body": "Do you actually serialize this? :p",
+      "diff_hunk": "@@ -242,6 +242,41 @@ def new_empty(self, shape):\n         return type(self)(torch.empty(shape))\n \n \n+class RedispatchTensor(torch.Tensor):\n+    __slots__ = ['call_log']\n+\n+    def __new__(cls, data):\n+        t = torch.Tensor._make_subclass(cls, data, require_grad=data.requires_grad)\n+        t.call_log = []\n+        return t\n+\n+    def __repr__(self):\n+        with torch._C.DisableTorchFunction():\n+            return super().__repr__()\n+\n+    def __reduce_ex__(self, proto):",
+      "outdated": true
+    },
+    {
+      "path": "torch/testing/_internal/common_subclass.py",
+      "line": null,
+      "original_line": 275,
+      "body": "nit: you could transfer the call_log here to get more information on the childs and multiple ops.",
+      "diff_hunk": "@@ -242,6 +242,41 @@ def new_empty(self, shape):\n         return type(self)(torch.empty(shape))\n \n \n+class RedispatchTensor(torch.Tensor):\n+    __slots__ = ['call_log']\n+\n+    def __new__(cls, data):\n+        t = torch.Tensor._make_subclass(cls, data, require_grad=data.requires_grad)\n+        t.call_log = []\n+        return t\n+\n+    def __repr__(self):\n+        with torch._C.DisableTorchFunction():\n+            return super().__repr__()\n+\n+    def __reduce_ex__(self, proto):\n+        with torch._C.DisableTorchFunction():\n+            return super().__reduce_ex__(proto)\n+\n+    @classmethod\n+    def __torch_function__(cls, func, types, args, kwargs=None):\n+        def append_log(x):\n+            if isinstance(x, RedispatchTensor):\n+                x.call_log.append((func.__qualname__, types, args, kwargs))\n+\n+        _ = tree_map(append_log, args)\n+        if kwargs:\n+            _ = tree_map(append_log, kwargs)\n+        ret = torch.overrides.redispatch_function(\n+            func, types, args, kwargs)\n+\n+        def wrap(x):\n+            if isinstance(x, torch.Tensor) and not isinstance(x, RedispatchTensor):\n+                return cls(x)",
+      "outdated": true
+    },
+    {
+      "path": "torch/overrides.py",
+      "line": null,
+      "original_line": 2139,
+      "body": "`super().__torch_function__` here?",
+      "diff_hunk": "@@ -2132,3 +2133,21 @@ def enable_reentrant_dispatch():\n             yield\n         finally:\n             pass\n+\n+\n+def redispatch_function(func, types, args, kwargs):\n+    \"\"\"An alternative to ``Tensor.__torch_function__`` that reentrantly calls the",
+      "outdated": true
+    }
+  ]
+}

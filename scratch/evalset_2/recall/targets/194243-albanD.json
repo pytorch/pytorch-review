@@ -1,0 +1,37 @@
+{
+ "case_id": "194243-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/build_stage2.py",
+   "line": 827,
+   "summary": "The wrong variable name is used here.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "adfebb61bc0b97ada349dbf6a34c5b4ebf82e21f",
+   "adoption_evidence": "Before: `built = os.path.join(BUILD_DIR, \"lib\", \"libtorch_cuda.so\")`. Merged: `build_lib = os.path.join(BUILD_DIR, \"lib\", \"libtorch_cuda.so\")`. The variable was renamed, and every use was updated to match: the getsize/exists checks, the error message, `shutil.copy2(build_lib, staged)`, the size report and `patch_wheel(args.wheel, build_lib)`. That is the fix the maintainer asked for.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "This is a naming nit. The merged code renamed `built = os.path.join(BUILD_DIR, \"lib\", \"libtorch_cuda.so\")` to `build_lib`, but behaviour didn't change, so it isn't a defect.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194243#discussion_r3918152563",
+   "human_review": "pending"
+  },
+  {
+   "id": "h3",
+   "path": "tools/native_aot/build_stage2.py",
+   "line": 795,
+   "summary": "The rebuild does not make sure it reuses the exact same cache as the previous build, and nothing stops a configuration change from being triggered.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "adfebb61bc0b97ada349dbf6a34c5b4ebf82e21f",
+   "adoption_evidence": "The maintainer's request was adopted. Before: `[\"cmake\", \"--log-level=STATUS\", \"-S\", REPO, \"-B\", BUILD_DIR],`. Merged: `[cmake_exe, \"--log-level=STATUS\", \"-S\", REPO, \"-B\", BUILD_DIR],`. `cmake_exe = _cmake_for_this_build()` picks the cmake recorded in the cache as CMAKE_COMMAND. Just before the reconfigure, the merged code saves the cache with `cache_before = _cache_entries()`. After it, `_refuse_cache_drift(cache_before)` runs and raises if any cache entry changed, or if a new environment-sourced entry appeared. The comment there says the reconfigure is \"held to both\", and the check runs ahead of the relink. So the reconfigure now has to use the same cache and must not change the configuration. Both parts of the request apply directly to the commented call.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "Re-running `cmake -S REPO -B BUILD_DIR` from a different environment can rewrite cached settings through EnvVarForwarding, so torch_cuda could be relinked against a different configuration than the rest of the install. The code's own comment says EnvVarForwarding \"FORCEs\" cache values. The merged code now snapshots the cache with `_cache_entries()` and calls `_refuse_cache_drift(cache_before)` after configure, and it reuses the original cmake via `_cmake_for_this_build()`.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194243#discussion_r3918227363",
+   "human_review": "pending"
+  }
+ ]
+}

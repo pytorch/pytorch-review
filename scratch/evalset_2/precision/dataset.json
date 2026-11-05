@@ -1,0 +1,6 @@
+{
+  "name": "evalset_2/precision",
+  "scorer": "maintainer",
+  "description": "66 PRs: {'clean': 56, 'not_clean': 2, 'disputed': 8}; see ../README.md.",
+  "created": "2026-11-05"
+}

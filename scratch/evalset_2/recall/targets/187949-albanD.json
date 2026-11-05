@@ -1,0 +1,37 @@
+{
+ "case_id": "187949-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/core/dispatch/Dispatcher.h",
+   "line": 218,
+   "summary": "The newly added Dispatcher function may be unused and should be removed if so.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "fccff359ecc8de1c4e17ea2727369d3277c03e7b",
+   "adoption_evidence": "Before: `const KernelFunction* backendFallbackKernelForDispatchKey(DispatchKey dk) const {` (line 218). In the merged code that function is gone. Its body was folded into the existing `bool hasBackendFallbackForDispatchKey(DispatchKey dk) const { ... return kernel.isValid(); }`, which no longer calls a helper. The maintainer asked whether the new function was used, and it was removed, so the request was adopted.",
+   "stage2": "keep",
+   "stage3": "keep",
+   "stage3_reason": "The new public `backendFallbackKernelForDispatchKey` only exists to back `hasBackendFallbackForDispatchKey`, so it widens the Dispatcher API with a function nothing else calls. The merged code removed it and moved the logic into `hasBackendFallbackForDispatchKey`, which returns `kernel.isValid()`. A reviewer could spot this by searching for callers.",
+   "status": "agreed",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/187949#discussion_r3469783210",
+   "human_review": "pending"
+  },
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/core/dispatch/DispatchKeyExtractor.h",
+   "line": 146,
+   "summary": "The change to the dispatch key extraction hot path may hurt performance, so it should be checked and the function possibly marked C10_ALWAYS_INLINE/forced inline.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "fccff359ecc8de1c4e17ea2727369d3277c03e7b",
+   "adoption_evidence": "Before: `DispatchKeySet getDispatchKeySetFromRawDispatchKeySet(`. Merged: `C10_ALWAYS_INLINE DispatchKeySet getDispatchKeySetFromRawDispatchKeySet(`. The maintainer suggested forced inlining, and the merged code marks this exact function C10_ALWAYS_INLINE.",
+   "stage2": "keep",
+   "stage3": "drop",
+   "stage3_reason": "The maintainer's question about perf impact is a speculative micro-optimization, not a defect: the function is defined inside the class body, so it is already implicitly inline. The merged code did add `C10_ALWAYS_INLINE`, but knowing that is worth doing takes profiling knowledge of the dispatcher hot path, which a reader of the code doesn't have.",
+   "status": "kept_by_rule",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/187949#discussion_r3469790605",
+   "human_review": "pending"
+  }
+ ]
+}

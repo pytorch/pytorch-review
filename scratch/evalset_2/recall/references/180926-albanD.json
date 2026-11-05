@@ -1,0 +1,69 @@
+{
+  "pr": 180926,
+  "head_sha": "75ee2ae5b2a938f561980a16acae81f178576b40",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-05-05T15:22:08Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": null,
+      "original_line": 6184,
+      "body": "I'm confused. Highest is the default, so that should be always true!",
+      "diff_hunk": "@@ -6179,6 +6179,38 @@ def recover():\n \n     return recover()(fn)\n \n+\n+def with_highest_f32_precision(f):\n+    \"\"\"Run the wrapped test under torch.set_float32_matmul_precision(\"highest\"),",
+      "outdated": true
+    },
+    {
+      "path": "test/test_cuda.py",
+      "line": 8981,
+      "original_line": 8806,
+      "body": "That sounds problematic as a gap?",
+      "diff_hunk": "@@ -8802,8 +8801,13 @@ def test_compile_kernel_large_shared_memory(self):\n         with self.assertRaises(RuntimeError):\n             kernel.set_shared_memory_config(excessive_shared_mem)\n \n-    @skipIfRocmArch(MI300_ARCH)\n-    @tf32_on_and_off(0.005)\n+    # AMD CDNA3 XF32 (v_mfma_f32_*_xf32) uses round-down accumulation, which\n+    # produces a negative-biased error ~-5e-3 with max_abs ~8e-3 at K=32 for\n+    # uniform[0,1] operands \u2014 exceeding the 0.005 tolerance that NVIDIA TF32",
+      "outdated": false
+    },
+    {
+      "path": "test/test_linalg.py",
+      "line": null,
+      "original_line": 7813,
+      "body": "But the test was correct before?",
+      "diff_hunk": "@@ -7800,11 +7803,14 @@ def test_addmm_relu_tunableop_rocm(self, device, dtype):\n     def test_addmm_gelu(self, device, dtype):\n         self._test_addmm_impl(torch._addmm_activation, \"gelu\", device, dtype)\n \n-    @skipIfRocmArch(MI300_ARCH)\n     @dtypes(torch.float, torch.double)\n     @dtypesIfCUDA(*floating_and_complex_types())\n-    @tf32_on_and_off(0.005)\n-    @reduced_f32_on_and_off(0.005)\n+    # K=8 random GEMM under E8M10 rounding has a theoretical floor of\n+    # ~sqrt(8) * 2^-10 * |A|_inf ~= 8e-3 for randn operands; the prior 0.005\n+    # tolerance was unattainable by any TF32 implementation (NVIDIA included).\n+    # See https://github.com/jeffdaily/tf32_analysis.\n+    @tf32_on_and_off(0.05)\n+    @reduced_f32_on_and_off(0.05)",
+      "outdated": true
+    },
+    {
+      "path": "test/test_linalg.py",
+      "line": null,
+      "original_line": 9752,
+      "body": "Same as above",
+      "diff_hunk": "@@ -9741,9 +9747,12 @@ def dims_full_for_fn():\n             r1 = fntorch(t0_full, t1, t2)\n             self.assertEqual(r0, r1)\n \n-    @skipIfRocmArch(MI300_ARCH)\n-    @tf32_on_and_off(0.001)\n-    @reduced_f32_on_and_off(0.001)\n+    # K=8 random GEMM under E8M10 rounding has a theoretical floor of\n+    # ~sqrt(8) * 2^-10 * |A|_inf ~= 8e-3 for randn operands; the prior 0.001\n+    # tolerance was unattainable by any TF32 implementation (NVIDIA included).",
+      "outdated": true
+    },
+    {
+      "path": "test/test_transformers.py",
+      "line": 468,
+      "original_line": 467,
+      "body": "This also sounds problematic as a loss of quality?",
+      "diff_hunk": "@@ -459,8 +457,16 @@ def hook(module, inputs, output):\n         # remove hook\n         handle.remove()\n \n-    @skipIfRocmArch(MI300_ARCH)\n-    @tf32_on_and_off(0.002)\n+    # Test asserts fastpath == slowpath, both running under the current\n+    # precision \u2014 so the @tf32_on_and_off tolerance applies to the mutual\n+    # agreement of two TF32-rounded outputs, not to TF32-vs-FP32. Measured\n+    # worst case on MI300 at d_model=12/seqlen<=1040 is ~1e-3, well under\n+    # 0.002. For d_model=256 the inner GEMMs have K=256 (vs K=12), so\n+    # summation-order drift between the two paths under hipBLASLt FAST_TF32\n+    # scales ~sqrt(256/12) \u2248 4.6x and compounds through 2 encoder layers;\n+    # use a looser tolerance on ROCm to cover that worst case while keeping",
+      "outdated": false
+    },
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": null,
+      "original_line": 6193,
+      "body": "If we keep this, this should be in the name.",
+      "diff_hunk": "@@ -6179,6 +6179,38 @@ def recover():\n \n     return recover()(fn)\n \n+\n+def with_highest_f32_precision(f):\n+    \"\"\"Run the wrapped test under torch.set_float32_matmul_precision(\"highest\"),\n+    forcing full IEEE FP32 for matmul on both CUDA (TF32 off) and CPU\n+    (mkldnn bf32/tf32 off). Save/restore across the call.\n+\n+    Use for tests whose intent is FP32 numerical correctness of an\n+    algorithm (e.g. a factorization) and should not be contaminated by\n+    reduced-precision matmul noise injected by an ambient\n+    allow_tf32/fp32_precision setting elsewhere in the process.\n+\n+    Note: this affects matmul only, not convolution. Tests that also",
+      "outdated": true
+    },
+    {
+      "path": "torch/testing/_internal/common_utils.py",
+      "line": null,
+      "original_line": 6183,
+      "body": "Let's stop using the confusing high/highest names and move to the new API based on fp32_precision like you do for mkldnn below.\nSpecifically, this is just about using ieee numerics, which is the default.",
+      "diff_hunk": "@@ -6179,6 +6179,38 @@ def recover():\n \n     return recover()(fn)\n \n+\n+def with_highest_f32_precision(f):",
+      "outdated": true
+    }
+  ]
+}
