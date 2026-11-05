@@ -1,0 +1,15 @@
+{
+ "case_id": "184625-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/export/test_export.py",
+   "line": 18746,
+   "summary": "The test asserts on generated IR/graph code strings (absence of aten.index.Tensor, presence of aten.select.int); the reviewer dislikes these brittle IR checks and wants the test to verify behavior instead (e.g., numerical correctness).",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "9aa04f02b3aa57a4f34d8d51483ff48b20a5a8a3",
+   "evidence": "Before the change, the test made IR string assertions: `self.assertNotIn(\"torch.ops.aten.index.Tensor\", traced.graph_module.code)` and `FileCheck().check(\"torch.ops.aten.select.int\").run(traced.graph_module.code)`, and the comment sits on the closing `)` of that FileCheck call. In the merged code both IR checks are gone. `traced = export(MyModel(), (x, y)).run_decompositions({})` became just `traced = export(MyModel(), (x, y))`. What remains is the behavioral check: `self.assertEqual(traced.module()(x, y2), ...)`, which compares outputs for a second input. So the brittle IR checks were removed and the test now checks numerical behavior, as the maintainer asked."
+  }
+ ]
+}

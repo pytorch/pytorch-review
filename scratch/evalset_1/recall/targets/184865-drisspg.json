@@ -1,0 +1,25 @@
+{
+ "case_id": "184865-drisspg",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/_inductor/codegen/cutedsl/cutedsl_scheduling.py",
+   "line": 237,
+   "summary": "Pulling CLUSTER_M/N out of the rendered template source with a regex is fragile and hacky; the cluster config should come from a more direct source.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "1a8864e9e1bfb49f563b1bb0d006fb899c64dc11",
+   "evidence": "Before: `m_match = re.search(r\"CLUSTER_M\\b.*?=\\s*(\\d+)\", src_code_str)` (and the same regex for CLUSTER_N). After the merge, the regex parsing of the rendered source is gone. The values are now read directly: `template_kwargs = getattr(kernel, \"_template_kwargs\", None)` and `cluster_m = template_kwargs.get(\"CLUSTER_M\")` / `cluster_n = template_kwargs.get(\"CLUSTER_N\")`. The `src_code_str` parameter was also removed, and the docstring now says \"Reads CLUSTER_M/N from kernel template kwargs\". That is the more direct source the maintainer asked for."
+  },
+  {
+   "id": "h2",
+   "path": "torch/_inductor/codegen/cutedsl/cutedsl_scheduling.py",
+   "line": 161,
+   "summary": "Questions whether src_code_str needs a default of None in _build_precompile_metadata, and when it can actually be None; suggests making it required.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "1a8864e9e1bfb49f563b1bb0d006fb899c64dc11",
+   "evidence": "The commented line was `def _build_precompile_metadata(self, kernel, ctb, src_code_str=None):`. In the merged code it is `def _build_precompile_metadata(self, kernel, ctb):`. The maintainer asked whether the `=None` default was needed. Instead of making `src_code_str` required, the PR removed the parameter entirely. `_build_hw_info` now reads CLUSTER_M/N from `kernel._template_kwargs` rather than parsing the source string, and the caller changed to `self._build_precompile_metadata(kernel, ctb)`. The optional `src_code_str=None` argument no longer exists, so the concern is resolved by an equivalent fix."
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "case_id": "188529-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_torch.py",
+   "line": 2130,
+   "summary": "Rather than adding a new test, extend the dtype for-loop in the existing test above to cover the new case.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ce70ff33cb4ff990710a9e5150458237af19f887",
+   "evidence": "Before review, the code added a separate test: `def test_repeat_interleave_cpu_small_integer_repeats(self, device):` (marked `@onlyCPU`), which looped over `(torch.int8, torch.uint8, torch.int16)`. The merged code deletes that test and extends the dtype loop in the test above instead: `repeat_dtypes = [torch.int, torch.long]` / `if device == \"cpu\": repeat_dtypes.extend([torch.int8, torch.uint8, torch.int16])` / `for dtype in repeat_dtypes:`. This is what the maintainer asked for."
+  }
+ ]
+}

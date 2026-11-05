@@ -1,0 +1,15 @@
+{
+ "case_id": "173032-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/autograd/FunctionsManual.cpp",
+   "line": 4967,
+   "summary": "Splitting `.mul_(3. / N)` into `.mul_(3.).div_(N)` makes the code worse because it adds an extra in-place tensor op; a better fix for the narrowing-conversion issue is needed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c24b6a2ea127ca961955df4adef5e1858bdfdc3e",
+   "evidence": "Before, the code had two in-place ops: `.mul_(3.)` followed by `.div_(N));` (line 4967). In the merged version these became one in-place op, `.mul_(three_over_n));`, with `auto three_over_n = c10::SymFloat(3.) / c10::SymFloat(N);` computed beforehand. Doing the arithmetic in SymFloat removes the extra tensor op the maintainer objected to and still avoids the narrowing conversion. It is equivalent to the original single `.mul_(3. / N)`."
+  }
+ ]
+}

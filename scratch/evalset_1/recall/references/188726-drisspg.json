@@ -1,0 +1,21 @@
+{
+  "pr": 188726,
+  "head_sha": "933eb0a58288ab545b192066f30dac79000ba982",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-01T20:09:33Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".claude/skills/ci-metrics/gcx-wrapper.sh",
+      "line": null,
+      "original_line": 8,
+      "body": "we shoudl probably just have the user install the curl link and not need go",
+      "diff_hunk": "@@ -0,0 +1,67 @@\n+#!/usr/bin/env bash\n+\n+set -euo pipefail\n+\n+export GCX_SERVER=\"${GCX_SERVER:-https://pytorchci.grafana.net}\"\n+export GCX_CONTEXT=\"${GCX_CONTEXT:-pytorchci}\"\n+export GCX_NO_UPDATE_NOTIFIER=\"${GCX_NO_UPDATE_NOTIFIER:-1}\"\n+GCX_CMD=(go run \"${GCX_MODULE:-github.com/grafana/gcx/cmd/gcx@latest}\")",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+ "case_id": "187357-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/native/GroupedMMUtils.h",
+   "line": 56,
+   "summary": "Use c10::contiguous_strides(size) to compute the strides (e.g. for the ROCm case) rather than returning an empty stride vector or hand-rolling the stride math.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "8b1c62e06bf59601b059a0dacec964c88a7cff82",
+   "evidence": "The comment sits on the output-shape logic (`if (a_is_2d) {`, line 56). It asks for strides to be computed with `c10::contiguous_strides`. In the reviewed version, the strides further down were worked out by hand: `out_stride = {size_padded, 1};` / `out_stride = {out_size[1] * size_padded, size_padded, 1};`. The merged code removes that and uses the helper instead: `auto padded_size = out_size; padded_size[last_dim] = ...; const auto strides = c10::contiguous_strides(padded_size); out_stride.assign(strides.begin(), strides.end());`. It also adds `#include <c10/util/strides.h>`. It passes the padded shape instead of the raw size, which keeps the 16-byte TMA alignment, so it does the same job. One gap: under `USE_ROCM`, `out_stride` is still left empty. The core request, replacing the hand-written stride math with `c10::contiguous_strides`, was adopted."
+  },
+  {
+   "id": "h4",
+   "path": "aten/src/ATen/native/ScaledBlasUtils.cpp",
+   "line": 588,
+   "summary": "Check that contraction_dim has exactly 2 elements before reading contraction_dim[0] and [1], so a short list can't cause an out-of-bounds access.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "8b1c62e06bf59601b059a0dacec964c88a7cff82",
+   "evidence": "Before the change, the code inside `if (!contraction_dim.empty()) {` went straight to `const int dim_a = contraction_dim[0], dim_b = contraction_dim[1];` without checking the size first. The merged code adds a check before those reads: `TORCH_CHECK_VALUE(contraction_dim.size() == 2, \"contraction_dim must have exactly 2 elements\");`. This matches the maintainer's suggestion exactly, including the error message."
+  }
+ ]
+}

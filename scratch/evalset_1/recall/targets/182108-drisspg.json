@@ -1,0 +1,15 @@
+{
+ "case_id": "182108-drisspg",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/_native/ops/norm/rmsnorm_impl.py",
+   "line": 53,
+   "summary": "The default eps comes from finfo(input.dtype), but the CUDA implementation takes it from the accumulator dtype, so the defaults don't match (fp16/bf16 inputs get a much larger eps).",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "27afc135a52a5f84acaeac2b950dfa31b3c71968",
+   "evidence": "Before: `eps = torch.finfo(input.dtype).eps`. Merged: `eps = torch.finfo(torch.float32).eps`. A new comment explains that this matches aten's layer_norm_kernel.cu, which picks eps from the accumulator dtype, and that the accumulator is float32 for every dtype the cond accepts (fp16/bf16/fp32). That is the change the maintainer asked for."
+  }
+ ]
+}

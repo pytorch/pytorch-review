@@ -1,0 +1,15 @@
+{
+ "case_id": "183780-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/cudagraph_utils.py",
+   "line": 301,
+   "summary": "Detect whether the caching allocator is disabled by querying the allocator's state directly instead of re-reading the PYTORCH_NO_CUDA/HIP_MEMORY_CACHING env vars.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "705fb55ebcb2aac113a0c9c8d95558245795a812",
+   "evidence": "Before: `or os.environ.get(\"PYTORCH_NO_HIP_MEMORY_CACHING\") == \"1\"` (and the CUDA env check on line 300). Merged: the env-var checks are gone and the allocator is queried directly: `torch.cuda.is_available() and not torch._C._cuda_cudaCachingAllocator_is_enabled()`. The `import os` line was removed, and the docstring and message were updated to describe the allocator state instead of the env vars. This is what the maintainer asked for."
+  }
+ ]
+}

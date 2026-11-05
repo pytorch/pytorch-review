@@ -1,0 +1,15 @@
+{
+ "case_id": "173969-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": ".claude/skills/triaging-issues/pt2-triage-rubric.md",
+   "line": 25,
+   "summary": "The rubric tells the triage bot to run the repro with different backends, but the bot has no environment that can run PyTorch, so this step will confuse it and should be removed or changed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "837a0c8b499b67518bb55d67fb39627e7940d70f",
+   "evidence": "Before: \"2. **If unclear, run repro with different backends:**\" was followed by a code block of torch.compile calls with eager/aot_eager/inductor backends. Merged: \"2. **Look for information with backends:**\" and the code block is gone. The bot is no longer told to run the repro. It now looks for backend information that already exists, which matches the maintainer's point that the bot has no environment that can run PyTorch."
+  }
+ ]
+}

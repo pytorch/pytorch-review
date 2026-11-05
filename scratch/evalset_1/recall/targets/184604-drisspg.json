@@ -1,0 +1,15 @@
+{
+ "case_id": "184604-drisspg",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/_native/ops/scatter_add/cutedsl_impl.py",
+   "line": 146,
+   "summary": "The eligibility analysis doesn't appear to check pointer alignment for tensors with a nonzero storage offset, and it is unclear how TensorIterator handles such offsets.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "4ebd96852dca87d163b7272000f103f642d872e9",
+   "evidence": "The commented line `elem = self.element_size()` (line 146 in `_scatter_add_eligibility`) did not change, so the eligibility function itself still doesn't check alignment. The merged code adds a separate `_alignment_contract_ok(dst, src, dim, *, dst_ptr_align)` check instead. It checks `src.data_ptr() % _SRC_ALIGN_BYTES` (16), `dst.data_ptr() % dst_ptr_align` (16 for TMA, 4 for vec-scatter) and the byte alignment of each row stride (`stride(dim) * elem`). `_is_tma_supported` and `_is_vec_scatter_supported` call it right after the eligibility check returns. The `.out` cond also calls it on `out`. `data_ptr()` already includes the storage offset, so a tensor with a nonzero offset that leaves the pointer misaligned is rejected and falls back to aten. This is an equivalent fix for the maintainer's concern, placed right after the commented eligibility analysis rather than on line 146 itself."
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "case_id": "183356-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/inductor/test_cutlass_backend.py",
+   "line": 413,
+   "summary": "The cutlass-dir patching and import check (_maybe_patch_cutlass_dir_from_checkout / try_import_cutlass assertion) is added to only this one test; the reviewer asks whether every CUTLASS test should use it, which suggests applying it consistently, e.g. in shared setup.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "374e55676a8ab1344c5b0cfdcff9d1f6c7e84d26",
+   "evidence": "Before, the commented line sat inside the per-test context manager: `with _maybe_patch_cutlass_dir_from_checkout(patch_env=True): ... self.assertEqual(Y_compiled, Y, atol=atol, rtol=rtol)`. In the merged code that wrapper is gone and the line is un-indented to `self.assertEqual(Y_compiled, Y, atol=atol, rtol=rtol)` directly under `with config.patch(...)`. The per-test helper `_maybe_patch_cutlass_dir_from_checkout` was deleted, and so were its uses in test_import_cutlass and test_cutlass_key. It was replaced by a module-level `_maybe_set_cutlass_dir_env_from_checkout()`, which runs at import time and sets TORCHINDUCTOR_CUTLASS_DIR before torch._inductor.config is imported. That means every test in the file now gets the checkout cutlass dir. This is what the reviewer asked for: apply the patch to all tests instead of only this one."
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "case_id": "178986-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_meta_registrations.py",
+   "line": 6017,
+   "summary": "Instead of adding a device-specific (xpu) conditional, the meta output should always be allocated with a layout matching the query input.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "7f6f81be84e3452458756871765676143af17d2e",
+   "evidence": "Before: `if device_hint(query) == \"xpu\": res = alloc_with_matching_layout(query, tuple(out_shape)) else: res = torch.empty(out_shape, dtype=query.dtype, device=query.device)`. Merged: `res = alloc_with_matching_layout(query, tuple(out_shape))`. The xpu check is gone, and the output is now always allocated with a layout matching the query, which is what the maintainer asked for."
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+  "pr": 189284,
+  "head_sha": "2473a8a13626e217618a8bd77f815c7def99686e",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "DISMISSED",
+    "body": "We should either say that the Node is not ready for inspection or actually trigger when ready!",
+    "submitted_at": "2026-07-08T17:49:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/autograd/graph.py",
+      "line": null,
+      "original_line": 476,
+      "body": "It should propagate to any worker thread from any systems.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/autograd/graph.py",
+      "line": null,
+      "original_line": 485,
+      "body": "These are all private APIs. We should have an example with public APIs",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/autograd/function.cpp",
+      "line": null,
+      "original_line": 54,
+      "body": "Why does this indirect through the engine vs calling the hook directly here?\nLet's use the same pattern as saved_variable_hooks ",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": 735,
+      "original_line": 723,
+      "body": "didn't the \"set_next_edges\" above already trigger it?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "torch/csrc/autograd/variable.cpp",
+      "line": null,
+      "original_line": 332,
+      "body": "This will make the doc above fake news.\nIt will trigger once ONE of the next_functions is setup, not all of them!",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "test/test_autograd.py",
+      "line": null,
+      "original_line": 11379,
+      "body": "Can you check nodes[1] is correct? :D\nYou can use split() as a function with multiple differentiable outputs.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

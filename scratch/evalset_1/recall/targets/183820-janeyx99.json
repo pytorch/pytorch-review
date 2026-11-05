@@ -1,0 +1,15 @@
+{
+ "case_id": "183820-janeyx99",
+ "targets": [
+  {
+   "id": "h5",
+   "path": "tools/linter/adapters/stable_shim_usage_linter.py",
+   "line": 164,
+   "summary": "Version handling assumes the patch version is always 0 (TORCH_VERSION_{major}_{minor}_0); it needs to support non-zero patch versions.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "64ecbba55b227843626fd08c6bc06bc8900dc509",
+   "evidence": "Before: `major, minor = required_version` / `required_macro = f\"TORCH_VERSION_{major}_{minor}_0\"`. Merged: `major, minor, patch = required_version` / `required_macro = f\"TORCH_VERSION_{major}_{minor}_{patch}\"`. The patch is no longer hardcoded to 0. The version tuple types were also widened to tuple[int, int, int] throughout the file."
+  }
+ ]
+}

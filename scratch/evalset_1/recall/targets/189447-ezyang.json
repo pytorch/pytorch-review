@@ -1,0 +1,15 @@
+{
+ "case_id": "189447-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/native/TensorShape.cpp",
+   "line": 4038,
+   "summary": "The added type conversions look unnecessary and should be removed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "3bda74318624581502db16e6439c36effdb16481",
+   "evidence": "Before: `self, c10::SymIntArrayRef(inferred_size), c10::SymIntArrayRef(*stride));`. After merge: `return alias_with_sizes_and_strides(self, inferred_size, *stride);`. The explicit SymIntArrayRef conversions were removed. The merge also folded the symbolic overload into the single templated function using `if constexpr`, which is what allows the arguments to be passed directly."
+  }
+ ]
+}

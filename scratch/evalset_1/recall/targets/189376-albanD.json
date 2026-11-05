@@ -1,0 +1,35 @@
+{
+ "case_id": "189376-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "docs/source/accelerator/testing.md",
+   "line": 38,
+   "summary": "These tests shouldn't be listed for out-of-tree backends to run, since core CI already runs them on all supported CPU architectures.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b7a510064582582df04ddcf79d16a4246676a8cb",
+   "evidence": "Before: \"Generic tests validate framework functionality that does not depend on accelerator support. OOT backends can run these tests directly in their PyTorch environment:\" followed by `python test/run_test.py --hw-classification GENERIC`. In the merged version the \"Generic Tests\" section and its run command are gone. Its place is taken by a classification table plus the line \"**For OOT backends, upstream test reuse should primarily focus on `ACCELERATOR` tests.** `GENERIC` tests are already covered by upstream CPU CI.\" The bring-up workflow also no longer tells backends to run GENERIC tests. This matches the maintainer's point that core CI already runs these tests."
+  },
+  {
+   "id": "h3",
+   "path": "docs/source/accelerator/testing.md",
+   "line": 65,
+   "summary": "This entry is probably a no-op for out-of-tree backends; the doc should instead point to a PrivateUse1 test that checks the PU1 backend was registered correctly.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b7a510064582582df04ddcf79d16a4246676a8cb",
+   "evidence": "The reviewed line was `python test/run_test.py --hw-classification CUDA` (line 65). It sat in a \"Device-specific Tests\" section that suggested OOT backends might reuse CUDA tests. The merged code deletes that command and the whole section. Device-specific tests now get one line in the classification table, plus a note that \"Device-specific tests target built-in backends. OOT backends typically maintain their own device-specific tests downstream.\" This settles the maintainer's point that the entry is a no-op for OOT backends.\n\nFor the second part, asking for PU1 registration validation, the merged doc adds a first bring-up step, \"### 1. Verify backend registration\". It contains checks such as `assert torch._C._get_privateuse1_backend_name() == \"<your_backend>\"`, `torch.accelerator.current_accelerator().type`, and tensor creation on the backend. This is an inline snippet, not a link to an existing core test, but it does the same job.\n\nThe maintainer's side question about calling `set_test_configs()` more than once is also answered: \"Each call to `set_test_configs()` fully replaces the existing configuration... provide all desired configurations in a single call.\""
+  },
+  {
+   "id": "h7",
+   "path": "docs/source/accelerator/testing.md",
+   "line": 170,
+   "summary": "The section leaves out which test file to run and how it applies.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b7a510064582582df04ddcf79d16a4246676a8cb",
+   "evidence": "Before, line 170 read \"A recommended order for adopting PyTorch tests in a new OOT backend:\", followed by a four-item list that never said which test file to run. In the merged version that intro became \"A step-by-step workflow for bringing a new OOT backend from initial bring-up to passing upstream `ACCELERATOR` tests.\" The section now spells out how to run the tests and how this applies. Step 2 sets PYTORCH_TESTING_DEVICE_FOR_CUSTOM/ONLY_FOR. Step 3 runs `python test/run_test.py --hw-classification ACCELERATOR` and says to \"start with a single test file and gradually expand the scope\", with the example `python test/run_test.py -i test_torch --hw-classification ACCELERATOR`. Steps 4\u20137 show the config code for each option. The section ends by linking test_testing.py as a complete runnable example."
+  }
+ ]
+}

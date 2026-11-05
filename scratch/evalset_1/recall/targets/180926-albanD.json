@@ -1,0 +1,25 @@
+{
+ "case_id": "180926-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/testing/_internal/common_utils.py",
+   "line": 6183,
+   "summary": "Stop using the confusing high/highest precision names and move to the new fp32_precision-based API (ieee numerics), as the PR already does for mkldnn.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "d6aa593941e06004e38cc3e25ae7fba9d860787b",
+   "evidence": "Before: `def with_highest_f32_precision(f):` plus a docstring saying \"Run the wrapped test under torch.set_float32_matmul_precision(\"highest\")\". The body called `torch.set_float32_matmul_precision(\"highest\")` and also saved and restored allow_tf32. Merged: `def with_ieee_matmul_precision(f):` plus a docstring saying \"Force matmul fp32_precision=\"ieee\"\u2026 \"ieee\" is the default, so this decorator is defensive\". The body now sets `torch.backends.cuda.matmul.fp32_precision = \"ieee\"` the same way it sets mkldnn, and allow_tf32 is gone. This does both things the maintainer asked: it drops the high/highest names and uses the fp32_precision API with ieee. The docstring also answers the \"highest is the default\" confusion."
+  },
+  {
+   "id": "h5",
+   "path": "test/test_linalg.py",
+   "line": 7813,
+   "summary": "Raising the TF32 tolerance from 0.005 to 0.05 (and from 0.001 in a second test) is questionable because the tests passed before; the looser tolerances hide regressions instead of fixing the ROCm behaviour.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "d6aa593941e06004e38cc3e25ae7fba9d860787b",
+   "evidence": "Before: `@reduced_f32_on_and_off(0.05)` (along with `@tf32_on_and_off(0.05)`), which loosened the tolerance on every platform. Merged: `@reduced_f32_on_and_off(0.05 if TEST_WITH_ROCM else 0.005)` and `@tf32_on_and_off(0.05 if TEST_WITH_ROCM else 0.005)`. Off ROCm, the test goes back to the prior 0.005 tolerance. The comment was also rewritten: it no longer says the old tolerance was \"unattainable by any TF32 implementation\" and now says NVIDIA TF32 \"stays well under the prior 0.005 tolerance in practice\". It says the tolerance is relaxed \"only on ROCm to preserve CUDA rigor\". That accepts the maintainer's point that the test was correct before. The same change went into test_broadcast_batched_matmul (0.02 on ROCm, otherwise 0.001)."
+  }
+ ]
+}

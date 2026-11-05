@@ -1,0 +1,15 @@
+{
+ "case_id": "187075-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "RELEASE.md",
+   "line": 54,
+   "summary": "The C++ standard version stated in RELEASE.md looks wrong or out of date, since PyTorch has at least partly moved to C++20, so the text should be corrected.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "7d28bf8e2bf24163375b6904056caffa5a58242d",
+   "evidence": "The maintainer asked why the 2.13 row said C++17 when PyTorch has moved to C++20, at least partly. Before: `| 2.13 | >=3.10, <=(3.15, 3.15t experimental) | C++17 | CUDA 12.6 ... | ROCm 7.2 |`. Merged: `| 2.13 | >=3.10, <=(3.15, 3.15t experimental) | C++20 | CUDA 12.6 ... | ROCm 7.2 |`. The commented line's C++ column went from C++17 to C++20, which fixes the outdated version. The merged text does not add a \"partial\" note, but it settles the maintainer's main point."
+  }
+ ]
+}

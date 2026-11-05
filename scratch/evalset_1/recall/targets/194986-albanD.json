@@ -1,0 +1,15 @@
+{
+ "case_id": "194986-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "docs/source/optim.md",
+   "line": 303,
+   "summary": "The doc example's hook does something trivial; use a more meaningful example, such as using the profiler API to add a custom range around the optimizer step.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "9d2b3dd0d265930c916e1431aaaa3a1f3cf127a5",
+   "evidence": "Before: `events = []`, with hooks that only appended (\"before\"/\"after\", lr) tuples to it. In the merged version that line is now `active_ranges = {}`. The hooks were renamed to `begin_optimizer_step` and `end_optimizer_step`. They enter `torch.profiler.record_function(\"optimizer.step\")` before the step and exit it after, so the optimizer step gets a custom profiler range. The step now runs inside `with torch.profiler.profile() as profile:`, and the example ends with `print(profile.key_averages().table())`. The surrounding prose was also rewritten to explain why the custom record_function range is useful. This is exactly what the maintainer suggested."
+  }
+ ]
+}

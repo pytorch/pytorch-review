@@ -1,0 +1,15 @@
+{
+ "case_id": "190575-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/cuda/memory.py",
+   "line": 1239,
+   "summary": "The reviewer asks why this extra (non-Tensor) version of the function is needed when the Tensor version looks like it should be enough, implying it could be removed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "65d5177497c08285c5e8c7c6de1b6b2884a4b848",
+   "evidence": "Before: `def _annotate_memory(data_ptr: int, metadata: str):` was a separate function, and `_annotate_tensor` wrapped it. In the merged code `_annotate_memory` is gone. Only `def _annotate_tensor(tensor: torch.Tensor, metadata: str):` is left, and it now calls `torch._C._cuda_annotateMemory(tensor.untyped_storage().data_ptr(), metadata)` directly. The trace comment was also changed to say \"via _annotate_tensor\". This removes the non-Tensor version, as the maintainer suggested."
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "case_id": "189891-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "cmake/public/utils.cmake",
+   "line": 548,
+   "summary": "Have the function build a unique result-variable name internally, the way append_cxx_flag_if_supported does, instead of making the caller pass one in.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "8a43e4f7e4cc73b85bcd894c1b5c00a86f52aa5b",
+   "evidence": "Before: `function(add_link_options_if_supported flag var)` with `check_linker_flag(C \"LINKER:${flag}\" ${var})`. Merged: `function(add_link_options_if_supported flag)`, and the variable name is now built inside the function with `string(TOUPPER \"HAS_LINKER${flag}\" _FLAG_NAME)` and `string(REGEX REPLACE \"[=,-]\" \"_\" _FLAG_NAME ...)`, then passed as `check_linker_flag(C \"LINKER:${flag}\" ${_FLAG_NAME})`. This follows the append_cxx_flag_if_supported pattern, and the comment saying the caller must pass a unique var name was removed."
+  }
+ ]
+}

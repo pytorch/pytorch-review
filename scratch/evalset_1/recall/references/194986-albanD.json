@@ -1,0 +1,45 @@
+{
+  "pr": 194986,
+  "head_sha": "2fa9a5dc034da2e40936cfb14b1c594b53cd7562",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-27T14:23:09Z"
+  },
+  "inline_comments": [
+    {
+      "path": "docs/source/optim.md",
+      "line": null,
+      "original_line": 225,
+      "body": "nit: you can use the decorator to save an indentation",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "docs/source/optim.md",
+      "line": null,
+      "original_line": 303,
+      "body": "Anything else more meaningful we can use here? Maybe just using profiler API to add a custom range around the optimizer?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/optim/__init__.py",
+      "line": null,
+      "original_line": 11,
+      "body": "I'm not a fan of this and it makes things inconsistent with the rest...\nI would slightly prefer adding a new torch.optim.muon module that re-exposes the content of the _muon part.\nBut no very strong opinion, so if you prefer this, that sounds ok as well",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/optim/sparse_adam.py",
+      "line": null,
+      "original_line": 10,
+      "body": "I would expect this to fix public API binding error that would require removing from the allowlist \ud83e\udd14 ",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

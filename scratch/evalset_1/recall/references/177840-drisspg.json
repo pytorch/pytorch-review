@@ -1,0 +1,21 @@
+{
+  "pr": 177840,
+  "head_sha": "ec61ec398c409251848fd9388a1f3b1ee748fa36",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-03-20T15:00:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/template_heuristics/triton.py",
+      "line": null,
+      "original_line": 1753,
+      "body": "there are helpers  in inductor for statically knowing sizes and not introducing guards",
+      "diff_hunk": "@@ -1724,7 +1747,14 @@ def _finalize_mm_configs(\n                     kwargs[\"GROUP_M\"] = group_m\n                 yield self.triton_config(**kwargs)\n \n-    def get_flex_attn_fwd_configs(self, head_dim: int, dtype: Any) -> list[FlexConfig]:\n+    @staticmethod\n+    def _static_seq_len(seq_len: Any) -> int | None:\n+        \"\"\"Return seq_len as a plain int if statically known, else None.\"\"\"\n+        return int(seq_len) if seq_len is not None and isinstance(seq_len, (int, sympy.Integer)) else None",
+      "outdated": true
+    }
+  ]
+}

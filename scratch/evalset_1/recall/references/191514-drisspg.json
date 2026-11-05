@@ -1,0 +1,21 @@
+{
+  "pr": 191514,
+  "head_sha": "005037546d7c97ef09ab0274d1cd109828447e49",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-30T03:38:46Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/kernel/vendored_templates/cutedsl/wrappers/dense_blockscaled_gemm_kernel.py",
+      "line": null,
+      "original_line": 206,
+      "body": "can we just place? also idk what this is doing but liek can we jstu call gemm_epilogue_op_scope(cute) diretcly",
+      "diff_hunk": "@@ -204,32 +204,7 @@ def _ones_alpha():\n \n \n def _epilogue_op_scope(cute):",
+      "outdated": true
+    }
+  ]
+}

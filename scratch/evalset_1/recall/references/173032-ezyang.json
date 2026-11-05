@@ -1,0 +1,21 @@
+{
+  "pr": 173032,
+  "head_sha": "b30bd4eff8194917333358d6534d14df7465b2f4",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-22T18:02:44Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/autograd/FunctionsManual.cpp",
+      "line": null,
+      "original_line": 4967,
+      "body": "This seems worse. But I agree it seems inconvenient to fix this.",
+      "diff_hunk": "@@ -4963,7 +4963,8 @@ std::tuple<Tensor, Tensor, Tensor> layer_norm_double_backward(\n     auto all_sub = ((ggI_sum * gxhat_sum).div_(N))\n                        .sub_((ggI_expanded * gxhat).sum(1, true))\n                        .add_((sigma2_eps_neg_1 * gxhat_mu_sum * ggI_mu_sum)\n-                                 .mul_(3. / static_cast<double>(N)));\n+                                 .mul_(3.)\n+                                 .div_(N));",
+      "outdated": true
+    }
+  ]
+}

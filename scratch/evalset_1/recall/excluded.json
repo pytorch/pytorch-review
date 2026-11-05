@@ -1,0 +1,147 @@
+[
+ {
+  "case": "173670-janeyx99",
+  "issue": "h4",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "175578-albanD",
+  "issue": "h1",
+  "reason": "C: naming nit labelled design"
+ },
+ {
+  "case": "176280-albanD",
+  "issue": "h22",
+  "reason": "C: naming nit labelled design"
+ },
+ {
+  "case": "176280-albanD",
+  "issue": "h3",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "183323-janeyx99",
+  "issue": "h3",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "183930-janeyx99",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "187949-albanD",
+  "issue": "h4",
+  "reason": "C: naming nit labelled design"
+ },
+ {
+  "case": "189376-albanD",
+  "issue": "h5",
+  "reason": "D: evidence does not show the fix"
+ },
+ {
+  "case": "189376-albanD",
+  "issue": "h8",
+  "reason": "D: evidence does not show the fix"
+ },
+ {
+  "case": "190820-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "190820-drisspg",
+  "issue": "h2",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "192132-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "192132-albanD",
+  "issue": "h5",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "192774-janeyx99",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "193398-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "194853-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "194853-drisspg",
+  "issue": "h3",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "194854-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h10",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195050-drisspg",
+  "issue": "h9",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195051-drisspg",
+  "issue": "h7",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195052-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195777-albanD",
+  "issue": "h1",
+  "reason": "B: needs knowledge outside the code"
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h1",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h2",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h3",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "195786-drisspg",
+  "issue": "h4",
+  "reason": "A: maintainer comment relays AI text"
+ },
+ {
+  "case": "198648-albanD",
+  "issue": "h2",
+  "reason": "D: evidence does not show the fix"
+ }
+]

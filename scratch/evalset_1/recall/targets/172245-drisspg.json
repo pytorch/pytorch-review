@@ -1,0 +1,15 @@
+{
+ "case_id": "172245-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_varlen_attention.py",
+   "line": 108,
+   "summary": "is_causal is set from window_size[1] == 0 alone, but causal should mean right window == 0 AND left window == -1 (unbounded); a finite left window is sliding-window attention, not plain causal.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "12dd4861235cb46eead51f0349a720d1d909aa7d",
+   "evidence": "Before: `is_causal = window_size[1] == 0` / `if is_causal:`. Merged: `if window_size == (-1, 0):`. The causal mask is now applied only when the right window is 0 and the left window is -1, which is what the maintainer asked for. Cases like (4, 0) no longer count as plain causal."
+  }
+ ]
+}

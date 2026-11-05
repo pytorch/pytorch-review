@@ -1,0 +1,15 @@
+{
+ "case_id": "192097-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/cpp_extensions/test_libtorch_agnostic.py",
+   "line": 350,
+   "summary": "The code added at this line looks unnecessary and should be removed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "dcf02e51371deb3050899643462349c1941e8979",
+   "evidence": "Before, line 350 read `if not torch.cuda.is_available():` followed by `return`. The merged diff deletes both lines (`-        if not torch.cuda.is_available():` / `-            return`). The test is also split: `test_my_is_pinned_cpu_false` (marked @onlyCPU) and a new `test_my_is_pinned_cuda_true` marked @onlyCUDA. The CUDA test uses `torch.randn(2, 3, device=\"cpu\", pin_memory=True)`. The runtime CUDA check is gone and the decorator now handles that gating, so the extra code the maintainer flagged was removed."
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "case_id": "187949-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/core/dispatch/Dispatcher.h",
+   "line": 218,
+   "summary": "The newly added Dispatcher function may be unused and should be removed if so.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "fccff359ecc8de1c4e17ea2727369d3277c03e7b",
+   "evidence": "Before: `const KernelFunction* backendFallbackKernelForDispatchKey(DispatchKey dk) const {` (line 218). In the merged code that function is gone. Its body was folded into the existing `bool hasBackendFallbackForDispatchKey(DispatchKey dk) const { ... return kernel.isValid(); }`, which no longer calls a helper. The maintainer asked whether the new function was used, and it was removed, so the request was adopted."
+  },
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/core/dispatch/DispatchKeyExtractor.h",
+   "line": 146,
+   "summary": "The change to the dispatch key extraction hot path may hurt performance, so it should be checked and the function possibly marked C10_ALWAYS_INLINE/forced inline.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "fccff359ecc8de1c4e17ea2727369d3277c03e7b",
+   "evidence": "Before: `DispatchKeySet getDispatchKeySetFromRawDispatchKeySet(`. Merged: `C10_ALWAYS_INLINE DispatchKeySet getDispatchKeySetFromRawDispatchKeySet(`. The maintainer suggested forced inlining, and the merged code marks this exact function C10_ALWAYS_INLINE."
+  }
+ ]
+}

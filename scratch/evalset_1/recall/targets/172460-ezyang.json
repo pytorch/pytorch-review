@@ -1,0 +1,15 @@
+{
+ "case_id": "172460-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/config.py",
+   "line": 910,
+   "summary": "The disabled_passes config reads os.environ directly; it should be defined with the inductor Config API (e.g. Config(env_name_force=...)) instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "3599c9635acb782646195fcfa0c1d6b7e7773d9f",
+   "evidence": "Before: `disabled_passes = os.environ.get(\"TORCHINDUCTOR_DISABLED_PASSES\", \"\").upper()`. Merged: `disabled_passes: str = Config(env_name_force=\"TORCHINDUCTOR_DISABLED_PASSES\", default=\"\",)`. The line now uses the inductor Config API, which is what the maintainer asked for. One difference: the `.upper()` normalization was dropped, and the comment now tells users to give uppercase pass names instead."
+  }
+ ]
+}

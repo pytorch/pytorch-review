@@ -1,0 +1,65 @@
+{
+ "case_id": "176280-albanD",
+ "targets": [
+  {
+   "id": "h5",
+   "path": "torch/_native/__init__.py",
+   "line": 7,
+   "summary": "Needing to import registry, import ops, then call register_all_operators in exactly that order is error-prone; justify the design or simplify it.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "Before, the code had to run three steps in order: `from .registry import register_all_operators`, then `from . import ops`, then `register_all_operators()` (the commented line 7). In the merged version the explicit call and its import are gone, and only `from . import ops` is left. The ordering the maintainer called error-prone has been removed, which is the simplification they asked for. Presumably registration now happens when ops is imported."
+  },
+  {
+   "id": "h13",
+   "path": "torch/_native/README.md",
+   "line": 108,
+   "summary": "Since the registry already calls every registration, the registry should provide the torch.library.Library object so authors don't fall into the trap of it being garbage-collected.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "The original commented line isn't available. The diff shows the whole file as new, so I can't quote the exact line before and after. The maintainer was pointing at the pattern where authors create and keep their own `torch.library.Library` object, which can be garbage-collected if no reference is held. In the merged README, authors don't create that object any more. They call the registry helper `register_op_override(lib_symbol: str, op_symbol: str, dispatch_key: str, implementation_fn, *, allow_multiple_override=False, unconditional_override=False)`, for example `tu.register_op_override(\"aten\", \"_scaled_mm_v2\", \"CUDA\", calling_fn)`. The README says this \"Register[s] a given implementation to a library - `lib_symbol = \\\"aten\\\"` for most cases\" and refers readers to `_register_op_override` in registry.py. So the registry now holds the Library, which is what the maintainer asked for. One sentence was left over from the old version: \"creating a `torch.library.Library`, and registering our function using `lib.impl(...)` are the same as in Replacing an Operator\". That's leftover wording; it doesn't change the API."
+  },
+  {
+   "id": "h24",
+   "path": "torch/_native/registry.py",
+   "line": 5,
+   "summary": "_RegisteredFns is never cleared, so calling register_all_operators more than once re-runs every registration.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "Before: `_RegisteredFns : list[_RegisterFn] = []`, along with `register_op_registerer` appending to it and `register_all_operators` looping over every stored fn (and printing). After review, all of that is gone. The list, the append-based registration and the replay loop were removed. In their place is `libs = {}`, keyed by `(lib_symbol, dispatch_key)`. `_get_library` only creates a `torch.library.Library` when that key is missing, and `_register_op_override` calls `lib.impl(...)` directly. A list that is never cleared and gets re-run on every register call no longer exists. The `libs` cache is also never cleared, but it only removes duplicates and nothing is replayed from it. That removes the specific problem the maintainer raised about these specific lines."
+  },
+  {
+   "id": "h27",
+   "path": "torch/_native/cutedsl_utils.py",
+   "line": 31,
+   "summary": "The manual 'already computed' check is redundant given @functools.cache on the function; the same applies to triton_utils.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "Before, the code had a manual check: `if _CUTEDSL_AVAILABLE is not None: return _CUTEDSL_AVAILABLE` inside the `@functools.cache` function, using the globals `_CUTEDSL_AVAILABLE` and `_CUTEDSL_VERSION`. The merged version drops both that check and the globals. `_check_runtime_available` now only uses `@functools.cache` and returns `(available, version)`. `runtime_available()` and `runtime_version()` call the cached function instead of reading globals. The triton part of the request can't be checked because that file's diff isn't shown."
+  },
+  {
+   "id": "h28",
+   "path": "torch/_native/cutedsl_utils.py",
+   "line": 17,
+   "summary": "Mixing module-level globals with functools.cache is inconsistent; cache the two getter functions instead of using globals.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "Before: `_CUTEDSL_AVAILABLE = None` / `_CUTEDSL_VERSION = None` (line 17), followed by a second `log = logging.getLogger(__name__)`. In the merged code both globals are gone, and so is the duplicate `log` line. Only one `log = logging.getLogger(__name__)` is left. The cached `_check_runtime_available()` now returns `tuple[bool, Version | None]`. The getters `runtime_available()` and `runtime_version()` read from that cached result (`available, _ = _check_runtime_available()`) instead of reading the globals. The getters aren't decorated with `@functools.cache` themselves. Still, everything now uses functools.cache and the globals are removed, which fixes the inconsistency the maintainer pointed out. That counts as an equivalent fix."
+  },
+  {
+   "id": "h29",
+   "path": "torch/_native/common_utils.py",
+   "line": 42,
+   "summary": "Parsing the version by splitting on '.' into three ints breaks on valid versions like '1.2.3.post1'; use packaging.version.parse or similar.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "a1a15c3ec251e6a45b1542417c4ec776473b56d0",
+   "evidence": "Before: `major, minor, update = (int(vi) for vi in version.split(\".\"))`. Merged: `v = packaging.version.parse(version)` inside a try/except for `packaging.version.InvalidVersion`, and the function now returns a `packaging.version.Version | None`. The split on \".\" and int() parsing is gone, so versions like '1.2.3.post1' now parse correctly, which is what the maintainer asked for. The new docstring still talks about returning (major, minor, patch) and stripping non-numeric tails, so it no longer matches the code, but that does not affect the fix."
+  }
+ ]
+}

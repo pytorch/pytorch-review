@@ -1,0 +1,15 @@
+{
+ "case_id": "188726-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": ".claude/skills/ci-metrics/gcx-wrapper.sh",
+   "line": 8,
+   "summary": "The wrapper should not run gcx with `go run ...@latest`, which requires Go. Users should install the gcx binary from the curl install link instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c60b45bca686c9b4b725c5086d93eafc68e96c53",
+   "evidence": "Before: `GCX_CMD=(go run \"${GCX_MODULE:-github.com/grafana/gcx/cmd/gcx@latest}\")`, which needed Go (`if ! command -v go ...; echo \"error: go is needed to run gcx.\"`). In the merged version that line is gone, along with the Go check. The script now uses gcx's curl install script: `curl -fsSL \"https://raw.githubusercontent.com/grafana/gcx/v${GCX_VERSION}/scripts/install.sh\" | INSTALL_DIR=\"${tmp}\" VERSION=\"${GCX_VERSION}\" sh` (inside `_ensure_gcx`), and `_run_gcx` calls the prebuilt binary with `\"${GCX_BIN}\" \"$@\"`. The user doesn't run the installer by hand, because the wrapper does it automatically. Still, the result matches the request: Go is no longer needed, and gcx comes from the curl install link."
+  }
+ ]
+}

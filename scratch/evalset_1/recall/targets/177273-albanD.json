@@ -1,0 +1,15 @@
+{
+ "case_id": "177273-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": ".ci/pytorch/windows/internal/smoke_test.bat",
+   "line": 5,
+   "summary": "The script installs the CUDA toolkit without installing the CUDA driver first; the driver should probably be installed before the toolkit.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "e55da9f31ef3ca0a5e0bb0ba29c6d2a6b1352f52",
+   "evidence": "Before: line 5 `if not \"%CUDA_VERSION%\" == \"cpu\" if not \"%CUDA_VERSION%\" == \"xpu\" call internal\\cuda_install.bat`, then line 8 called driver_update.bat. Merged: line 5 is now `if not \"%CUDA_VERSION%\" == \"cpu\" if not \"%CUDA_VERSION%\" == \"xpu\" call internal\\driver_update.bat`, and `call internal\\cuda_install.bat` comes after it. So the driver now gets installed before the CUDA toolkit, which is what the maintainer asked for. One unrelated side change: the cpu/xpu guard was dropped from the cuda_install call."
+  }
+ ]
+}

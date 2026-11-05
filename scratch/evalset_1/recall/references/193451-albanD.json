@@ -1,0 +1,29 @@
+{
+  "pr": 193451,
+  "head_sha": "9c999b9da8716e72558d7fb2663ae18a91153564",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "CHANGES_REQUESTED",
+    "body": "Thanks for a PR, suggesting a different way to fix it!\r\n\r\nAlso I think this would happen for any call via `torch.ops`. So you don't actually need a custom op, you just need an in-core op that triggers a warning. That should simplify your test significantly",
+    "submitted_at": "2026-08-13T22:09:59Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/test_custom_ops.py",
+      "line": null,
+      "original_line": 2898,
+      "body": "You can use self.assertWarnsRegex !",
+      "diff_hunk": "@@ -2870,6 +2870,37 @@ def test_autograd_function_backed_op(self, load_inline):\n         loss.backward()\n         self.assertEqual(x.grad, temp)\n \n+    @scoped_load_inline\n+    def test_custom_op_warning_propagation(self, load_inline):\n+        import warnings\n+        cpp_source = \"\"\"\n+#include <torch/csrc/Exceptions.h>\n+#include <c10/util/Exception.h>\n+\n+torch::Tensor custom_op_with_warning(const torch::Tensor& x) {\n+  TORCH_WARN(\"Warning from custom C++ op!\");\n+  return x;\n+}\n+\n+TORCH_LIBRARY(test_custom_op_warning, m) {\n+    m.def(\"custom_op_with_warning\", custom_op_with_warning);\n+}\n+        \"\"\"\n+\n+        module = load_inline(\n+            name=\"test_custom_op_warning\",\n+            cpp_sources=cpp_source,\n+            functions=\"custom_op_with_warning\",\n+            verbose=True,\n+        )\n+\n+        x = torch.ones(2, 2)\n+        with warnings.catch_warnings(record=True) as w:",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/jit/python/pybind_utils.cpp",
+      "line": null,
+      "original_line": 892,
+      "body": "I don't think this is the right fix. As this system is supposed to work in tandem with exeption handling to perform well (see .set_in_exception() and similar things).\n\nI think a better fix here would be guard all of this call into the HANDLE_TH_ERROR macro and END_HANDLE_TH_ERROR_MACRO_PYBIND. That one handles error translation and warning in one go and ensure everything works well.",
+      "diff_hunk": "@@ -888,6 +889,7 @@ py::object invokeOperatorFromPython(\n     const py::args& args,\n     const py::kwargs& kwargs,\n     std::optional<c10::DispatchKey> dk) {\n+  torch::PyWarningHandler warning_handler;",
+      "outdated": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+ "case_id": "198527-janeyx99",
+ "targets": [
+  {
+   "id": "h5",
+   "path": "CONTRIBUTING.md",
+   "line": 85,
+   "summary": "Remove the maintainer-specific line from the contributor-facing section, because contributors should only need the labels and the process, not maintainer details.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b62909dd5fba9fec9e1aaf4f31199416e2ee60f8",
+   "evidence": "The maintainer said the line pointing to maintainer details was unnecessary in the contributor-facing section. Before (line 85): \"What we expect from maintainers is described in the [maintainer guide](docs/source/community/maintainer_guide.md).\" The merged diff deletes this line and adds nothing in its place. Lines 79-85 now read: \"Issues are where we receive feedback... Once a change and design is agreed upon, pull requests are the place to discuss and verify the implementation. For clarity, PyTorch uses labels to track the state of every issue and PR... This workflow is being rolled out and not all of it is live yet, see [Current status](#current-status).\" The maintainer guide reference is gone. The PR also took the maintainer's other suggestions: the reworded intro lines were applied and the Current status section was moved after the lifecycles."
+  },
+  {
+   "id": "h6",
+   "path": "CONTRIBUTING.md",
+   "line": 87,
+   "summary": "Move the 'current status' section after the description of the desired workflow so readers have the background they need to understand it.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b62909dd5fba9fec9e1aaf4f31199416e2ee60f8",
+   "evidence": "The comment asked for three things. All three are in the merged diff.\n\n1. **Move the status section after the workflow description.** Before, the commented line `### Current status` came right after the intro, ahead of the lifecycle sections. In the merged file, the section and its table come after the \"Issue lifecycle\" and \"PR lifecycle\" sections, just before \"Why was my issue or PR closed?\". The TOC was reordered to match. The intro now just says: \"This workflow is being rolled out and not all of it is live yet, see [Current status](#current-status).\"\n\n2. **Drop the maintainer-guide line.** \"What we expect from maintainers is described in the [maintainer guide](...)\" was removed.\n\n3. **Apply the suggested wording.** Before: \"Labels track the state of every issue and PR, so that...\" After: \"For clarity, PyTorch uses labels to track the state of every issue and PR, so that both contributors and maintainers can tell what the next step is and who is expected to take it.\" This matches the suggestion, with its \"Llbels\" typo fixed."
+  }
+ ]
+}

@@ -1,0 +1,61 @@
+{
+  "pr": 194241,
+  "head_sha": "bbab70a1f42f1bed03058c0d477b03d951f0ea98",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-08-31T21:30:53Z"
+  },
+  "inline_comments": [
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 614,
+      "body": "This sounds like a very specific failure",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": 585,
+      "original_line": 606,
+      "body": "We do this same logic in other places. Should they all use this?",
+      "diff_hunk": "",
+      "outdated": false
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 760,
+      "body": "Let's make this one a string template like the other. It's easier to manage\n",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 821,
+      "body": "Don't we only ever run this on linux anyways?\nShould we have an early exist for windows/apple early?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 956,
+      "body": "double not",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "tools/native_aot/gen_aot_lib.py",
+      "line": null,
+      "original_line": 926,
+      "body": "Would this delete the cmake rather than overriding it as we say we should above?",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

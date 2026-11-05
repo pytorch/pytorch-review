@@ -1,0 +1,35 @@
+{
+ "case_id": "177530-albanD",
+ "targets": [
+  {
+   "id": "h6",
+   "path": "torch/csrc/utils/disable_torch_function.cpp",
+   "line": 256,
+   "summary": "Building py_args with py::make_tuple creates a full tuple when it isn't needed; a ternary would avoid the allocation.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4480f61c862452f9c0867335956596a4d50e2bf1",
+   "evidence": "Before: `py::tuple py_args; if (args == Py_None) { py_args = py::make_tuple(); } else { py_args = py::reinterpret_borrow<py::tuple>(args); }`. Merged: `py::tuple py_args = args == Py_None ? py::make_tuple() : py::reinterpret_borrow<py::tuple>(args);`. The if/else became the ternary the maintainer suggested, so py_args is no longer default-constructed and then reassigned."
+  },
+  {
+   "id": "h8",
+   "path": "torch/testing/_internal/common_subclass.py",
+   "line": 257,
+   "summary": "The __reduce_ex__ override on RedispatchTensor looks unnecessary because the tensor is never serialized.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4480f61c862452f9c0867335956596a4d50e2bf1",
+   "evidence": "Before: `def __reduce_ex__(self, proto):` followed by `with torch._C.DisableTorchFunction(): return super().__reduce_ex__(proto)`. In the merged diff the whole override is deleted (`-    def __reduce_ex__(self, proto):` and the two lines after it), so there is no merged version of it. That removes the unneeded serialization override, which is what the maintainer was getting at."
+  },
+  {
+   "id": "h9",
+   "path": "torch/testing/_internal/common_subclass.py",
+   "line": 275,
+   "summary": "Copy call_log over to newly wrapped output tensors so the log covers child tensors and chains of ops.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4480f61c862452f9c0867335956596a4d50e2bf1",
+   "evidence": "Before: `return cls(x)`. Merged: `return cls(x, call_log=call_log)`. `__new__` also gained a `call_log=None` parameter, and `__torch_function__` now finds the call_log of the first RedispatchTensor input and passes it along. So wrapped outputs (child tensors) share the parent's log, and the log builds up across chains of ops, as the maintainer asked."
+  }
+ ]
+}

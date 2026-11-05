@@ -1,0 +1,15 @@
+{
+ "case_id": "191514-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/kernel/vendored_templates/cutedsl/wrappers/dense_blockscaled_gemm_kernel.py",
+   "line": 206,
+   "summary": "The _epilogue_op_scope wrapper adds an unnecessary layer of indirection; remove it and call gemm_epilogue_op_scope(cute) directly at the call sites.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "bd14606cc820c9ce2f5fbacfb51bfc6879db4fdf",
+   "evidence": "Before, the reviewed code had a wrapper, `def _epilogue_op_scope(cute):\\n    return gemm_epilogue_op_scope(cute)`, which was called as `scope = _epilogue_op_scope(cute); exec(epilogue_op, scope); epilogue_op = scope[fn_name]`. The merged diff deletes that wrapper entirely, along with the `gemm_epilogue_op_scope` import and the `ast`-based exec block. The call site is now a single line: `epilogue_op = materialize_epilogue_function(epilogue_op, cute)`, using a shared helper from gemm_epilogue_codegen. This file doesn't call `gemm_epilogue_op_scope(cute)` literally, but the extra wrapper layer the maintainer objected to is gone. The scope building now lives in the shared codegen module instead of a pass-through wrapper, so this is an equivalent fix."
+  }
+ ]
+}

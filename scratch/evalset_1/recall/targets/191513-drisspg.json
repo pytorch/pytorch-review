@@ -1,0 +1,15 @@
+{
+ "case_id": "191513-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/kernel/gemm_epilogue_codegen.py",
+   "line": 102,
+   "summary": "The GemmEpilogueIRCodegen class (and related codegen helpers) may belong in gemm_epilogue_ir rather than a separate gemm_epilogue_codegen module.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "97b877fe5d652c4477a65ded4d3415d6708191c2",
+   "evidence": "Before the change, line 102 read `class GemmEpilogueIRCodegen:` (\"Lower scheduler loop-body expressions to a CuTeDSL fragment function.\"). The merged diff deletes the whole class from gemm_epilogue_codegen.py: `__init__`, `load`, `args_kwargs`, `lower`, `render` and `from_buffers` are all gone. The imports the class needed from `.gemm_epilogue_ir` (`GemmEpilogueIRAnalysis`, `GemmEpilogueIRExpression`) are removed too, along with `V`, `ComputedBuffer` and `OrderedSet`. The module docstring changes from \"Shared CuTeDSL expression emission\" to \"Shared CuTeDSL emission primitives\", so the file now holds only the op overrides, the body/kernel helpers and a new `gemm_epilogue_op_scope`. The class no longer lives in the codegen module, which matches the request to move it into gemm_epilogue_ir. I couldn't see the gemm_epilogue_ir diff, so I can't confirm the class appears there, but the removed IR imports point that way."
+  }
+ ]
+}

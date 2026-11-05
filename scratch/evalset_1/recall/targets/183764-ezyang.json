@@ -1,0 +1,15 @@
+{
+ "case_id": "183764-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/inductor/aoti_torch/utils.h",
+   "line": 281,
+   "summary": "The new wrapper always copies the data into a std::vector, even when T == U and no conversion is needed. The TODO about skipping that copy should be done now, not deferred. The author should first check whether most call sites skip the conversion, since that would make the copy a regression for the common case.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "4a60bdc6b48caf621407de0ba28f2420024eab32",
+   "evidence": "The maintainer asked for the TODO to be done now instead of left for later. The original line 281 was \"// call); would require the wrapper to optionally hold an ArrayRef view.\" That TODO was removed, and the merged code now does what it described. When T matches the wire type, `pointer_to_optional_list` uses compile-time dispatch (`if constexpr (std::is_same_v<T, std::remove_cv_t<U>>)`) to return a `BorrowedOptionalArrayRef<T>{ptr ? c10::OptionalArrayRef<T>(c10::ArrayRef<T>(*ptr, len)) : ...}` with the comment \"No allocation, no copy\". It only builds an owning vector (`OwnedOptionalArrayRef`) when a type conversion is actually needed. The diff doesn't show whether the author checked the call sites as the maintainer suggested, but the copy for the same-type case was removed."
+  }
+ ]
+}

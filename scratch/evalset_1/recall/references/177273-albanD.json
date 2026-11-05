@@ -1,0 +1,21 @@
+{
+  "pr": 177273,
+  "head_sha": "5780f29550b76346b93e444dcaf6c16deac24d30",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-03-12T15:56:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".ci/pytorch/windows/internal/smoke_test.bat",
+      "line": null,
+      "original_line": 5,
+      "body": "shouldn't we install the cuda driver before the cuda toolkit?",
+      "diff_hunk": "@@ -2,6 +2,9 @@ set SRC_DIR=%~dp0\n \n pushd %SRC_DIR%\\..\n \n+if not \"%CUDA_VERSION%\" == \"cpu\" if not \"%CUDA_VERSION%\" == \"xpu\" call internal\\cuda_install.bat",
+      "outdated": true
+    }
+  ]
+}

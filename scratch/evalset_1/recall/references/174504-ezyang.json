@@ -1,0 +1,21 @@
+{
+  "pr": 174504,
+  "head_sha": "f6303ac28556863e9ca84aa34de5fafd87870c83",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-02-18T15:59:39Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/output_code.py",
+      "line": null,
+      "original_line": 623,
+      "body": "@IvanKobzarev Make a test that triggers the dynamic shapes case and ensure that we give a reasonable error in this case",
+      "diff_hunk": "@@ -616,6 +617,11 @@ def __init__(\n         # This is set at compile time to avoid runtime overhead\n         self._wrap_compiled_regions = config.wrap_inductor_compiled_regions\n \n+        if self._wrap_compiled_regions:\n+            self.fake_outputs = tuple(\n+                [x.meta[\"val\"] for x in gm.graph.find_nodes(op=\"output\")[0].args[0]]\n+            )",
+      "outdated": true
+    }
+  ]
+}

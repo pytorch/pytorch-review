@@ -1,0 +1,7 @@
+{
+  "name": "evalset_1/recall",
+  "scorer": "maintainer",
+  "description": "64 cases from recall_core (first reviews by ezyang, albanD, janeyx99 and drisspg on PRs created 2026-01-01 to 2026-09-30) with 88 targets: issues the maintainer raised that the merged code adopted. A case is kept when the PR merged, the automated PR review never reviewed it, and the review does not relay an AI reviewer. Each review was split into issues by an LLM (score_findings' extraction prompt), and each issue was judged against the diff from the reviewed commit to the merged commit; targets are the design and defect issues judged adopted (yes). A manual pass then removed issues that relay AI text, need knowledge outside the code (release schedules, people, policy), are naming nits, or whose evidence does not show the fix (excluded.json). Split by PR, balanced per reviewer: dev 31 cases / 47 targets, test 33 / 41. Score recall on targets/ only.",
+  "source": "recall_core, freeze_issues.py, validate_targets.py (review_rsi/loop), manual review",
+  "created": "2026-11-05"
+}

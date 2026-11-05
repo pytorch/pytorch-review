@@ -1,0 +1,7 @@
+{
+  "name": "evalset_1/precision",
+  "scorer": "maintainer",
+  "description": "92 clean PRs landed June-September 2026 and balanced across areas (each case's `area`; 8 docs/typo-only PRs are tagged `docs/typo` and reported apart, the rest 8-15 per code area, 29 approvers, none above 14%), each 50-1500 lines changed. A maintainer's first human review was an approval without substantive comments; nobody requested changes or left substantive comments; the PR was not changed after that approval, landed, was never reverted, and no later commit refers to it. Each case's diff matches the landed commit file by file. `split`: dev is the 30 PRs (3-4 per code area, docs/typo excluded) used for the first comparisons, test the other 62.",
+  "source": "scripts/pr_review_eval/build_dataset.py --prs",
+  "created": "2026-11-02"
+}

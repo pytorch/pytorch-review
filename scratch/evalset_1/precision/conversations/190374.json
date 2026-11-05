@@ -1,0 +1,1 @@
+{"pr_author":"frgossen","head_sha":"f4698d8bc0e422de3d99937666e00527d3b8a493","title":"Fix typos in comments and docstrings across torch modules","body":"Stack from [ghstack](https://github.com/ezyang/ghstack/tree/0.15.0) (oldest at bottom):\n* __->__ #190374\n\n","truncated":false,"reactions_truncated":false,"omitted_items":0,"items":[]}

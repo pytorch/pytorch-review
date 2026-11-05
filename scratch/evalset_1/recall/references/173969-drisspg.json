@@ -1,0 +1,21 @@
+{
+  "pr": 173969,
+  "head_sha": "7e0ef31e5f4b512b7228f8271018ca4b4f15c20a",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-30T23:13:02Z"
+  },
+  "inline_comments": [
+    {
+      "path": ".claude/skills/triaging-issues/pt2-triage-rubric.md",
+      "line": null,
+      "original_line": 25,
+      "body": "I think tht this will likely confuse the bot since it doesnt have access to an env that runs PT ",
+      "diff_hunk": "@@ -0,0 +1,179 @@\n+# PT2 Triage Rubric\n+\n+This rubric guides labeling decisions for PT2 oncall triage.\n+\n+## 1. Component Isolation - Be Precise, Don't Over-Tag\n+\n+### Dynamo vs Dynamic Shapes\n+\n+| Signal | Label |\n+|--------|-------|\n+| `dynamic=False` fixes it | `module: dynamic shapes` only |\n+| Graph breaks, bytecode errors | `module: dynamo` |\n+| Guard failures, SymInt issues | `module: dynamic shapes` |\n+| Data-dependent operations (.item(), etc.) | `module: dynamic shapes` |\n+\n+**Don't just slap `module: dynamo` on every torch.compile issue.**\n+\n+---\n+\n+## 2. Backend Isolation for Correctness Issues\n+\n+When component isn't clear from the issue body:\n+\n+1. **Check comments first** - often contains debugging info\n+2. **If unclear, run repro with different backends:**",
+      "outdated": true
+    }
+  ]
+}

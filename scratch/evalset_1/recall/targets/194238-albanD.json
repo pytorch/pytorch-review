@@ -1,0 +1,25 @@
+{
+ "case_id": "194238-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/export.py",
+   "line": 140,
+   "summary": "_CLOSURE_EXCLUDED is used for membership checks, so make it a set instead of a tuple.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "93c09f9532fb3af9c0472876d6839ed5cc807523",
+   "evidence": "The maintainer commented on the comment block above `_CLOSURE_EXCLUDED`. Before: `_CLOSURE_EXCLUDED = (\"gen_aot_lib.py\", \"build_stage2.py\")`, a tuple. Merged: `_CLOSURE_EXCLUDED = frozenset({\"gen_aot_lib.py\", \"build_stage2.py\"})`. That is an immutable set, so membership checks are now set lookups, which is what the maintainer asked for. The comment block was also shortened (\"gen_aot_lib.py only consumes sidecars, and build_stage2.py passes no kernel-affecting option\")."
+  },
+  {
+   "id": "h4",
+   "path": "tools/native_aot/export.py",
+   "line": 469,
+   "summary": "runtimes_current quietly falls back to 'cutedsl' when the sidecar has no kind; every sidecar should carry a kind, so this default shouldn't exist.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "93c09f9532fb3af9c0472876d6839ed5cc807523",
+   "evidence": "The maintainer asked for the 'cutedsl' default to be removed, and it was. Before: `tc = toolchains.get_toolchain(sidecar.get(\"kind\", \"cutedsl\"))`. Merged: `tc = toolchains.get_toolchain(sidecar[\"kind\"])`. The merged code also adds a comment explaining the change: \"sidecar[\"kind\"] rather than a default: both callers reach here past a schema check that proves the field, and guessing would judge one toolchain's artifact by another's compiler versions.\""
+  }
+ ]
+}

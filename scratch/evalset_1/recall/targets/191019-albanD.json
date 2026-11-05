@@ -1,0 +1,25 @@
+{
+ "case_id": "191019-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/csrc/Generator.cpp",
+   "line": 248,
+   "summary": "The generator lock should be released right after this line instead of being held longer than needed.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "c7b99ba4a67abd198a8b20e294250fcdb98842fc",
+   "evidence": "Before: `std::scoped_lock<std::mutex> lock(gen.mutex());` followed by `auto [seed_t, offset_t, intragraph_t] = gen.philox_state(inc);`, so the lock stayed held for the rest of the function, including the PyTuple building. Merged: `{ std::scoped_lock<std::mutex> lock(gen.mutex()); state = gen.philox_state(inc); }` then `auto& [seed_t, offset_t, intragraph_t] = state;`. The lock now sits in its own block and is released right after the philox_state call, before the tuple is built. That is what the maintainer asked for."
+  },
+  {
+   "id": "h4",
+   "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+   "line": 524,
+   "summary": "Don't build a new Tensor from another Tensor's data_ptr; use clone() for a fresh copy or alias() for a view.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "c7b99ba4a67abd198a8b20e294250fcdb98842fc",
+   "evidence": "Before: `auto seed_t = at::from_blob(capture_state->rng_state_seed_extragraph_.data_ptr(), {1}, [](void*) {}, dev_opts);` (the offset tensor was built the same way). Merged: `seed = at::Tensor(capture_state->rng_state_seed_extragraph_).alias();` and `offset = at::Tensor(capture_state->rng_state_offset_extragraph_).alias();`. The from_blob/data_ptr wrapping is gone and alias() is used instead, as the maintainer suggested. The from_blob wrappers had been used to stop callers from resizing the buffers, so that protection now comes from set_resizable(false) on the storage in initialize()."
+  }
+ ]
+}

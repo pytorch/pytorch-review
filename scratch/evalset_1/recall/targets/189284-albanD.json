@@ -1,0 +1,35 @@
+{
+ "case_id": "189284-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/autograd/variable.cpp",
+   "line": 332,
+   "summary": "The hook fires once only ONE of the next_functions is set up, not all of them, so the Node isn't ready to inspect yet; either document that the Node is not ready for inspection or trigger the hook only once it is fully ready.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "b876e45f45ddf6a90ba6460a8d3272707506e942",
+   "evidence": "Before, line 332 in `set_gradient_edge` was: `if (edge.function) { fire_node_creation_hooks(edge.function); }`. In the merged code that whole call is gone from `set_gradient_edge`, so the hook no longer fires while the node is only partly wired up, which was the case the maintainer pointed out. Two other changes go with this. `rebase_history` now returns the node (`return copy_slices;` / `return fn;`), which looks like it lets callers fire the hook after the node is fully set up; those callers are in other files, so I can't confirm that from this diff. `grad_accumulator` now calls `fire_node_creation_hooks(result)` only when the AccumulateGrad node is newly created. Taken together, the merged code took the maintainer's second option: fire the hook only once the node is ready."
+  },
+  {
+   "id": "h2",
+   "path": "torch/autograd/graph.py",
+   "line": 476,
+   "summary": "The hook should propagate to any worker thread from any system, not only some threads.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "b876e45f45ddf6a90ba6460a8d3272707506e942",
+   "evidence": "Before: \"The registration is thread-local and propagates to autograd engine worker threads: if backward is run under this context ... the hook also fires for those nodes.\" That limits propagation to autograd engine worker threads. Merged: \"The registration is thread-local and propagates like other autograd thread-local state: it is active on autograd engine worker threads, so nodes created during backward (e.g. with ``create_graph=True`` or inside checkpoint recomputation) also fire the hook.\" The rewrite makes general propagation the rule, the same as other thread-local state, which applies to any worker thread that carries that state. Autograd engine worker threads now appear only as one example. This matches the request that the hook propagate to any worker thread from any system. The diff only touches the docstring, so I can't check from it whether the C++ code changed the same way."
+  },
+  {
+   "id": "h4",
+   "path": "torch/csrc/autograd/function.cpp",
+   "line": 54,
+   "summary": "The hook goes through the engine instead of being called directly; it should follow the same pattern as saved_variable_hooks.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "b876e45f45ddf6a90ba6460a8d3272707506e942",
+   "evidence": "Before, the commented line was `auto& engine = Engine::get_default_engine();`, and the loop sent each hook through the engine with `engine.call_node_creation_hook(node, state.stack[i]);`. In the merged code that line and the loop became `auto hooks = Engine::get_default_engine().get_node_creation_hooks(); for (const auto& hook : hooks) { (*hook)(node); }`. The engine now only hands back the list of hooks, and `fire_node_creation_hooks` calls each hook itself. This is the same pattern as saved_variable_hooks, which get their hooks from the engine (`get_default_saved_variable_hooks()`) and then call them directly. The engine no longer sits between the function and the hook call, so the request was adopted."
+  }
+ ]
+}

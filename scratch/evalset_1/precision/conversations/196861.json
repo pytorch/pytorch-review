@@ -1,0 +1,1 @@
+{"pr_author":"eqy","head_sha":"227cc8acf93abc22e05df79e3a3d534427f558ce","title":"[cuDNN][SDPA] Upgrade cuDNN 9.26, add some guards for failing <= 9.25.1 cases ","body":"to fix #196678\r\n\r\nauthored with codex","truncated":false,"reactions_truncated":false,"omitted_items":0,"items":[]}

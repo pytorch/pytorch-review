@@ -1,0 +1,21 @@
+{
+  "pr": 191513,
+  "head_sha": "5ecfeddd5226b4446d2242318fffb5f1573ff3de",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-29T23:46:30Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/kernel/gemm_epilogue_codegen.py",
+      "line": null,
+      "original_line": 102,
+      "body": "should this be in gemm_epilogue_ir",
+      "diff_hunk": "@@ -0,0 +1,205 @@\n+# mypy: allow-untyped-defs\n+\"\"\"Shared CuTeDSL expression emission for GEMM epilogues.\"\"\"\n+\n+from collections.abc import Sequence\n+from typing import Any\n+\n+import torch\n+from torch._inductor.codegen.cutedsl.cutedsl_op_overrides import (\n+    CuteDSLCSEVariable,\n+    CuteDSLOpOverrides,\n+)\n+from torch._inductor.ir import ComputedBuffer\n+from torch._inductor.virtualized import V\n+from torch.utils._ordered_set import OrderedSet\n+from torch.utils._sympy.value_ranges import ValueRanges\n+\n+from .gemm_epilogue_ir import (\n+    GemmEpilogueIRAnalysis,\n+    GemmEpilogueIRExpression,\n+)\n+\n+\n+class GemmEpilogueCuteDSLBody:\n+    def __init__(self) -> None:\n+        self.lines: list[str] = []\n+\n+    def writeline(self, line: str) -> None:\n+        self.lines.append(line)\n+\n+\n+class GemmEpilogueCuteDSLCSE:\n+    def __init__(self) -> None:\n+        self.index = 0\n+\n+    def generate(self, body, expr, *, bounds=None, dtype=None, shape=None):\n+        name = f\"tmp{self.index}\"\n+        self.index += 1\n+        body.writeline(f\"{name} = {expr}\")\n+        return CuteDSLCSEVariable(\n+            name,\n+            ValueRanges.unknown() if bounds is None else bounds,\n+            dtype=dtype,\n+            shape=shape,\n+        )\n+\n+\n+class GemmEpilogueCuteDSLKernel:\n+    def __init__(self) -> None:\n+        self.body = GemmEpilogueCuteDSLBody()\n+        self.cse = GemmEpilogueCuteDSLCSE()\n+\n+\n+class GemmEpilogueCuteDSLOpOverrides(CuteDSLOpOverrides):\n+    \"\"\"Normalize ATen spellings before emitting CuTeDSL expressions.\"\"\"\n+\n+    # Aten add/sub carry alpha as schema sugar; CuTeDSL only needs the scaled RHS.\n+    @staticmethod\n+    def add(a: Any, b: Any, *, alpha: Any = 1) -> Any:\n+        rhs = b if alpha == 1 else CuteDSLOpOverrides.mul(b, alpha)\n+        return CuteDSLOpOverrides.add(a, rhs)\n+\n+    @staticmethod\n+    def sub(a: Any, b: Any, *, alpha: Any = 1) -> Any:\n+        rhs = b if alpha == 1 else CuteDSLOpOverrides.mul(b, alpha)\n+        return CuteDSLOpOverrides.sub(a, rhs)\n+\n+    @staticmethod\n+    def _to_copy(x: Any, *, dtype: torch.dtype, **kwargs: Any) -> Any:\n+        unsupported_kwargs = {\n+            key: value\n+            for key, value in kwargs.items()\n+            if value not in (None, False, torch.preserve_format)\n+        }\n+        if unsupported_kwargs:\n+            raise NotImplementedError(\n+                f\"unsupported GEMM epilogue _to_copy kwargs: {unsupported_kwargs}\"\n+            )\n+        return CuteDSLOpOverrides.to_dtype(x, dtype)\n+\n+    @staticmethod\n+    def clamp(x: Any, min: Any = None, max: Any = None) -> Any:\n+        result = x\n+        if min is not None:\n+            result = CuteDSLOpOverrides.maximum(result, min)\n+        if max is not None:\n+            result = CuteDSLOpOverrides.minimum(result, max)\n+        return result\n+\n+    @staticmethod\n+    def clamp_min(x: Any, min: Any) -> Any:\n+        return CuteDSLOpOverrides.maximum(x, min)\n+\n+    @staticmethod\n+    def clamp_max(x: Any, max: Any) -> Any:\n+        return CuteDSLOpOverrides.minimum(x, max)\n+\n+    @staticmethod\n+    def convert_element_type(x: Any, dtype: torch.dtype) -> Any:\n+        return CuteDSLOpOverrides.to_dtype(x, dtype)\n+\n+\n+class GemmEpilogueIRCodegen:",
+      "outdated": true
+    }
+  ]
+}

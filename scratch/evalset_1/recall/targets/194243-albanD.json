@@ -1,0 +1,25 @@
+{
+ "case_id": "194243-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/build_stage2.py",
+   "line": 827,
+   "summary": "The wrong variable name is used here.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "adfebb61bc0b97ada349dbf6a34c5b4ebf82e21f",
+   "evidence": "Before: `built = os.path.join(BUILD_DIR, \"lib\", \"libtorch_cuda.so\")`. Merged: `build_lib = os.path.join(BUILD_DIR, \"lib\", \"libtorch_cuda.so\")`. The variable was renamed, and every use was updated to match: the getsize/exists checks, the error message, `shutil.copy2(build_lib, staged)`, the size report and `patch_wheel(args.wheel, build_lib)`. That is the fix the maintainer asked for."
+  },
+  {
+   "id": "h3",
+   "path": "tools/native_aot/build_stage2.py",
+   "line": 795,
+   "summary": "The rebuild does not make sure it reuses the exact same cache as the previous build, and nothing stops a configuration change from being triggered.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "adfebb61bc0b97ada349dbf6a34c5b4ebf82e21f",
+   "evidence": "The maintainer's request was adopted. Before: `[\"cmake\", \"--log-level=STATUS\", \"-S\", REPO, \"-B\", BUILD_DIR],`. Merged: `[cmake_exe, \"--log-level=STATUS\", \"-S\", REPO, \"-B\", BUILD_DIR],`. `cmake_exe = _cmake_for_this_build()` picks the cmake recorded in the cache as CMAKE_COMMAND. Just before the reconfigure, the merged code saves the cache with `cache_before = _cache_entries()`. After it, `_refuse_cache_drift(cache_before)` runs and raises if any cache entry changed, or if a new environment-sourced entry appeared. The comment there says the reconfigure is \"held to both\", and the check runs ahead of the relink. So the reconfigure now has to use the same cache and must not change the configuration. Both parts of the request apply directly to the commented call."
+  }
+ ]
+}

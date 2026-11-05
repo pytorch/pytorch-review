@@ -1,0 +1,15 @@
+{
+ "case_id": "190821-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/codegen/cutedsl/cutedsl_op_overrides.py",
+   "line": 110,
+   "summary": "The new combine helpers (_sum_combine, _prod_combine, _max_combine, etc.) repeat functionality that already exists in the op overrides; reuse the existing overrides instead.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "fc786b5a999c88e5eca56af7f55f1c8c7535882a",
+   "evidence": "The flagged helper `def _max_combine(lhs, rhs): import cutlass; return cutlass.max(lhs, rhs)` (line 110: `import cutlass`) was deleted in the merged code. The other duplicate helpers went with it (_sum_combine, _prod_combine, _min_combine, the source/finalize helpers, MaterializedTensorSSAReduction and materialize_tensorssa_reduction). The only definition left is the existing string-based descriptor in TENSORSSA_REDUCTIONS: `\"max\": TensorSSAReduction(\"cute.ReductionOp.MAX\", 'float(\"-inf\")', \"cutlass.max(lhs, rhs)\")`. So the duplicated combine logic is gone and the existing machinery is used, which is what the maintainer asked for."
+  }
+ ]
+}

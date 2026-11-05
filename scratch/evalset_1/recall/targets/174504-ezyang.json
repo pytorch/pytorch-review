@@ -1,0 +1,15 @@
+{
+ "case_id": "174504-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/output_code.py",
+   "line": 623,
+   "summary": "Capturing fake_outputs from the output node's meta['val'] doesn't handle dynamic shapes; a reasonable error must be raised in that case.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "fc343455c02da3e37c43fe0d53dc022288525b52",
+   "evidence": "Before, the commented line just captured raw fake values: `self.fake_outputs = tuple([x.meta[\"val\"] for x in gm.graph.find_nodes(op=\"output\")[0].args[0]])`. In the merged version, those values are first collected into `fake_vals`. The code then checks for dynamic shapes: `if isinstance(t, torch.Tensor) and any(isinstance(s, torch.SymInt) for s in t.shape): raise RuntimeError(\"wrap_compiled_regions does not support dynamic shapes yet\")`. After that check it builds `OutputTensorMeta` entries. So the dynamic shapes case now gives the clear error the maintainer asked for. The maintainer also asked for a test, and that can't be confirmed here because the diff only covers output_code.py. Any test would live in a separate file."
+  }
+ ]
+}

@@ -1,0 +1,21 @@
+{
+  "pr": 184625,
+  "head_sha": "758092c96d7ef6fe43f76f028f91f6a2af1744c4",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-05-22T03:28:10Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/export/test_export.py",
+      "line": null,
+      "original_line": 18746,
+      "body": "Not a huge fan of the IR checks here",
+      "diff_hunk": "@@ -18728,6 +18728,28 @@ def forward(self, x, y):\n             ignore_empty_lines=True,\n         )\n \n+    def test_scalar_tensor_index(self):\n+        class MyModel(torch.nn.Module):\n+            def forward(self, x, y):\n+                return x[y]\n+\n+        x = torch.randn((3, 4))\n+        for dtype in (torch.int8, torch.int16, torch.int32, torch.int64):\n+            with self.subTest(dtype=dtype):\n+                y = torch.tensor(1, dtype=dtype)\n+                traced = export(MyModel(), (x, y)).run_decompositions({})\n+                self.assertNotIn(\n+                    \"torch.ops.aten.index.Tensor\", traced.graph_module.code\n+                )\n+                FileCheck().check(\"torch.ops.aten.select.int\").run(\n+                    traced.graph_module.code\n+                )",
+      "outdated": true
+    }
+  ]
+}

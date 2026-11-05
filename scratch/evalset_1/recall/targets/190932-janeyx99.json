@@ -1,0 +1,15 @@
+{
+ "case_id": "190932-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/inductor/aoti_torch/c/shim_mps.h",
+   "line": null,
+   "summary": "Move the new declaration out of shim_mps.h and into torch/csrc/stable/c/shim.h, with a comment pointing to where the other set_args functions live.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "8fa0771b464298f284f5293c67f5fe2c7dcfb656",
+   "evidence": "The comment is anchored at the top of shim_mps.h (`#ifndef AOTI_TORCH_SHIM_MPS`), but it is about the newly added declaration. In the reviewed version, shim_mps.h declared `AOTI_TORCH_EXPORT AOTITorchError aoti_torch_mps_set_arg_bytes(AOTIMetalKernelFunctionHandle func, unsigned idx, const void* ptr, uint64_t size);`. The merged diff deletes that declaration from shim_mps.h entirely, and the other set_arg functions (`aoti_torch_mps_set_arg_tensor`, `aoti_torch_mps_set_arg_int`) are left in place. So the new declaration was taken out of shim_mps.h, as the maintainer asked. The diff only covers shim_mps.h, so it can't confirm that the declaration landed in torch/csrc/stable/c/shim.h or that the requested comment was added there. Still, removing it from this file strongly suggests it was moved as requested."
+  }
+ ]
+}

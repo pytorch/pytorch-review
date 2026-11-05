@@ -1,0 +1,15 @@
+{
+ "case_id": "183324-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/native/mkldnn/Linear.h",
+   "line": 26,
+   "summary": "The reviewer suggests applying the same change made elsewhere in the PR to this line too; the comment is vague and gives no other context.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ae15186da2e3db8f83ca93182687173fcfc3b551",
+   "evidence": "The PR changed other declarations from C10_API to TORCH_API, and the reviewer asked for the same change here. Before: `C10_API Tensor mkl_linear(`. Merged: `TORCH_API Tensor mkl_linear(`. The commented line got that exact change."
+  }
+ ]
+}

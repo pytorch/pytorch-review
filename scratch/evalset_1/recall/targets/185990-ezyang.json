@@ -1,0 +1,15 @@
+{
+ "case_id": "185990-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/cuda/_graph_annotations.py",
+   "line": 97,
+   "summary": "The code here is overly defensive; the unnecessary defensive checks or handling should be simplified or removed.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ae182efcec1a0e959150e5d1b82fc3a3c30dc240",
+   "evidence": "Before, the version lookup was wrapped defensively: `try: import importlib.metadata` (line 97), then `cuda_bindings_version = importlib.metadata.version(\"cuda-bindings\")`, with `except Exception: cuda_bindings_version = \"unknown\"`. In the merged code the try/except is gone and the import moved to the top of the module (`import importlib.metadata`). What remains is just `cuda_bindings_version = importlib.metadata.version(\"cuda-bindings\")`. That removes the defensive handling the maintainer called \"overly defensive\"."
+  }
+ ]
+}

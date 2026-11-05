@@ -1,0 +1,15 @@
+{
+ "case_id": "198648-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "third_party/kineto/CODE_OF_CONDUCT.md",
+   "line": 1,
+   "summary": "Remove the vendored kineto repo-level files (code of conduct, contributing, lint, and clang config files) because the core PyTorch versions take over and these won't apply or run any more.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "f239880657b1736636db1bc1e6b77f0479c8cb3a",
+   "evidence": "Before: the commented line was \"# Code of Conduct\" (line 1 of third_party/kineto/CODE_OF_CONDUCT.md). After: the whole file was deleted (\"deleted file mode 100644\", \"+++ /dev/null\"), so the line has no merged version. Removing the vendored code of conduct is exactly what the maintainer asked for."
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "case_id": "193132-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "c10/cuda/impl/CUDAGuardImpl.h",
+   "line": 307,
+   "summary": "Use a DeviceGuard (RAII) here instead of switching the device manually, so the previous device is restored. The same applies at line 332.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "ec76413b9c536b8b11decfc1d28317f1efe9747b",
+   "evidence": "Before (in the event-creation function, lines 305-309): `C10_CUDA_CHECK(c10::cuda::SetDevice(device_index));`, with a manual GetDevice call and a make_scope_exit restore. After the merge, that whole block is gone and in its place is `c10::impl::InlineDeviceGuard<CUDAGuardImpl> guard(device_index);`, which is an RAII device guard. The diff also adds the `InlineDeviceGuard.h` include. The same swap was made at the IPC handle site (old line 332) and at the other manual device switches in the file."
+  }
+ ]
+}

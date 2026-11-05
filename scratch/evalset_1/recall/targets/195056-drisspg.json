@@ -1,0 +1,25 @@
+{
+ "case_id": "195056-drisspg",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/_native/ops/reductions/kernel_rowtile.py",
+   "line": 199,
+   "summary": "The TMA path hardcodes the row stride (inner extent N/compact layout) instead of deriving it from the actual input tensor's stride.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "cc5b03bf857bf32579b0d31c42e7fe7293c4878c",
+   "evidence": "Before: `[_L.fake_compact(dt, (_L.sym(), inner), stride_order=(1, 0), align=align)],` where `inner = N if use_tma else ...`. On the TMA path, that gave a compact layout whose row stride was fixed at N. After the merge, the TMA branch builds `cute.runtime.make_fake_tensor(dt, (_L.sym(), N), (cute.sym_int64(divisibility=tile.TRANSFER_ALIGNMENT // isz), 1), assumed_align=align)`, so the row stride is now a symbolic runtime value that only has to meet an alignment requirement. It is no longer baked in as N. The real tensor's stride is checked too: `tma_stride_bytes = x.stride(0) * isz` and `tma_stride_aligned`, which decide whether TMA is used or else raise an error. The commented line itself now returns `[fake_in],`. This takes the stride from the actual input tensor, which is what the maintainer asked for."
+  },
+  {
+   "id": "h4",
+   "path": "torch/_native/ops/reductions/kernel_rowtile.py",
+   "line": 189,
+   "summary": "When use_tma is forced True by the caller, the alignment check is skipped; alignment should still be validated even for forced TMA.",
+   "type": "defect",
+   "adopted": "yes",
+   "merged_commit": "cc5b03bf857bf32579b0d31c42e7fe7293c4878c",
+   "evidence": "Before, line 189 picked `align = (op.tilemap.align_bytes(isz) if use_tma else _L.supported_alignment(...))`. When use_tma was forced, nothing checked the input's alignment. In the merged code those lines read `align = (tile.TRANSFER_ALIGNMENT if use_tma else _L.supported_alignment(x, tile.align_bytes(N, isz)))`. A new check before them validates a forced use_tma: `elif use_tma and not tma_base_aligned: raise ValueError(f\"TMA requires a {tile.TRANSFER_ALIGNMENT}-byte aligned input\")`, plus a matching row-stride check (`elif use_tma and not tma_stride_aligned: raise ValueError(...)`). Here `tma_base_aligned = _L.supported_alignment(x, tile.TRANSFER_ALIGNMENT) == tile.TRANSFER_ALIGNMENT`. So alignment is now checked even when TMA is forced, and the align value baked in on the TMA path is guaranteed to hold."
+  }
+ ]
+}

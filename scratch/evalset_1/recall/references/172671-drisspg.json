@@ -1,0 +1,21 @@
+{
+  "pr": 172671,
+  "head_sha": "7a7bad10883e387b39fc184cc196cc2475d768b5",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-17T23:53:56Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/nn/attention/test_fa3.py",
+      "line": null,
+      "original_line": 53,
+      "body": "we should probably put this In a common place",
+      "diff_hunk": "@@ -0,0 +1,763 @@\n+# Owner(s): [\"module: sdpa\"]\n+\n+import importlib\n+import itertools\n+import unittest\n+from collections import namedtuple\n+from contextlib import contextmanager\n+\n+import torch\n+import torch.nn.functional as F\n+from torch.backends.cuda import SDPBackend\n+from torch.nn.attention import (\n+    activate_flash_attention_impl,\n+    current_flash_attention_impl,\n+    register_flash_attention_impl,\n+    restore_flash_attention_impl,\n+    sdpa_kernel,\n+)\n+from torch.profiler import profile, ProfilerActivity\n+from torch.testing._internal.common_device_type import instantiate_device_type_tests\n+from torch.testing._internal.common_utils import parametrize, run_tests, TestCase\n+\n+\n+SdpaShape = namedtuple(\"Sdpa_Shape\", [\"batch\", \"num_heads\", \"seq_len\", \"head_dim\"])\n+\n+\n+def _fa3_dependencies_available() -> bool:\n+    if not torch.cuda.is_available():\n+        return False\n+    major, _ = torch.cuda.get_device_capability(torch.cuda.current_device())\n+    if major != 9:  # FA3 requires Hopper (SM90)\n+        return False\n+    try:\n+        importlib.import_module(\"flash_attn_interface\")\n+    except ModuleNotFoundError:\n+        return False\n+    return True\n+\n+\n+@contextmanager\n+def cuda_kernel_profiler(kernel_pattern=\"flash_attn_3\"):\n+    result = {\"found\": False, \"kernel_names\": []}\n+\n+    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:\n+        yield result\n+\n+    # Get all event names (both CPU and CUDA activities)\n+    kernel_names = [evt.name for evt in prof.events() if evt.name]\n+    result[\"kernel_names\"] = kernel_names\n+    result[\"found\"] = any(kernel_pattern in name for name in kernel_names)\n+\n+\n+def flash_vs_math(test_case, q, k, v, is_causal=False, rtol=2):",
+      "outdated": true
+    }
+  ]
+}

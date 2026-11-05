@@ -1,0 +1,21 @@
+{
+  "pr": 184182,
+  "head_sha": "67aafef4fbe5b33fc5ee99825d450ff700a76462",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-05-22T02:30:52Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/inductor/test_inductor_scheduler.py",
+      "line": null,
+      "original_line": 557,
+      "body": "Surely there should be a better way to test if a compile region has fused completely",
+      "diff_hunk": "@@ -482,6 +482,80 @@ def fn(x, idx):\n             msg=f\"Fusion bug detected! Expected {expected}, got {result}\",\n         )\n \n+    @xfailIfNoAcceleratorTriton\n+    @onlyCUDA\n+    def test_expand_reuse_does_not_realize_before_reduction(self):\n+        def fn(icrd1, icrd2, wcrd, ocrd, meta, input1, input2, weight, output):\n+            input1_selected = torch.index_select(input1, 2, icrd1)\n+            input2_selected = torch.index_select(input2, 2, icrd2)\n+            weight_selected = torch.index_select(weight, 3, wcrd)\n+\n+            input1_expanded = input1_selected.view(B, U, 1, 1, -1)\n+            input2_expanded = input2_selected.view(B, 1, V, 1, -1)\n+            weight_expanded = weight_selected.view(1, U, V, W, -1)\n+            meta_expanded = meta.view(1, 1, 1, 1, -1)\n+\n+            product = (\n+                meta_expanded * input1_expanded * input2_expanded * weight_expanded\n+            )\n+            product = torch.sum(product, dim=(1, 2))\n+            output.index_add_(2, ocrd, product)\n+            return output\n+\n+        P = 20\n+        M = 10\n+        B = 10\n+        L = 23\n+        U = 4\n+        V = 4\n+        W = 4\n+        device = \"cuda\"\n+\n+        torch.manual_seed(0)\n+        input1 = torch.rand((B, U, L), dtype=torch.float32, device=device)\n+        input2 = torch.rand((B, V, L), dtype=torch.float32, device=device)\n+        weight = torch.rand((U, V, W, M), dtype=torch.float32, device=device)\n+        output = torch.zeros((B, W, L), dtype=torch.float32, device=device)\n+        meta = torch.rand((P,), dtype=torch.float32, device=device)\n+        icrd1 = torch.randint(L, (P,), device=device)\n+        icrd2 = torch.randint(L, (P,), device=device)\n+        wcrd = torch.randint(M, (P,), device=device)\n+        ocrd = torch.arange(P, device=device)\n+\n+        expected = fn(\n+            icrd1,\n+            icrd2,\n+            wcrd,\n+            ocrd,\n+            meta,\n+            input1,\n+            input2,\n+            weight,\n+            output.clone(),\n+        )\n+\n+        torch._dynamo.reset()\n+        metrics.reset()\n+        with fresh_inductor_cache():\n+            actual, codes = run_and_get_code(\n+                torch.compile(fn, backend=\"inductor\", fullgraph=True),\n+                icrd1,\n+                icrd2,\n+                wcrd,\n+                ocrd,\n+                meta,\n+                input1,\n+                input2,\n+                weight,\n+                output.clone(),\n+            )\n+\n+        self.assertTrue(torch.allclose(expected, actual, atol=1e-4, rtol=1e-4))\n+        self.assertEqual(metrics.generated_kernel_count, 1)\n+        code = \"\\n\".join(codes)\n+        self.assertEqual(code.count(\".run(\"), 1)\n+        self.assertNotIn(\" = empty_strided_cuda((\", code)",
+      "outdated": true
+    }
+  ]
+}

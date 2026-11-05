@@ -1,0 +1,15 @@
+{
+ "case_id": "184182-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/inductor/test_inductor_scheduler.py",
+   "line": 557,
+   "summary": "The test checks for complete fusion in a brittle way (counting '.run(' calls and grepping generated code for 'empty_strided_cuda'); it should use a better, more robust way to assert that the compiled region fused fully.",
+   "type": "design",
+   "adopted": "yes",
+   "merged_commit": "02ca6332b1e15b2f1750fc020cadfda50103e928",
+   "evidence": "Before: the test grepped the generated code: `self.assertEqual(code.count(\".run(\"), 1)` and `self.assertNotIn(\" = empty_strided_cuda((\", code)` (line 557), with the code captured through `run_and_get_code`. Merged: both string checks and the `run_and_get_code` capture are gone. The test now calls `torch.compile(fn, ...)(...)` directly and asserts on Inductor metrics instead: `self.assertEqual(metrics.ir_nodes_pre_fusion, 2)` plus the existing `self.assertEqual(metrics.generated_kernel_count, 1)`. The brittle checks were swapped for a structured check that the compiled region fused, which is what the maintainer asked for."
+  }
+ ]
+}
