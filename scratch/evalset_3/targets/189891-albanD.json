@@ -1,0 +1,17 @@
+{
+ "case_id": "189891-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "cmake/public/utils.cmake",
+   "line": 548,
+   "summary": "Have the function build a unique result-variable name internally, the way append_cxx_flag_if_supported does, instead of making the caller pass one in.",
+   "type": "design",
+   "maintainer_comment": "Could we do the same as append_cxx_flag_if_supported and build a unique name internally rather than requiring the user to provide it?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189891#discussion_r3580975096",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

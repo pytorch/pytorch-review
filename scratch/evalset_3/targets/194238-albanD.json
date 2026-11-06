@@ -1,0 +1,29 @@
+{
+ "case_id": "194238-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/export.py",
+   "line": 140,
+   "summary": "_CLOSURE_EXCLUDED is used for membership checks, so make it a set instead of a tuple.",
+   "type": "design",
+   "maintainer_comment": "Use a set instead of a tuple since you check string inside later?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194238#discussion_r3867026491",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": "Perf nit"
+  },
+  {
+   "id": "h4",
+   "path": "tools/native_aot/export.py",
+   "line": 469,
+   "summary": "runtimes_current quietly falls back to 'cutedsl' when the sidecar has no kind; every sidecar should carry a kind, so this default shouldn't exist.",
+   "type": "design",
+   "maintainer_comment": "Why default to cutedsl here? The sidecar should always have the kind?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194238#discussion_r3881323755",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

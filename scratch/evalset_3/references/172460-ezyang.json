@@ -1,0 +1,21 @@
+{
+  "pr": 172460,
+  "head_sha": "4dcd61982e906846001ac17228c9f396e593a2a9",
+  "label": "block",
+  "decision": {
+    "author": "ezyang",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-01-16T02:32:50Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_inductor/config.py",
+      "line": null,
+      "original_line": 910,
+      "body": "Can you use the fancy Config API for this? Thanks!",
+      "diff_hunk": "@@ -903,6 +903,12 @@ def use_autoheuristic(name: str) -> bool:\n add_pre_grad_passes: Optional[str] = None\n remove_pre_grad_passes: Optional[str] = None\n \n+# Comma-separated list of pass names to disable. Passes disabled via this config\n+# will be skipped when they go through GraphTransformObserver.\n+# Can be set via TORCHINDUCTOR_DISABLED_PASSES env var.\n+# Pass names are normalized to uppercase for comparison.\n+disabled_passes = os.environ.get(\"TORCHINDUCTOR_DISABLED_PASSES\", \"\").upper()",
+      "outdated": true
+    }
+  ]
+}

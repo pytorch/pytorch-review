@@ -1,0 +1,17 @@
+{
+ "case_id": "173238-janeyx99",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/native/ForeachOpsKernels.cpp",
+   "line": null,
+   "summary": "The same fix needs to go into foreach_tensor_norm_slow, the CPU/slow path, because right now only the CUDA path is fixed.",
+   "type": "defect",
+   "maintainer_comment": "thanks for tackling this! a few comments:\r\n\r\n1. please move the check as up as possible and reduce redundant iteration through the list -- it may be good to abstract out this check/combine it with an existing check that already iterates through the tensors.\r\n2. please also fix foreach_tensor_norm_slow in ForeachOpsKernels.cpp and remove the onlyCUDA from the test case. \r\n\r\nforeach_max would also benefit from such a check, but that should go in a separate PR",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/173238#pullrequestreview-3706960200",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Jane Xu",
+   "labeler_note": ""
+  }
+ ]
+}

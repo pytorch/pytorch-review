@@ -1,0 +1,17 @@
+{
+ "case_id": "189284-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/autograd/variable.cpp",
+   "line": 332,
+   "summary": "The hook fires once only ONE of the next_functions is set up, not all of them, so the Node isn't ready to inspect yet; either document that the Node is not ready for inspection or trigger the hook only once it is fully ready.",
+   "type": "defect",
+   "maintainer_comment": "This will make the doc above fake news.\nIt will trigger once ONE of the next_functions is setup, not all of them!",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189284#discussion_r3546126265",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": "As it breaks the stated design. Changing either the code or design is fine as a way to resolve"
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "case_id": "194241-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "tools/native_aot/gen_aot_lib.py",
+   "line": 585,
+   "summary": "This logic is duplicated elsewhere in the code; the other places should reuse this helper.",
+   "type": "design",
+   "maintainer_comment": "We do this same logic in other places. Should they all use this?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/194241#discussion_r3898061478",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

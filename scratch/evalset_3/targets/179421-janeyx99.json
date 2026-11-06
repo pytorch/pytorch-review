@@ -1,0 +1,17 @@
+{
+ "case_id": "179421-janeyx99",
+ "targets": [
+  {
+   "id": "h3",
+   "path": "torch/csrc/stable/stableivalue_conversions.h",
+   "line": 273,
+   "summary": "Only the FromImpl<std::optional<T>> path was updated to use the new heap-allocated StableIValue API; the matching ToImpl optional conversion (around line 614) also needs the TORCH_FEATURE_VERSION >= 2.13 handling.",
+   "type": "defect",
+   "maintainer_comment": "Also handle the flip side: https://github.com/pytorch/pytorch/blob/21b62de20398cf05cb814f48eeb505ad1a777ba5/torch/csrc/stable/stableivalue_conversions.h#L614-L615",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/179421#discussion_r3204168883",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Jane Xu",
+   "labeler_note": ""
+  }
+ ]
+}

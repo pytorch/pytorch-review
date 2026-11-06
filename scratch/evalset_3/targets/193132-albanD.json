@@ -1,0 +1,17 @@
+{
+ "case_id": "193132-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "c10/cuda/impl/CUDAGuardImpl.h",
+   "line": 307,
+   "summary": "Use a DeviceGuard (RAII) here instead of switching the device manually, so the previous device is restored. The same applies at line 332.",
+   "type": "design",
+   "maintainer_comment": "DeviceGuard ?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/193132#discussion_r4085998144",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

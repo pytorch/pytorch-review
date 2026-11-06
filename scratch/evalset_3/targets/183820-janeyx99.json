@@ -1,0 +1,17 @@
+{
+ "case_id": "183820-janeyx99",
+ "targets": [
+  {
+   "id": "h5",
+   "path": "tools/linter/adapters/stable_shim_usage_linter.py",
+   "line": 164,
+   "summary": "Version handling assumes the patch version is always 0 (TORCH_VERSION_{major}_{minor}_0); it needs to support non-zero patch versions.",
+   "type": "design",
+   "maintainer_comment": "we want to be able to support patch versions too, it won't always be 0",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/183820#discussion_r3250193364",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Jane Xu",
+   "labeler_note": ""
+  }
+ ]
+}

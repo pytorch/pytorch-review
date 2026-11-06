@@ -1,0 +1,21 @@
+{
+  "pr": 174333,
+  "head_sha": "93afd0c8a708f873d6dbcc955146c8c7ea9096f1",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-02-05T18:10:12Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_C/_autograd.pyi",
+      "line": null,
+      "original_line": 98,
+      "body": "Isn't SavedTensor a public API itself? This is a weird pattern.\n\nIf so, can you create a private function that takes the arguments and returns the SavedTensor object but not make it the constructor on the public object.",
+      "diff_hunk": "@@ -88,7 +88,16 @@ class _ProfilerResult:\n     def experimental_event_tree(self) -> list[_ProfilerEvent]: ...\n     def trace_start_ns(self) -> int: ...\n \n-class SavedTensor: ...\n+class SavedTensor:\n+    def __init__(\n+        self,\n+        tensor: torch.Tensor,\n+        *,\n+        is_output: bool,\n+        is_inplace_on_view: bool = False,\n+        _INTERNAL_USE_ONLY: bool = False,",
+      "outdated": true
+    }
+  ]
+}

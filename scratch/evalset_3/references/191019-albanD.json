@@ -1,0 +1,45 @@
+{
+  "pr": 191019,
+  "head_sha": "ce78fa04eb3b919510980a210f3b3e9dbf84b3ca",
+  "label": "block",
+  "decision": {
+    "author": "albanD",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-07-24T17:50:14Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/csrc/Generator.cpp",
+      "line": null,
+      "original_line": 342,
+      "body": "Why not make it public and nicely documented?\nI think there is quite a bit of subtlety about what it returns and how you should use it, especially in a Graph world.",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "torch/csrc/Generator.cpp",
+      "line": null,
+      "original_line": 248,
+      "body": "Release the lock after this line?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "test/test_cuda.py",
+      "line": null,
+      "original_line": 2960,
+      "body": "Can we have a test that shows the behavior when the offset overflows the int64 size?",
+      "diff_hunk": "",
+      "outdated": true
+    },
+    {
+      "path": "aten/src/ATen/cuda/CUDAGeneratorImpl.cpp",
+      "line": null,
+      "original_line": 524,
+      "body": "What?!\nWhy take a data_ptr of a Tensor to make it into another Tensor? :p\nclone() or alias() should work here depending if you want a fresh Tensor or a view to the original.",
+      "diff_hunk": "",
+      "outdated": true
+    }
+  ]
+}

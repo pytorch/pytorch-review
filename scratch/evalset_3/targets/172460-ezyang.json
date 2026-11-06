@@ -1,0 +1,17 @@
+{
+ "case_id": "172460-ezyang",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/config.py",
+   "line": 910,
+   "summary": "The disabled_passes config reads os.environ directly; it should be defined with the inductor Config API (e.g. Config(env_name_force=...)) instead.",
+   "type": "design",
+   "maintainer_comment": "Can you use the fancy Config API for this? Thanks!",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/172460#discussion_r2696641163",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Edward Yang",
+   "labeler_note": ""
+  }
+ ]
+}

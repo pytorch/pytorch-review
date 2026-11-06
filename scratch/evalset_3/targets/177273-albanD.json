@@ -1,0 +1,17 @@
+{
+ "case_id": "177273-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": ".ci/pytorch/windows/internal/smoke_test.bat",
+   "line": 5,
+   "summary": "The script installs the CUDA toolkit without installing the CUDA driver first; the driver should probably be installed before the toolkit.",
+   "type": "defect",
+   "maintainer_comment": "shouldn't we install the cuda driver before the cuda toolkit?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/177273#discussion_r2925675782",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

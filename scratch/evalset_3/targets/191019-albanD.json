@@ -1,0 +1,17 @@
+{
+ "case_id": "191019-albanD",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/csrc/Generator.cpp",
+   "line": 248,
+   "summary": "The generator lock should be released right after this line instead of being held longer than needed.",
+   "type": "defect",
+   "maintainer_comment": "Release the lock after this line?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/191019#discussion_r3647161386",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

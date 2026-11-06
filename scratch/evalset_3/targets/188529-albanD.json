@@ -1,0 +1,17 @@
+{
+ "case_id": "188529-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_torch.py",
+   "line": 2130,
+   "summary": "Rather than adding a new test, extend the dtype for-loop in the existing test above to cover the new case.",
+   "type": "design",
+   "maintainer_comment": "Why not update the for-loop for dtype in the test above rather than adding a new one here?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/188529#discussion_r3515290367",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

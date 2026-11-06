@@ -1,0 +1,17 @@
+{
+ "case_id": "174333-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_C/_autograd.pyi",
+   "line": 98,
+   "summary": "Adding a constructor with an `_INTERNAL_USE_ONLY` flag to the public SavedTensor class is an odd pattern; move construction into a private factory function that returns a SavedTensor and leave the public class's constructor unchanged.",
+   "type": "design",
+   "maintainer_comment": "Isn't SavedTensor a public API itself? This is a weird pattern.\n\nIf so, can you create a private function that takes the arguments and returns the SavedTensor object but not make it the constructor on the public object.",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/174333#discussion_r2770258722",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

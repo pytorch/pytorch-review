@@ -1,0 +1,12 @@
+{
+  "pr": 173238,
+  "head_sha": "b7383191e25cbd846e0d52309ce2a37253c48d98",
+  "label": "block",
+  "decision": {
+    "author": "janeyx99",
+    "state": "COMMENTED",
+    "body": "thanks for tackling this! a few comments:\r\n\r\n1. please move the check as up as possible and reduce redundant iteration through the list -- it may be good to abstract out this check/combine it with an existing check that already iterates through the tensors.\r\n2. please also fix foreach_tensor_norm_slow in ForeachOpsKernels.cpp and remove the onlyCUDA from the test case. \r\n\r\nforeach_max would also benefit from such a check, but that should go in a separate PR",
+    "submitted_at": "2026-01-26T16:46:50Z"
+  },
+  "inline_comments": []
+}

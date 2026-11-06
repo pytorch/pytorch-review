@@ -1,0 +1,17 @@
+{
+ "case_id": "180926-albanD",
+ "targets": [
+  {
+   "id": "h5",
+   "path": "test/test_linalg.py",
+   "line": 7813,
+   "summary": "Raising the TF32 tolerance from 0.005 to 0.05 (and from 0.001 in a second test) is questionable because the tests passed before; the looser tolerances hide regressions instead of fixing the ROCm behaviour.",
+   "type": "design",
+   "maintainer_comment": "But the test was correct before?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/180926#discussion_r3189592279",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

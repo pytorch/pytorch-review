@@ -1,0 +1,29 @@
+{
+ "case_id": "187949-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "aten/src/ATen/core/dispatch/Dispatcher.h",
+   "line": 218,
+   "summary": "The newly added Dispatcher function may be unused and should be removed if so.",
+   "type": "design",
+   "maintainer_comment": "Is this new function actually used?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/187949#discussion_r3469783210",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  },
+  {
+   "id": "h2",
+   "path": "aten/src/ATen/core/dispatch/DispatchKeyExtractor.h",
+   "line": 146,
+   "summary": "The change to the dispatch key extraction hot path may hurt performance, so it should be checked and the function possibly marked C10_ALWAYS_INLINE/forced inline.",
+   "type": "design",
+   "maintainer_comment": "Any perf impact? should this be forcedinline?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/187949#discussion_r3469790605",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": "Do we want C++ perf asks?"
+  }
+ ]
+}

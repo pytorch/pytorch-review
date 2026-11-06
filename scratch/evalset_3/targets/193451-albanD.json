@@ -1,0 +1,17 @@
+{
+ "case_id": "193451-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/csrc/jit/python/pybind_utils.cpp",
+   "line": 892,
+   "summary": "A standalone PyWarningHandler is the wrong fix because it has to work together with exception handling (set_in_exception). The call should be wrapped in HANDLE_TH_ERRORS / END_HANDLE_TH_ERRORS_PYBIND, which handles both error translation and warnings.",
+   "type": "design",
+   "maintainer_comment": "I don't think this is the right fix. As this system is supposed to work in tandem with exeption handling to perform well (see .set_in_exception() and similar things).\n\nI think a better fix here would be guard all of this call into the HANDLE_TH_ERROR macro and END_HANDLE_TH_ERROR_MACRO_PYBIND. That one handles error translation and warning in one go and ensure everything works well.",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/193451#discussion_r3779492288",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": "This one will be hard to encode. It is quite indirect implications and trading off of BC-break for another."
+  }
+ ]
+}

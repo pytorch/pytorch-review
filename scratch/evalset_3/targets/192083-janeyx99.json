@@ -1,0 +1,17 @@
+{
+ "case_id": "192083-janeyx99",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/cpp_extensions/libtorch_agn_2_10_extension/csrc/my_permute.cpp",
+   "line": 9,
+   "summary": "The permute dims parameter should use IntHeaderOnlyArrayRef instead of its current type.",
+   "type": "design",
+   "maintainer_comment": "use IntHeaderOnlyArrayRef",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/192083#discussion_r3724660855",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Jane Xu",
+   "labeler_note": ""
+  }
+ ]
+}

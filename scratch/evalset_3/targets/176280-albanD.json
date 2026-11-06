@@ -1,0 +1,41 @@
+{
+ "case_id": "176280-albanD",
+ "targets": [
+  {
+   "id": "h13",
+   "path": "torch/_native/README.md",
+   "line": 108,
+   "summary": "Since the registry already calls every registration, the registry should provide the torch.library.Library object so authors don't fall into the trap of it being garbage-collected.",
+   "type": "design",
+   "maintainer_comment": "Since we have the registry that call all these. Should the registry be the one providing the lib to avoid this trap?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176280#discussion_r2878767998",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  },
+  {
+   "id": "h27",
+   "path": "torch/_native/cutedsl_utils.py",
+   "line": 31,
+   "summary": "The manual 'already computed' check is redundant given @functools.cache on the function; the same applies to triton_utils.",
+   "type": "design",
+   "maintainer_comment": "Why this given the cache above? Same for the triton version",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176280#discussion_r2878843817",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  },
+  {
+   "id": "h29",
+   "path": "torch/_native/common_utils.py",
+   "line": 42,
+   "summary": "Parsing the version by splitting on '.' into three ints breaks on valid versions like '1.2.3.post1'; use packaging.version.parse or similar.",
+   "type": "defect",
+   "maintainer_comment": "You should use packaging.version.parse or something like that as `1.2.3.post1` is a valid python version that would break this.",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/176280#discussion_r2878859988",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}

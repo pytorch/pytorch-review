@@ -1,0 +1,17 @@
+{
+ "case_id": "191364-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "tools/linter/adapters/_stable_shim_utils.py",
+   "line": 505,
+   "summary": "A string literal that interpolates values is missing its `f` prefix, so the placeholders print as literal text and are never filled in.",
+   "type": "defect",
+   "maintainer_comment": "f string missing",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/191364#discussion_r3669324639",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": "This is a trivial bug, we most likely don't need a rule for it."
+  }
+ ]
+}

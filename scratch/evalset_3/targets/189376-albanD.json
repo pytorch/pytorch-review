@@ -1,0 +1,17 @@
+{
+ "case_id": "189376-albanD",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "docs/source/accelerator/testing.md",
+   "line": 38,
+   "summary": "These tests shouldn't be listed for out-of-tree backends to run, since core CI already runs them on all supported CPU architectures.",
+   "type": "design",
+   "maintainer_comment": "Actually shouldn't these never be ran by OOT backends. Core CI does run this for all supported CPU arch already ?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/189376#discussion_r3553909282",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Alban Desmaison",
+   "labeler_note": ""
+  }
+ ]
+}
