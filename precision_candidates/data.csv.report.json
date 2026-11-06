@@ -1,0 +1,24 @@
+{
+  "repository": "pytorch/pytorch",
+  "since": "2025-01-01T00:00:00+00:00",
+  "until": "2026-11-05T00:00:00+00:00",
+  "prs": [],
+  "kinds": [
+    "review_comment",
+    "issue_comment"
+  ],
+  "reactor_policy": "pr_author_or_named_requested_or_submitted_reviewer",
+  "snapshot_events": 20,
+  "queries": 2,
+  "unique_comments": 20,
+  "duplicates": 0,
+  "verification_attempts": 0,
+  "csv_rows": 0,
+  "unknown": [],
+  "skipped": {
+    "no_explicit_ai_review_attribution": 20
+  },
+  "source_complete": true,
+  "verification_complete": true,
+  "csv_written": true
+}
