@@ -1,0 +1,17 @@
+{
+ "case_id": "182537-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/test_flop_counter.py",
+   "line": 1395,
+   "summary": "The sparsity_hint tests allocate real CUDA tensors, some of them large (1x32x2048x128). They should use fake tensors so they don't need real GPU allocation.",
+   "type": "design",
+   "maintainer_comment": "could we use fake tensors for this? ",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/182537#discussion_r3190955615",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Driss Guessous",
+   "labeler_note": ""
+  }
+ ]
+}

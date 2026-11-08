@@ -1,0 +1,45 @@
+{
+  "pr": 182108,
+  "head_sha": "475f785d83e55bd2c9d49894efdd2dafbb1f3012",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-05-09T00:57:24Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_native/ops/norm/norms.py",
+      "line": 58,
+      "original_line": 58,
+      "body": "hmm did we measure the impact on perf for this path?",
+      "diff_hunk": "@@ -0,0 +1,149 @@\n+\"\"\"Adaptor for quack's 2-D RMSNorm kernel interface to match ATen op signatures.\n+\n+These functions handle tensor reshaping, memory allocation, and call quack's\n+compiled kernels directly (bypassing the ``@torch.library.custom_op`` wrapper\n+to avoid dispatcher overhead).\n+\"\"\"\n+\n+from __future__ import annotations\n+\n+import math\n+\n+import torch\n+\n+\n+# quack imports `cutlass`, which is only installed on CUDA-enabled x86 Linux\n+# builds. Keep the import lazy so `torch._native.ops.norm.norms` stays\n+# importable on CPU-only builds (test_public_bindings /\n+# test_circular_dependencies walk every module under `torch.`).\n+def _torch2cute(t: torch.Tensor | None):  # type: ignore[no-untyped-def]\n+    from torch._vendor.quack import cute_dsl_utils as _cute_dsl_utils\n+\n+    if t is None:\n+        return None\n+    return _cute_dsl_utils.torch2cute_dtype_map[t.dtype]\n+\n+\n+def _reshape_2d(t: torch.Tensor, M: int, N: int) -> torch.Tensor:\n+    if t.ndim == 2 and t.shape[0] == M and t.shape[1] == N and t.is_contiguous():\n+        return t\n+    return t.reshape(M, N).contiguous()\n+\n+\n+def _flatten_rstd(t: torch.Tensor, M: int) -> torch.Tensor:\n+    if t.ndim == 1 and t.shape[0] == M:\n+        return t\n+    if t.is_contiguous() and t.numel() == M:\n+        return t.detach().view(M)\n+    return t.reshape(M).contiguous()\n+\n+\n+def quack_rmsnorm_fwd(\n+    input: torch.Tensor,\n+    weight: torch.Tensor | None,\n+    normalized_shape: list[int],\n+    eps: float,\n+) -> tuple[torch.Tensor, torch.Tensor]:\n+    input_shape = input.shape\n+    N = math.prod(normalized_shape)\n+    M = input.numel() // N\n+    # quack's kernel requires a contiguous 2-D input with trailing stride 1;\n+    # a plain `.reshape(M, N)` can return a non-contiguous view.\n+    x = _reshape_2d(input, M, N)\n+\n+    out = torch.empty_like(x)\n+    rstd = torch.empty(M, device=x.device, dtype=torch.float32)\n+\n+    if weight is not None:\n+        weight = weight.reshape(N).contiguous()",
+      "outdated": false
+    },
+    {
+      "path": "torch/_native/ops/norm/norms.py",
+      "line": 20,
+      "original_line": 20,
+      "body": "should we define / maybe reexport in our cute dsl utils",
+      "diff_hunk": "@@ -0,0 +1,149 @@\n+\"\"\"Adaptor for quack's 2-D RMSNorm kernel interface to match ATen op signatures.\n+\n+These functions handle tensor reshaping, memory allocation, and call quack's\n+compiled kernels directly (bypassing the ``@torch.library.custom_op`` wrapper\n+to avoid dispatcher overhead).\n+\"\"\"\n+\n+from __future__ import annotations\n+\n+import math\n+\n+import torch\n+\n+\n+# quack imports `cutlass`, which is only installed on CUDA-enabled x86 Linux\n+# builds. Keep the import lazy so `torch._native.ops.norm.norms` stays\n+# importable on CPU-only builds (test_public_bindings /\n+# test_circular_dependencies walk every module under `torch.`).\n+def _torch2cute(t: torch.Tensor | None):  # type: ignore[no-untyped-def]\n+    from torch._vendor.quack import cute_dsl_utils as _cute_dsl_utils",
+      "outdated": false
+    },
+    {
+      "path": "torch/_native/ops/norm/rmsnorm_impl.py",
+      "line": null,
+      "original_line": 53,
+      "body": "the cuda impl looks to be creating Eps off of the accumulator type not the input dtype so",
+      "diff_hunk": "@@ -0,0 +1,120 @@\n+\"\"\"Quack-backed RMSNorm overrides for aten fused RMSNorm operators.\n+\n+Uses the vendored quack subset at ``torch._vendor.quack``.\n+\"\"\"\n+# mypy: allow-untyped-defs\n+\n+from __future__ import annotations\n+\n+import torch\n+\n+from ... import cutedsl_utils as cu\n+\n+\n+def _is_supported(input: torch.Tensor) -> bool:\n+    if input.dtype not in (torch.float16, torch.bfloat16, torch.float32):\n+        return False\n+    major, _ = torch.cuda.get_device_capability(input.device)\n+    return major in (9, 10)\n+\n+\n+def _fused_rms_norm_cond(\n+    input: torch.Tensor,\n+    normalized_shape: list[int],\n+    weight: torch.Tensor | None,\n+    eps: float | None,\n+) -> bool:\n+    if not _is_supported(input):\n+        return False\n+    # Empty inputs crash quack with cudaErrorInvalidConfiguration -- the bad\n+    # launch config poisons the CUDA context for subsequent calls. Quack's own\n+    # rmsnorm_bwd guards against this with `if x.numel() > 0` (rmsnorm.py:1111)\n+    # but the fwd path doesn't.\n+    if input.numel() == 0:\n+        return False\n+    # The override reshapes + makes contiguous, which materializes a COW input.\n+    # Match the bmm_outer_product cond (triton_impl.py:46) and fall through to\n+    # aten so composite-compliance tests don't flag spurious materialization.\n+    is_cow = torch._C._is_cow_tensor  # pyrefly: ignore[missing-attribute]\n+    if is_cow(input):\n+        return False\n+    if weight is not None and is_cow(weight):\n+        return False\n+    return True\n+\n+\n+def _fused_rms_norm_impl(\n+    input: torch.Tensor,\n+    normalized_shape: list[int],\n+    weight: torch.Tensor | None,\n+    eps: float | None,\n+) -> tuple[torch.Tensor, torch.Tensor]:\n+    if eps is None:\n+        eps = torch.finfo(input.dtype).eps",
+      "outdated": true
+    },
+    {
+      "path": "torch/_native/ops/norm/rmsnorm_impl.py",
+      "line": 73,
+      "original_line": 43,
+      "body": "out of  curiosity: I think the CUDA impl does some input validation. We are doing all the same input validation for the approved paths, right?",
+      "diff_hunk": "@@ -0,0 +1,120 @@\n+\"\"\"Quack-backed RMSNorm overrides for aten fused RMSNorm operators.\n+\n+Uses the vendored quack subset at ``torch._vendor.quack``.\n+\"\"\"\n+# mypy: allow-untyped-defs\n+\n+from __future__ import annotations\n+\n+import torch\n+\n+from ... import cutedsl_utils as cu\n+\n+\n+def _is_supported(input: torch.Tensor) -> bool:\n+    if input.dtype not in (torch.float16, torch.bfloat16, torch.float32):\n+        return False\n+    major, _ = torch.cuda.get_device_capability(input.device)\n+    return major in (9, 10)\n+\n+\n+def _fused_rms_norm_cond(\n+    input: torch.Tensor,\n+    normalized_shape: list[int],\n+    weight: torch.Tensor | None,\n+    eps: float | None,\n+) -> bool:\n+    if not _is_supported(input):\n+        return False\n+    # Empty inputs crash quack with cudaErrorInvalidConfiguration -- the bad\n+    # launch config poisons the CUDA context for subsequent calls. Quack's own\n+    # rmsnorm_bwd guards against this with `if x.numel() > 0` (rmsnorm.py:1111)\n+    # but the fwd path doesn't.\n+    if input.numel() == 0:\n+        return False\n+    # The override reshapes + makes contiguous, which materializes a COW input.\n+    # Match the bmm_outer_product cond (triton_impl.py:46) and fall through to\n+    # aten so composite-compliance tests don't flag spurious materialization.\n+    is_cow = torch._C._is_cow_tensor  # pyrefly: ignore[missing-attribute]\n+    if is_cow(input):\n+        return False\n+    if weight is not None and is_cow(weight):\n+        return False\n+    return True",
+      "outdated": false
+    }
+  ]
+}

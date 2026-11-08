@@ -1,6 +1,6 @@
 {
   "name": "evalset_3",
   "scorer": "maintainer",
-  "description": "21 cases, 25 targets the maintainer who raised them marked 'should be captured by the review agent as a blocking issue'.",
+  "description": "27 cases, 31 targets the maintainer who raised them marked 'should be captured by the review agent as a blocking issue'.",
   "created": "2026-11-06"
 }

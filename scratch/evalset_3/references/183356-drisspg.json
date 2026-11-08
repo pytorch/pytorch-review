@@ -1,0 +1,21 @@
+{
+  "pr": 183356,
+  "head_sha": "e1296bdddf6e81b69b7aee8a2e87da38b4f6f06e",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "APPROVED",
+    "body": "",
+    "submitted_at": "2026-05-12T00:32:23Z"
+  },
+  "inline_comments": [
+    {
+      "path": "test/inductor/test_cutlass_backend.py",
+      "line": null,
+      "original_line": 413,
+      "body": "Should all tests uses this patch?",
+      "diff_hunk": "@@ -303,28 +374,43 @@ def test_cutlass_backend_subproc_mm(self):\n \n         M, N, K = 4096, 2048, 25728\n \n-        a = torch.randn(M, K).to(GPU_TYPE).half()\n-        b = torch.randn(N, K).to(GPU_TYPE).half().t()\n+        with _maybe_patch_cutlass_dir_from_checkout(patch_env=True):\n+            cutlass_dir = _get_cutlass_dir()\n+            self.assertTrue(\n+                try_import_cutlass(),\n+                \"CUTLASS backend is required by this test but could not be imported. \"\n+                \"Set TORCHINDUCTOR_CUTLASS_DIR to a valid CUTLASS checkout; \"\n+                f\"current cutlass_dir={cutlass_dir!r}.\",\n+            )\n+\n+            # Scale inputs by 1/sqrt(K) to avoid large accumulation differences\n+            # between CUTLASS and ATen in half precision.\n+            a = random_matrix_with_scaled_reduction_dim(\n+                M, K, dtype=torch.float16, device=GPU_TYPE, reduction_dim=-1\n+            )\n+            b = random_matrix_with_scaled_reduction_dim(\n+                N, K, dtype=torch.float16, device=GPU_TYPE, reduction_dim=-1\n+            ).t()\n \n-        with config.patch(\n-            {\n-                \"max_autotune\": True,\n-                \"autotune_in_subproc\": True,\n-                \"max_autotune_gemm_backends\": \"CUTLASS\",\n-                \"compile_threads\": 4,\n-                \"cutlass.cutlass_max_profiling_configs\": 4,\n-            }\n-        ):\n-            Y_compiled = torch.compile(torch.mm)(a, b)\n-            Y = torch.mm(a, b)\n-            if GPU_TYPE == \"xpu\":\n-                atol = 1e-3  # default is 1e-5\n-                rtol = 1e-3  # default is 1e-3\n-            else:\n-                atol = None\n-                rtol = None\n+            with config.patch(\n+                {\n+                    \"max_autotune\": True,\n+                    \"autotune_in_subproc\": True,\n+                    \"max_autotune_gemm_backends\": \"CUTLASS\",\n+                    \"compile_threads\": 4,\n+                    \"cutlass.cutlass_max_profiling_configs\": 4,\n+                }\n+            ):\n+                Y_compiled = torch.compile(torch.mm)(a, b)\n+                Y = torch.mm(a, b)\n+                if GPU_TYPE == \"xpu\":\n+                    atol = 1e-3  # default is 1e-5\n+                    rtol = 1e-3  # default is 1e-3\n+                else:\n+                    atol = None\n+                    rtol = None\n \n-            torch.testing.assert_close(Y_compiled, Y, atol=atol, rtol=rtol)\n+                self.assertEqual(Y_compiled, Y, atol=atol, rtol=rtol)",
+      "outdated": true
+    }
+  ]
+}

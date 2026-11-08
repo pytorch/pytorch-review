@@ -1,0 +1,21 @@
+{
+  "pr": 178986,
+  "head_sha": "97d36d25a59fa2ccd781288bb38455721741727f",
+  "label": "block",
+  "decision": {
+    "author": "drisspg",
+    "state": "COMMENTED",
+    "body": "",
+    "submitted_at": "2026-04-01T15:33:32Z"
+  },
+  "inline_comments": [
+    {
+      "path": "torch/_meta_registrations.py",
+      "line": null,
+      "original_line": 6017,
+      "body": "we shoudl alloc with matching layout no need for conditionals ",
+      "diff_hunk": "@@ -6014,7 +6014,10 @@ def meta__scaled_dot_product_fused_attention_overrideable(\n     # Preserve input dimensionality for the output shape\n     out_shape = list(query.shape)\n     out_shape[-1] = D_V\n-    res = torch.empty(out_shape, dtype=query.dtype, device=query.device)\n+    if device_hint(query) == \"xpu\":",
+      "outdated": true
+    }
+  ]
+}

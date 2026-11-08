@@ -2,11 +2,11 @@
 
 Recall targets that maintainers confirmed. Each target is an issue a maintainer raised in review of a pytorch/pytorch
 pull request and the author fixed; the same maintainer then answered "Do you think this issue should be captured by
-the review agent as a blocking issue?" with **Yes**. 21 cases, 25 targets: albanD 19, janeyx99 5, ezyang 1; 18
-design, 7 defect.
+the review agent as a blocking issue?" with **Yes**. 27 cases, 31 targets: albanD 19, drisspg 6, janeyx99 5,
+ezyang 1; 22 design, 9 defect.
 
 The maintainers were asked about the targets of `evalset_2/recall/`, one row per maintainer comment (68 rows). Of
-the 45 rows answered, 25 were Yes, 16 Unsure and 4 No; only the Yes ones are here.
+the 56 rows answered, 31 were Yes, 19 Unsure and 6 No; only the Yes ones are here.
 
 ## Provenance
 

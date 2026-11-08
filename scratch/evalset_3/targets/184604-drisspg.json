@@ -1,0 +1,17 @@
+{
+ "case_id": "184604-drisspg",
+ "targets": [
+  {
+   "id": "h2",
+   "path": "torch/_native/ops/scatter_add/cutedsl_impl.py",
+   "line": 146,
+   "summary": "The eligibility analysis doesn't appear to check pointer alignment for tensors with a nonzero storage offset, and it is unclear how TensorIterator handles such offsets.",
+   "type": "defect",
+   "maintainer_comment": "do we check that the pointer is aligned? e.g. when offset is !=0n honestly not sure what the behavior is for tensor iterator with non zero offset",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/184604#discussion_r3277212574",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Driss Guessous",
+   "labeler_note": ""
+  }
+ ]
+}

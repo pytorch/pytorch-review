@@ -1,0 +1,17 @@
+{
+ "case_id": "178986-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_meta_registrations.py",
+   "line": 6017,
+   "summary": "Instead of adding a device-specific (xpu) conditional, the meta output should always be allocated with a layout matching the query input.",
+   "type": "design",
+   "maintainer_comment": "we shoudl alloc with matching layout no need for conditionals ",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/178986#discussion_r3022895558",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Driss Guessous",
+   "labeler_note": ""
+  }
+ ]
+}

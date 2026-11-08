@@ -1,0 +1,17 @@
+{
+ "case_id": "183356-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "test/inductor/test_cutlass_backend.py",
+   "line": 413,
+   "summary": "The cutlass-dir patching and import check (_maybe_patch_cutlass_dir_from_checkout / try_import_cutlass assertion) is added to only this one test; the reviewer asks whether every CUTLASS test should use it, which suggests applying it consistently, e.g. in shared setup.",
+   "type": "design",
+   "maintainer_comment": "Should all tests uses this patch?",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/183356#discussion_r3222962269",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Driss Guessous",
+   "labeler_note": ""
+  }
+ ]
+}

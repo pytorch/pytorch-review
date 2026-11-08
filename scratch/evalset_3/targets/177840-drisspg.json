@@ -1,0 +1,17 @@
+{
+ "case_id": "177840-drisspg",
+ "targets": [
+  {
+   "id": "h1",
+   "path": "torch/_inductor/template_heuristics/triton.py",
+   "line": 1753,
+   "summary": "The custom _static_seq_len helper duplicates what existing inductor helpers already do (checking whether a size is statically known without adding guards); use those helpers instead.",
+   "type": "design",
+   "maintainer_comment": "there are helpers  in inductor for statically knowing sizes and not introducing guards",
+   "maintainer_comment_url": "https://github.com/pytorch/pytorch/pull/177840#discussion_r2966280567",
+   "human_label": "yes: should be captured as a blocking issue",
+   "labeler": "Driss Guessous",
+   "labeler_note": ""
+  }
+ ]
+}
